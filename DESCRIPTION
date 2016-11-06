@@ -1,0 +1,15 @@
+Package: mniw
+Type: Package
+Title: Density and Simulation for the Matrix-Normal Inverse-Wishart (MNIW) Distribution
+Version: 0.0.0.9011
+Date: 2016-06-03
+Author: Martin Lysy
+Maintainer: Martin Lysy <mlysy@uwaterloo.ca>
+Description: More about what it does (maybe more than one line)
+License: GPL 3
+Imports:
+    Rcpp (>= 0.11.6)
+LinkingTo: Rcpp, RcppEigen
+Suggests:
+    testthat
+RoxygenNote: 5.0.1
