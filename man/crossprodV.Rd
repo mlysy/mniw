@@ -2,21 +2,23 @@
 % Please edit documentation in R/crossprodV.R
 \name{crossprodV}
 \alias{crossprodV}
-\title{Matrix Inner Product}
+\title{Matrix Cross-Product}
 \usage{
-crossprodV(X, V, inverse = FALSE)
+crossprodV(X, Y = NULL, V, inverse = FALSE)
 }
 \arguments{
 \item{X}{Either a matrix of size \code{p x q}, or an array of size \code{p x q x n}.}
 
-\item{V}{Either a matrix of size \code{p x q}, or an array of size \code{p x q x n}.}
+\item{Y}{Optionally, either a matriz of size \code{p x r} or an array of size \code{p x r x n}.  If missing uses \code{Y = X}.}
 
-\item{inverse}{Whether or not the inner product should be calculated with \code{V} (\code{inverse = FALSE}) or \code{V^{-1}}.}
+\item{V}{Either a matrix of size \code{p x p}, or an array of size \code{p x p x n}.}
+
+\item{inverse}{Logical; whether or not the inner product should be calculated with \code{V} or \code{V^{-1}}.}
 }
 \value{
-An array of size \code{q x q x n}.
+An array of size \code{q x r x n}.
 }
 \description{
-Vectorized matrix inner products \code{Y = X' V X} or \code{Y = X' V^{-1} X}.
+Vectorized matrix cross-products \code{X' V Y} or \code{X' V^{-1} Y}.
 }
 

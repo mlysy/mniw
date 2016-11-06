@@ -1,8 +1,8 @@
-#-------------------------------------------------------------------------------
+#---------------------------------------------------------------------------
 #
 # Wishart and Inverse-Wishart distributions
 #
-#-------------------------------------------------------------------------------
+#---------------------------------------------------------------------------
 
 #' @name Wishart
 #' @title Wishart and Inverse-Wishart Distributions.
@@ -27,7 +27,7 @@
 #' \deqn{\code{(a' X a) / (a' Psi a) ~ chisq(df = nu)}.}
 #' @return A vector for densities, or a \code{q x q x n} array for random sampling.
 
-#--- convenience wrappers -------------------------------------------------------
+#--- convenience wrappers --------------------------------------------------
 
 # wishart density
 #' @rdname Wishart
@@ -57,7 +57,7 @@ riwish <- function(n, Psi, nu) {
   rwishart(n, Psi, nu, inverse = TRUE)
 }
 
-#--- lower level functions ------------------------------------------------------
+#--- lower level functions -------------------------------------------------
 
 # density of wishart and inverse wishart
 
@@ -93,8 +93,7 @@ dwishart <- function(X, Psi, nu, inverse = FALSE, log = FALSE, debug = FALSE) {
   #N <- unique(sort(c(ncol(X)/q, ncol(Psi)/q, length(nu))))
   #N <- c(1, N[N>1])
   if(length(N) > 2) stop("Arguments have different lengths.")
-  ans <- .Call('mniw_LogDensityWishart', PACKAGE = 'mniw',
-               X, Psi, nu, inverse)
+  ans <- LogDensityWishart(X, Psi, nu, inverse)
   if(!log) ans <- exp(ans)
   ans
 }
@@ -122,8 +121,7 @@ rwishart <- function(n, Psi, nu, inverse = FALSE) {
   #N <- c(1,N[N>1])
   if(length(N) > 2 || (length(N) == 2 && N[2] != n))
     stop("Arguments don't all have length n.")
-  X <- .Call('mniw_GenerateWishart', PACKAGE = 'mniw',
-             n, Psi, nu, inverse)
+  X <- GenerateWishart(n, Psi, nu, inverse)
   if(n > 1) X <- array(X, dim = c(q,q,n))
   X
 }

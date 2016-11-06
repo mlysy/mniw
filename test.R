@@ -1,4 +1,27 @@
-#--- random testing -------------------------------------------------------------
+#--- basic testing ---------------------------------------------------------
+
+require(Rcpp)
+require(RcppEigen)
+sourceCpp("CrossProdVXY.cpp")
+
+# cross-products
+rMN <- function(n, p = n) {
+  matrix(rnorm(n*p), n, p)
+}
+
+p <- 3
+q <- 5
+r <- 2
+
+X <- rMN(p, q)
+V <- crossprod(rMN(p))
+Y <- rMN(p,r)
+
+ipR <- t(X) %*% solve(V) %*% Y
+ipC <- crossprodV(X = X, Y = Y, V = V, inverse = TRUE)[,,1]
+range(ipR - ipC)
+
+#--- random testing --------------------------------------------------------
 
 require(mniw)
 

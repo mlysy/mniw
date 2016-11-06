@@ -1,4 +1,4 @@
-#--- random effects models ------------------------------------------------------
+#--- random effects models -------------------------------------------------
 
 #' @title Random Effects Sampling for Multivariate Normal-Normal Model.
 #' @description Sample from the multivariate normal conditional distribution of the random effects given the data.
@@ -35,7 +35,6 @@ rmNormRE <- function(n, y, V, lambda, A) {
   N <- c(1, N[N > 1])
   if(length(N) > 2 || (length(N) == 2 && N[2] != n))
     stop("Arguments don't all have length n.")
-  Mu <- .Call('mniw_GenerateRandomEffectsNormal', PACKAGE = 'mniw',
-              N, lambda, y, V, A)
+  Mu <- GenerateRandomEffectsNormal(N, lambda, y, V, A)
   Mu
 }

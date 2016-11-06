@@ -9,10 +9,9 @@ compileAttributes()
 document()
 install()
 
-build(pkg.name)
+test()
 
-test(pkg.name)
-
+build()
 
 #--- initial compile -------------------------------------------------------
 

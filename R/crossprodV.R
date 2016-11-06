@@ -1,4 +1,4 @@
-#' @title Matrix Inner Product
+#' @title Matrix Cross-Product
 #' @description Vectorized matrix cross-products \code{X' V Y} or \code{X' V^{-1} Y}.
 #'
 #' @param X Either a matrix of size \code{p x q}, or an array of size \code{p x q x n}.
@@ -26,11 +26,12 @@ crossprodV <- function(X, Y = NULL, V, inverse = FALSE) {
     if(length(n) > 2) stop("X and V have different lengths.")
     n <- max(n)
     # C code
-    W <- .Call('mniw_CrossProdVXX', PACKAGE = 'mniw', X, V, p, q, inverse)
+    W <- CrossProdVXX(X, V, p, q, inverse)
   } else {
     # dimensions of Y
     if(is.vector(Y)) Y <- as.matrix(Y)
     if(dim(Y)[1] != p) stop("Y and V have incompatible dimensions.")
+    Ynames <- dimnames(Y)[2]
     r <- dim(Y)[2]
     Y <- matrix(Y,p)
     # check lengths
@@ -39,8 +40,7 @@ crossprodV <- function(X, Y = NULL, V, inverse = FALSE) {
     if(length(n) > 2) stop("X, Y, and V have different lengths.")
     n <- max(n)
     # C code
-    W <- .Call('mniw_CrossProdVXY', PACKAGE = 'mniw',
-               X, Y, V, p, q, r, inverse)
+    W <- CrossProdVXY(X, Y, V, p, q, r, inverse)
   }
   W <- array(W, dim = c(q,r,n))
   if(!is.null(Xnames) || !is.null(Ynames)) {

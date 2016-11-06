@@ -1,4 +1,4 @@
-#--- multivariate normal distribution -------------------------------------------
+#--- multivariate normal distribution --------------------------------------
 
 #' @name mNorm
 #' @title Multivariate Normal Distribution.
@@ -57,8 +57,7 @@ dmNorm <- function(x, mu, V, log = FALSE) {
   x <- matrix(x, nrow = q) # format for mN
   mu <- matrix(mu, nrow = q) # format for mN
   if(debug) browser()
-  ans <- .Call('mniw_LogDensityMultivariateNormal', PACKAGE = 'mniw',
-               x, mu, V)
+  ans <- LogDensityMultivariateNormal(x, mu, V)
   if(!log) ans <- exp(ans)
   ans
 }
@@ -95,8 +94,7 @@ rmNorm <- function(n, mu, V, debug = FALSE) {
     stop("Arguments don't all have length n.")
   if(debug) browser()
   mu <- matrix(mu, nrow = q) # format for mN
-  X <- .Call('mniw_GenerateMultivariateNormal', PACKAGE = 'mniw',
-             n, mu, V)
+  X <- GenerateMultivariateNormal(n, mu, V)
   if(n > 1) {
     X <- t(X)
   } else {

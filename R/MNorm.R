@@ -1,4 +1,4 @@
-#--- matrix normal distribution -------------------------------------------------
+#--- matrix normal distribution --------------------------------------------
 
 #' @name MNorm
 #' @title Matrix-Normal Distribution.
@@ -17,7 +17,7 @@
 #' \deqn{a' X b \sim N( a' Mu b, (a' RowV a) * (b' ColV b) ).}
 #' @return A vector for densities, or a \code{p x q x n} array for random sampling.
 
-#--- lower-level functions ------------------------------------------------------
+#--- lower-level functions -------------------------------------------------
 
 #' @rdname MNorm
 #' @export
@@ -43,8 +43,7 @@ dMNorm <- function(X, Mu, RowV, ColV, log = FALSE, debug = FALSE) {
              Psi = ColV)
   if(length(N) > 2) stop("Arguments have different lengths.")
   if(debug) browser()
-  ans <- .Call('mniw_LogDensityMatrixNormal', PACKAGE = 'mniw',
-               X, Mu, RowV, ColV)
+  ans <- LogDensityMatrixNormal(X, Mu, RowV, ColV)
   if(!log) ans <- exp(ans)
   ans
 }
@@ -72,8 +71,7 @@ rMNorm <- function(n, Mu, RowV, ColV, debug = FALSE) {
   if(length(N) > 2 || (length(N) == 2 && N[2] != n))
     stop("Arguments don't all have length n.")
   if(debug) browser()
-  X <- .Call('mniw_GenerateMatrixNormal', PACKAGE = 'mniw',
-             n, Mu, RowV, ColV)
+  X <- GenerateMatrixNormal(n, Mu, RowV, ColV)
   if(n > 1) X <- array(X, dim = c(p,q,n))
   X
 }

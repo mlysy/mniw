@@ -1,4 +1,4 @@
-#--- MNIW distribution ----------------------------------------------------------
+#--- MNIW distribution -----------------------------------------------------
 
 #' @title Generate Samples from the Matrix-Normal Inverse-Wishart Distribution.
 #' @param n Number of samples.
@@ -33,8 +33,7 @@ rMNIW <- function(n, Lambda, Sigma, Psi, nu, prec = FALSE, debug = FALSE) {
   if(length(N) > 2 || (length(N) == 2 && N[2] != n)) {
     stop("Arguments don't all have length n.")
   }
-  XV <- .Call('mniw_GenerateMatrixNIW', PACKAGE = 'mniw',
-              n, Lambda, Sigma, Psi, nu, prec)
+  XV <- GenerateMatrixNIW(n, Lambda, Sigma, Psi, nu, prec)
   if(n > 1) {
     XV$X <- array(XV$X, dim = c(p,q,n))
     XV$V <- array(XV$V, dim = c(q,q,n))
