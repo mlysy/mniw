@@ -11,6 +11,8 @@ install()
 
 test()
 
+test_path()
+
 build()
 
 #--- initial compile -------------------------------------------------------
