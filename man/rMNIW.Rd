@@ -13,7 +13,7 @@ rMNIW(n, Lambda, Sigma, Psi, nu, prec = FALSE, debug = FALSE)
 
 \item{Sigma}{\code{p x p} conditional row variance matrix of \code{X}.}
 
-\item{Psi}{\code{q x q} Precision matrix of \code{V}.}
+\item{Psi}{\code{q x q} scale matrix of \code{V}.}
 
 \item{nu}{Scalar degrees of freedom of \code{V}.}
 

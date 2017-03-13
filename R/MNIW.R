@@ -4,7 +4,7 @@
 #' @param n Number of samples.
 #' @param Lambda \code{p x q} mean matrix of \code{X} (see details).
 #' @param Sigma \code{p x p} conditional row variance matrix of \code{X}.
-#' @param Psi \code{q x q} Precision matrix of \code{V}.
+#' @param Psi \code{q x q} scale matrix of \code{V}.
 #' @param nu Scalar degrees of freedom of \code{V}.
 #' @param prec Logical, whether or not to return \code{V} or \code{C = V^{-1}}.
 #' @details the Matrix-Normal Inverse-Wishart (MNIW) distribution on \code{p x q} matrix \code{X} and \code{q x q} matrix \code{V} is:

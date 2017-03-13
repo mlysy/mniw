@@ -7,6 +7,7 @@
 #' @name Wishart
 #' @title Wishart and Inverse-Wishart Distributions.
 #' @description Densities and Random Sampling for the Wishart and Inverse-Wishart distributions.
+#' @aliases dwish rwish diwish riwish dwishart rwishart
 #' @param X Argument to the density function.  Either a \code{q x q} matrix or a \code{q x q x n} array.
 #' @param n Number of random matrices to generate.
 #' @param Psi Scale parameter.  Either a \code{q x q} matrix or a \code{q x q x n} array.

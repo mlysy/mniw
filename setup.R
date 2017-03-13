@@ -3,11 +3,12 @@
 require(Rcpp)
 require(RcppEigen)
 require(devtools)
-pkg.name <- "mniw"
+pkg.path <- "C:/Users/Jerome/Documents/R/mniw/mniw"
+#pkg.name <- "mniw"
 
-compileAttributes()
-document()
-install()
+compileAttributes(pkgdir = pkg.path)
+document(pkg = pkg.path)
+install(pkg = pkg.path)
 
 test()
 
