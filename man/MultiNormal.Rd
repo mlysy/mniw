@@ -4,6 +4,7 @@
 \alias{MultiNormal}
 \alias{dmNorm}
 \alias{rmNorm}
+\alias{rmNorm}
 \title{The Multivariate Normal Distribution.}
 \usage{
 dmNorm(x, mu, V, log = FALSE)
@@ -30,4 +31,3 @@ Density and Random sampling for the Multivariate Normal Distribution.
 \details{
 \code{dmNorm} and \code{rmNorm} both accept single or multiple values for each argument.
 }
-

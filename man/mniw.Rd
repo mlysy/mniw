@@ -13,4 +13,3 @@ The Matrix-Normal Inverse-Wishart (MNIW) distribution on \code{(X,V)} is given b
 \deqn{X | V ~ MN(Lambda, Sigma, V), \qquad V ~ iW(Psi, nu).}
 The default parameters are \code{Lambda = matrix(0,p,q)}, \code{Sigma = diag(p)}, \code{Psi = diag(q)}.
 }
-

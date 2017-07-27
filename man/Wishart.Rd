@@ -2,11 +2,16 @@
 % Please edit documentation in R/Wishart.R
 \name{Wishart}
 \alias{Wishart}
-\alias{diwish}
 \alias{dwish}
-\alias{dwishart}
-\alias{riwish}
 \alias{rwish}
+\alias{diwish}
+\alias{riwish}
+\alias{dwishart}
+\alias{rwishart}
+\alias{rwish}
+\alias{diwish}
+\alias{riwish}
+\alias{dwishart}
 \alias{rwishart}
 \title{Wishart and Inverse-Wishart Distributions.}
 \usage{
@@ -55,4 +60,3 @@ If \code{X ~ Wish(Psi, nu)}, then \code{X^{-1} ~ iWish(Psi^{-1}, nu)}.
 Quadratic forms involving a nonrandom vector \code{a} and a Wishart random matrix \code{X} have a chi-square distribution.  That is, for fixed \code{a} and \code{X ~ Wish(Psi, nu)},
 \deqn{\code{(a' X a) / (a' Psi a) ~ chisq(df = nu)}.}
 }
-

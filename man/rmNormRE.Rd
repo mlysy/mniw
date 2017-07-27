@@ -26,4 +26,3 @@ The normal-normal random effects model is:
 The posterior distribution for the random effects \code{mu} is
 \deqn{mu | y \sim N(,).}
 }
-

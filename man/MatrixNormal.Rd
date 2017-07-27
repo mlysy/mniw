@@ -4,6 +4,7 @@
 \alias{MatrixNormal}
 \alias{dMNorm}
 \alias{rMNorm}
+\alias{rMNorm}
 \title{Matrix-Normal Distribution.}
 \usage{
 dMNorm(X, Mu, RowV, ColV, log = FALSE, debug = FALSE)
@@ -37,4 +38,3 @@ The distribution of a \code{p x q} Matrix-Normal random matrix is
 Linear combinations of Matrix-Normals are normal.  That is, for fixed \code{a} and \code{b} and \code{X ~ MNorm(Mu, RowV, ColV)}, then
 \deqn{a' X b \sim N( a' Mu b, (a' RowV a) * (b' ColV b) ).}
 }
-

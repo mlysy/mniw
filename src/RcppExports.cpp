@@ -8,7 +8,7 @@ using namespace Rcpp;
 
 // CrossProdVXX
 Eigen::MatrixXd CrossProdVXX(Eigen::MatrixXd X, Eigen::MatrixXd V, int p, int q, bool inverse);
-RcppExport SEXP mniw_CrossProdVXX(SEXP XSEXP, SEXP VSEXP, SEXP pSEXP, SEXP qSEXP, SEXP inverseSEXP) {
+RcppExport SEXP _mniw_CrossProdVXX(SEXP XSEXP, SEXP VSEXP, SEXP pSEXP, SEXP qSEXP, SEXP inverseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -23,7 +23,7 @@ END_RCPP
 }
 // CrossProdVXY
 Eigen::MatrixXd CrossProdVXY(Eigen::MatrixXd X, Eigen::MatrixXd Y, Eigen::MatrixXd V, int p, int q, int r, bool inverse);
-RcppExport SEXP mniw_CrossProdVXY(SEXP XSEXP, SEXP YSEXP, SEXP VSEXP, SEXP pSEXP, SEXP qSEXP, SEXP rSEXP, SEXP inverseSEXP) {
+RcppExport SEXP _mniw_CrossProdVXY(SEXP XSEXP, SEXP YSEXP, SEXP VSEXP, SEXP pSEXP, SEXP qSEXP, SEXP rSEXP, SEXP inverseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -40,7 +40,7 @@ END_RCPP
 }
 // LogDensityMultivariateNormal
 Eigen::VectorXd LogDensityMultivariateNormal(Eigen::MatrixXd X, Eigen::MatrixXd Mu, Eigen::MatrixXd V);
-RcppExport SEXP mniw_LogDensityMultivariateNormal(SEXP XSEXP, SEXP MuSEXP, SEXP VSEXP) {
+RcppExport SEXP _mniw_LogDensityMultivariateNormal(SEXP XSEXP, SEXP MuSEXP, SEXP VSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -53,7 +53,7 @@ END_RCPP
 }
 // LogDensityMatrixNormal
 Eigen::VectorXd LogDensityMatrixNormal(Eigen::MatrixXd X, Eigen::MatrixXd Mu, Eigen::MatrixXd RowV, Eigen::MatrixXd ColV);
-RcppExport SEXP mniw_LogDensityMatrixNormal(SEXP XSEXP, SEXP MuSEXP, SEXP RowVSEXP, SEXP ColVSEXP) {
+RcppExport SEXP _mniw_LogDensityMatrixNormal(SEXP XSEXP, SEXP MuSEXP, SEXP RowVSEXP, SEXP ColVSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -67,7 +67,7 @@ END_RCPP
 }
 // GenerateMultivariateNormal
 Eigen::MatrixXd GenerateMultivariateNormal(int N, Eigen::MatrixXd Lambda, Eigen::MatrixXd Sigma);
-RcppExport SEXP mniw_GenerateMultivariateNormal(SEXP NSEXP, SEXP LambdaSEXP, SEXP SigmaSEXP) {
+RcppExport SEXP _mniw_GenerateMultivariateNormal(SEXP NSEXP, SEXP LambdaSEXP, SEXP SigmaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -80,7 +80,7 @@ END_RCPP
 }
 // GenerateMatrixNormal
 Eigen::MatrixXd GenerateMatrixNormal(int N, Eigen::MatrixXd Lambda, Eigen::MatrixXd RowSigma, Eigen::MatrixXd ColSigma);
-RcppExport SEXP mniw_GenerateMatrixNormal(SEXP NSEXP, SEXP LambdaSEXP, SEXP RowSigmaSEXP, SEXP ColSigmaSEXP) {
+RcppExport SEXP _mniw_GenerateMatrixNormal(SEXP NSEXP, SEXP LambdaSEXP, SEXP RowSigmaSEXP, SEXP ColSigmaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -94,7 +94,7 @@ END_RCPP
 }
 // GenerateMatrixNIW
 List GenerateMatrixNIW(int N, Eigen::MatrixXd Lambda, Eigen::MatrixXd Sigma, Eigen::MatrixXd Psi, Eigen::VectorXd nu, bool inverse);
-RcppExport SEXP mniw_GenerateMatrixNIW(SEXP NSEXP, SEXP LambdaSEXP, SEXP SigmaSEXP, SEXP PsiSEXP, SEXP nuSEXP, SEXP inverseSEXP) {
+RcppExport SEXP _mniw_GenerateMatrixNIW(SEXP NSEXP, SEXP LambdaSEXP, SEXP SigmaSEXP, SEXP PsiSEXP, SEXP nuSEXP, SEXP inverseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -110,7 +110,7 @@ END_RCPP
 }
 // GenerateRandomEffectsNormal
 Eigen::MatrixXd GenerateRandomEffectsNormal(int N, Eigen::MatrixXd lambda, Eigen::MatrixXd y, Eigen::MatrixXd V, Eigen::MatrixXd A);
-RcppExport SEXP mniw_GenerateRandomEffectsNormal(SEXP NSEXP, SEXP lambdaSEXP, SEXP ySEXP, SEXP VSEXP, SEXP ASEXP) {
+RcppExport SEXP _mniw_GenerateRandomEffectsNormal(SEXP NSEXP, SEXP lambdaSEXP, SEXP ySEXP, SEXP VSEXP, SEXP ASEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -125,7 +125,7 @@ END_RCPP
 }
 // HierUneqVModelGibbs
 List HierUneqVModelGibbs(int nSamples, int nBurn, Eigen::MatrixXd Y, Eigen::MatrixXd X, Eigen::MatrixXd V, Eigen::MatrixXd Lambda, Eigen::MatrixXd Omega, Eigen::MatrixXd Psi, double nu, bool updateBetaSigma, bool updateMu, bool storeBetaSigma, bool storeMu);
-RcppExport SEXP mniw_HierUneqVModelGibbs(SEXP nSamplesSEXP, SEXP nBurnSEXP, SEXP YSEXP, SEXP XSEXP, SEXP VSEXP, SEXP LambdaSEXP, SEXP OmegaSEXP, SEXP PsiSEXP, SEXP nuSEXP, SEXP updateBetaSigmaSEXP, SEXP updateMuSEXP, SEXP storeBetaSigmaSEXP, SEXP storeMuSEXP) {
+RcppExport SEXP _mniw_HierUneqVModelGibbs(SEXP nSamplesSEXP, SEXP nBurnSEXP, SEXP YSEXP, SEXP XSEXP, SEXP VSEXP, SEXP LambdaSEXP, SEXP OmegaSEXP, SEXP PsiSEXP, SEXP nuSEXP, SEXP updateBetaSigmaSEXP, SEXP updateMuSEXP, SEXP storeBetaSigmaSEXP, SEXP storeMuSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -148,7 +148,7 @@ END_RCPP
 }
 // LogDensityWishart
 Eigen::VectorXd LogDensityWishart(Eigen::MatrixXd X, Eigen::MatrixXd Psi, Eigen::VectorXd nu, bool inverse);
-RcppExport SEXP mniw_LogDensityWishart(SEXP XSEXP, SEXP PsiSEXP, SEXP nuSEXP, SEXP inverseSEXP) {
+RcppExport SEXP _mniw_LogDensityWishart(SEXP XSEXP, SEXP PsiSEXP, SEXP nuSEXP, SEXP inverseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -162,7 +162,7 @@ END_RCPP
 }
 // GenerateWishart
 Eigen::MatrixXd GenerateWishart(int N, Eigen::MatrixXd Psi, Eigen::VectorXd nu, bool inverse);
-RcppExport SEXP mniw_GenerateWishart(SEXP NSEXP, SEXP PsiSEXP, SEXP nuSEXP, SEXP inverseSEXP) {
+RcppExport SEXP _mniw_GenerateWishart(SEXP NSEXP, SEXP PsiSEXP, SEXP nuSEXP, SEXP inverseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -173,4 +173,24 @@ BEGIN_RCPP
     rcpp_result_gen = Rcpp::wrap(GenerateWishart(N, Psi, nu, inverse));
     return rcpp_result_gen;
 END_RCPP
+}
+
+static const R_CallMethodDef CallEntries[] = {
+    {"_mniw_CrossProdVXX", (DL_FUNC) &_mniw_CrossProdVXX, 5},
+    {"_mniw_CrossProdVXY", (DL_FUNC) &_mniw_CrossProdVXY, 7},
+    {"_mniw_LogDensityMultivariateNormal", (DL_FUNC) &_mniw_LogDensityMultivariateNormal, 3},
+    {"_mniw_LogDensityMatrixNormal", (DL_FUNC) &_mniw_LogDensityMatrixNormal, 4},
+    {"_mniw_GenerateMultivariateNormal", (DL_FUNC) &_mniw_GenerateMultivariateNormal, 3},
+    {"_mniw_GenerateMatrixNormal", (DL_FUNC) &_mniw_GenerateMatrixNormal, 4},
+    {"_mniw_GenerateMatrixNIW", (DL_FUNC) &_mniw_GenerateMatrixNIW, 6},
+    {"_mniw_GenerateRandomEffectsNormal", (DL_FUNC) &_mniw_GenerateRandomEffectsNormal, 5},
+    {"_mniw_HierUneqVModelGibbs", (DL_FUNC) &_mniw_HierUneqVModelGibbs, 13},
+    {"_mniw_LogDensityWishart", (DL_FUNC) &_mniw_LogDensityWishart, 4},
+    {"_mniw_GenerateWishart", (DL_FUNC) &_mniw_GenerateWishart, 4},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_mniw(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
 }

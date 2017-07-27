@@ -23,4 +23,3 @@ rMNIW(n, Lambda, Sigma, Psi, nu, prec = FALSE, debug = FALSE)
 the Matrix-Normal Inverse-Wishart (MNIW) distribution on \code{p x q} matrix \code{X} and \code{q x q} matrix \code{V} is:
 \deqn{X | V \sim MN(Lambda, Sigma, V), \qquad V \sim iWish(Psi, nu).}
 }
-

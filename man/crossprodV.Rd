@@ -21,4 +21,3 @@ An array of size \code{q x r x n}.
 \description{
 Vectorized matrix cross-products \code{X' V Y} or \code{X' V^{-1} Y}.
 }
-
