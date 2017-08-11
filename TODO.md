@@ -1,3 +1,5 @@
+1.  *Test hierarchical model*.  Make sure the **R** wrapper does what it's supposed to and that the underlying **C++** code and testing **Stan** code give the same output. Put all `.stan` and `.R` test files into `tests/dontrun`.
+
 1.  *Documentation*: same template as **`LMN`**, except we may not need a vignette since the package is somewhat self-explanatory.  Perhaps a short vignette illustrating how much longer it is to sample from an MNIW distribution using other packages (e.g., **`MCMCpack`**), and perhaps the Gibbs sampler for the hierarchical model as well.
 
 2.  *Convert **C++** code as Header-only library*.  To do this, put everything into header files *except* files ending in `Export.cpp`.  Those are the interface functions between **C++** and **R**.  Don't edit `RcppExports.cpp` since that's created by the **`Rcpp`** package, which itself facilitates the interface process.
