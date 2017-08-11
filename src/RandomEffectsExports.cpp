@@ -94,24 +94,27 @@ Eigen::MatrixXd GenerateRandomEffectsNormal(int N,
 // setting all(Omega == 0) = TRUE is equivalent to a Lebesgue prior on beta.
 //[[Rcpp::export]]
 List HierUneqVModelGibbs(int nSamples, int nBurn,
-			 Eigen::MatrixXd Y, Eigen::MatrixXd X, Eigen::MatrixXd V,
+			 Eigen::MatrixXd Y, Eigen::MatrixXd X,
+			 Eigen::MatrixXd V,
 			 Eigen::MatrixXd Lambda, Eigen::MatrixXd Omega,
 			 Eigen::MatrixXd Psi, double nu,
-			 bool updateBetaSigma = true, bool updateMu = true,
-			 bool storeBetaSigma = true, bool storeMu = true) {
+			 Eigen::MatrixXd Beta0, Eigen::MatrixXd iSigma0,
+			 Eigen::MatrixXd Mu0,
+			 bool updateBetaSigma, bool updateMu,
+			 bool storeBetaSigma, bool storeMu) {
 			 //MatrixXd Beta0, MatrixXd Sigma0, MatrixXd Mu0
   // dimensions of the problem
   int N = Y.rows();
   int p = X.cols();
   int q = Y.cols();
   int ii, jj;
-  // don't store if don't update
-  if(!updateBetaSigma) {
-    storeBetaSigma = false;
-  }
-  if(!updateMu) {
-    storeMu = false;
-  }
+  // // don't store if don't update
+  // if(!updateBetaSigma) {
+  //   storeBetaSigma = false;
+  // }
+  // if(!updateMu) {
+  //   storeMu = false;
+  // }
   // whether we have the flat prior on Beta
   bool flatBeta = Omega.squaredNorm() == 0.0;
   // output variables
@@ -130,9 +133,12 @@ List HierUneqVModelGibbs(int nSamples, int nBurn,
   double nuHat = nu + N - (flatBeta ? p : 0);
   MatrixXd Yt = Y.adjoint();
   // initialize Gibbs sampler
-  MatrixXd Mu = Yt;
-  MatrixXd Beta = MatrixXd::Zero(p,q);
-  MatrixXd OmegaL = MatrixXd::Zero(q,q);
+  MatrixXd Mu = Mu0.adjoint();
+  MatrixXd Beta = Beta0;
+  MatrixXd OmegaL = iSigma0.llt().matrixL();
+  // MatrixXd Mu = Yt;
+  // MatrixXd Beta = MatrixXd::Zero(p,q);
+  // MatrixXd OmegaL = MatrixXd::Zero(q,q);
   // internal values
   MatrixXd iXtXO = (X.adjoint() * X + Omega).eval().llt().solve(MatrixXd::Identity(p,p));
   MatrixXd RowiOmegaHatL = iXtXO.llt().matrixL();

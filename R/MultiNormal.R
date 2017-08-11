@@ -16,32 +16,34 @@
 #' @rdname MultiNormal
 #' @export
 dmNorm <- function(x, mu, V, log = FALSE) {
-  debug <- FALSE
-  if(FALSE) {
-    .getPQ <- mniw:::.getPQ
-    .getN <- mniw:::.getN
-    .setDims <- mniw:::.setDims
-  }
+  ## debug <- FALSE
+  ## if(FALSE) {
+  ##   .getPQ <- mniw:::.getPQ
+  ##   .getN <- mniw:::.getN
+  ##   .setDims <- mniw:::.setDims
+  ## }
   # get dimensions
   # first convert to appropriate MN format
-  if(is.vector(x)) {
-    x <- matrix(x, nrow = 1)
-  } else {
-    x <- t(x)
-    x <- array(x, dim = c(1, dim(x)))
-  }
-  if(!missing(mu)) {
-    if(is.vector(mu)) {
-      mu <- matrix(mu, nrow = 1)
-    } else {
-      mu <- t(mu)
-      mu <- array(mu, dim = c(1,dim(mu)))
-    }
-  }
+  x <- .vec2mn(x)
+  if(!missing(mu)) mu <- .vec2mn(mu)
+  ## if(is.vector(x)) {
+  ##   x <- matrix(x, nrow = 1)
+  ## } else {
+  ##   x <- t(x)
+  ##   x <- array(x, dim = c(1, dim(x)))
+  ## }
+  ## if(!missing(mu)) {
+  ##   if(is.vector(mu)) {
+  ##     mu <- matrix(mu, nrow = 1)
+  ##   } else {
+  ##     mu <- t(mu)
+  ##     mu <- array(mu, dim = c(1,dim(mu)))
+  ##   }
+  ## }
   PQ <- .getPQ(X = x, Lambda = mu, Psi = V)
   p <- PQ[1]
   q <- PQ[2]
-  if(p != 1) stop("p has wrong dimension.")
+  if(p != 1) stop("x and mu must be vectors or matrices.")
   if(anyNA(PQ)) {
     stop("Problem dimensions are undetermined (too many missing inputs).")
   }
@@ -68,19 +70,20 @@ dmNorm <- function(x, mu, V, log = FALSE) {
 rmNorm <- function(n, mu, V, debug = FALSE) {
   # get dimensions
   # first convert to appropriate MN format
-  if(!missing(mu)) {
-    if(is.vector(mu)) {
-      mu <- matrix(mu, nrow = 1)
-    } else {
-      mu <- t(mu)
-      mu <- array(mu, dim = c(1,dim(mu)))
-    }
-  }
+  if(!missing(mu)) mu <- .vec2mn(mu)
+  ## if(!missing(mu)) {
+  ##   if(is.vector(mu)) {
+  ##     mu <- matrix(mu, nrow = 1)
+  ##   } else {
+  ##     mu <- t(mu)
+  ##     mu <- array(mu, dim = c(1,dim(mu)))
+  ##   }
+  ## }
   PQ <- .getPQ(Lambda = mu, Psi = V)
   if(is.na(PQ[1])) PQ[1] <- 1
   p <- PQ[1]
   q <- PQ[2]
-  if(p != 1) stop("p has wrong dimension.")
+  if(p != 1) stop("mu must be a vector or matrix.")
   if(anyNA(PQ)) {
     stop("Problem dimensions are undetermined (too many missing inputs).")
   }
@@ -91,8 +94,9 @@ rmNorm <- function(n, mu, V, debug = FALSE) {
   if(anyNA(V)) stop("V and mu have incompatible dimensions.")
   # check lengths
   N <- .getN(p = p, q = q, Lambda = mu, Psi = V)
-  if(length(N) > 2 || (length(N) == 2 && N[2] != n))
+  if(length(N) > 2 || (length(N) == 2 && N[2] != n)) {
     stop("Arguments don't all have length n.")
+  }
   if(debug) browser()
   mu <- matrix(mu, nrow = q) # format for mN
   X <- GenerateMultivariateNormal(n, mu, V)
