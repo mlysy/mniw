@@ -124,8 +124,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // HierUneqVModelGibbs
-List HierUneqVModelGibbs(int nSamples, int nBurn, Eigen::MatrixXd Y, Eigen::MatrixXd X, Eigen::MatrixXd V, Eigen::MatrixXd Lambda, Eigen::MatrixXd Omega, Eigen::MatrixXd Psi, double nu, bool updateBetaSigma, bool updateMu, bool storeBetaSigma, bool storeMu);
-RcppExport SEXP _mniw_HierUneqVModelGibbs(SEXP nSamplesSEXP, SEXP nBurnSEXP, SEXP YSEXP, SEXP XSEXP, SEXP VSEXP, SEXP LambdaSEXP, SEXP OmegaSEXP, SEXP PsiSEXP, SEXP nuSEXP, SEXP updateBetaSigmaSEXP, SEXP updateMuSEXP, SEXP storeBetaSigmaSEXP, SEXP storeMuSEXP) {
+List HierUneqVModelGibbs(int nSamples, int nBurn, Eigen::MatrixXd Y, Eigen::MatrixXd X, Eigen::MatrixXd V, Eigen::MatrixXd Lambda, Eigen::MatrixXd Omega, Eigen::MatrixXd Psi, double nu, Eigen::MatrixXd Beta0, Eigen::MatrixXd iSigma0, Eigen::MatrixXd Mu0, bool updateBetaSigma, bool updateMu, bool storeBetaSigma, bool storeMu);
+RcppExport SEXP _mniw_HierUneqVModelGibbs(SEXP nSamplesSEXP, SEXP nBurnSEXP, SEXP YSEXP, SEXP XSEXP, SEXP VSEXP, SEXP LambdaSEXP, SEXP OmegaSEXP, SEXP PsiSEXP, SEXP nuSEXP, SEXP Beta0SEXP, SEXP iSigma0SEXP, SEXP Mu0SEXP, SEXP updateBetaSigmaSEXP, SEXP updateMuSEXP, SEXP storeBetaSigmaSEXP, SEXP storeMuSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -138,11 +138,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< Eigen::MatrixXd >::type Omega(OmegaSEXP);
     Rcpp::traits::input_parameter< Eigen::MatrixXd >::type Psi(PsiSEXP);
     Rcpp::traits::input_parameter< double >::type nu(nuSEXP);
+    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type Beta0(Beta0SEXP);
+    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type iSigma0(iSigma0SEXP);
+    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type Mu0(Mu0SEXP);
     Rcpp::traits::input_parameter< bool >::type updateBetaSigma(updateBetaSigmaSEXP);
     Rcpp::traits::input_parameter< bool >::type updateMu(updateMuSEXP);
     Rcpp::traits::input_parameter< bool >::type storeBetaSigma(storeBetaSigmaSEXP);
     Rcpp::traits::input_parameter< bool >::type storeMu(storeMuSEXP);
-    rcpp_result_gen = Rcpp::wrap(HierUneqVModelGibbs(nSamples, nBurn, Y, X, V, Lambda, Omega, Psi, nu, updateBetaSigma, updateMu, storeBetaSigma, storeMu));
+    rcpp_result_gen = Rcpp::wrap(HierUneqVModelGibbs(nSamples, nBurn, Y, X, V, Lambda, Omega, Psi, nu, Beta0, iSigma0, Mu0, updateBetaSigma, updateMu, storeBetaSigma, storeMu));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -184,7 +187,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_mniw_GenerateMatrixNormal", (DL_FUNC) &_mniw_GenerateMatrixNormal, 4},
     {"_mniw_GenerateMatrixNIW", (DL_FUNC) &_mniw_GenerateMatrixNIW, 6},
     {"_mniw_GenerateRandomEffectsNormal", (DL_FUNC) &_mniw_GenerateRandomEffectsNormal, 5},
-    {"_mniw_HierUneqVModelGibbs", (DL_FUNC) &_mniw_HierUneqVModelGibbs, 13},
+    {"_mniw_HierUneqVModelGibbs", (DL_FUNC) &_mniw_HierUneqVModelGibbs, 16},
     {"_mniw_LogDensityWishart", (DL_FUNC) &_mniw_LogDensityWishart, 4},
     {"_mniw_GenerateWishart", (DL_FUNC) &_mniw_GenerateWishart, 4},
     {NULL, NULL, 0}

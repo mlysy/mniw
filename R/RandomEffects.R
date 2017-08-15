@@ -100,9 +100,11 @@ rmNormRE <- function(n, y, V, lambda, A) {
 #' where \eqn{y_i} and \eqn{\mu_i} are response and random-effects vectors of length \eqn{q}, \eqn{x_i} are covariate vectors of length \eqn{p}, and \eqn{(\beta, \Sigma)} are hyperparameter matrices of size \eqn{p \times q} and \eqn{\q \times q}.
 #'
 #' The MNIW prior distribution is given by a list with elements \code{Lambda}, \code{Omega}, \code{Psi}, and \code{nu}.  If any of these is \code{NULL} or missing, the default value is 0.  Note that \code{Omega == 0} gives a Lebesgue prior to \eqn{\beta}.
-#' @return A list with elements:
+#' @return A list with potential elements:
 #' \describe{
-#'   \item{\code{Beta}}{An \code{}
+#'   \item{\code{Beta}}{An \code{p x q x nsamples} array of regression coefficient iterations (if \code{storeHyp == TRUE})}
+#'   \item{\code{Sigma}}{An \code{q x q x nsamples} array of regression variance matrices (if \code{storeHyp == TRUE})}
+#'   \item{\code{Mu}}{An \code{n x q x nsamples} array of random effects (if \code{storeRE == TRUE})}
 #' }
 #' @export
 mNormRE.post <- function(nsamples, Y, V, X, prior = NULL, init, burn,

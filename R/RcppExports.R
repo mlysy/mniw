@@ -33,8 +33,8 @@ GenerateRandomEffectsNormal <- function(N, lambda, y, V, A) {
     .Call('_mniw_GenerateRandomEffectsNormal', PACKAGE = 'mniw', N, lambda, y, V, A)
 }
 
-HierUneqVModelGibbs <- function(nSamples, nBurn, Y, X, V, Lambda, Omega, Psi, nu, updateBetaSigma = TRUE, updateMu = TRUE, storeBetaSigma = TRUE, storeMu = TRUE) {
-    .Call('_mniw_HierUneqVModelGibbs', PACKAGE = 'mniw', nSamples, nBurn, Y, X, V, Lambda, Omega, Psi, nu, updateBetaSigma, updateMu, storeBetaSigma, storeMu)
+HierUneqVModelGibbs <- function(nSamples, nBurn, Y, X, V, Lambda, Omega, Psi, nu, Beta0, iSigma0, Mu0, updateBetaSigma, updateMu, storeBetaSigma, storeMu) {
+    .Call('_mniw_HierUneqVModelGibbs', PACKAGE = 'mniw', nSamples, nBurn, Y, X, V, Lambda, Omega, Psi, nu, Beta0, iSigma0, Mu0, updateBetaSigma, updateMu, storeBetaSigma, storeMu)
 }
 
 LogDensityWishart <- function(X, Psi, nu, inverse = FALSE) {
