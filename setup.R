@@ -3,7 +3,7 @@
 require(Rcpp)
 require(RcppEigen)
 require(devtools)
-pkg.path <- "C:/Users/Jerome/Documents/R/mniw/mniw"
+pkg.path <- "C:/Users/Jerome/Documents/R/mniw"
 #pkg.name <- "mniw"
 
 compileAttributes(pkgdir = pkg.path)

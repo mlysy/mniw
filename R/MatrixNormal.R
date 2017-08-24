@@ -43,7 +43,7 @@ dMNorm <- function(X, Mu, RowV, ColV, log = FALSE, debug = FALSE) {
   N <- .getN(p = p, q = q, X = X, Lambda = Mu, Sigma = RowV,
              Psi = ColV)
   if(length(N) > 2) stop("Arguments have different lengths.")
-  if(debug) browser()
+  if(isTRUE(debug)) browser()
   ans <- LogDensityMatrixNormal(X, Mu, RowV, ColV)
   if(!log) ans <- exp(ans)
   ans
@@ -71,7 +71,7 @@ rMNorm <- function(n, Mu, RowV, ColV, debug = FALSE) {
              Psi = ColV)
   if(length(N) > 2 || (length(N) == 2 && N[2] != n))
     stop("Arguments don't all have length n.")
-  if(debug) browser()
+  if(isTRUE(debug)) browser()
   X <- GenerateMatrixNormal(n, Mu, RowV, ColV)
   if(n > 1) X <- array(X, dim = c(p,q,n))
   X

@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////
 
 #ifndef TriUtils_h
-#define TriUtils_h
+#define TriUtils_h 1
 
 #include "mniwSetLib.h"
 

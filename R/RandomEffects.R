@@ -141,8 +141,16 @@ mNormRE.post <- function(nsamples, Y, V, X, prior = NULL, init, burn,
   if(!identical(dim(Mu0), c(n, q))) {
     stop("init$Mu and Y have incompatible dimensions.")
   }
+  # X, Y and V
+  X <- .setDims(X, p = nrow(X), q = ncol(X))
+  if(anyNA(X)) stop("Something went wrong.")
+  Y <- .setDims(Y, p = nrow(Y), q = ncol(Y))
+  if(anyNA(Y)) stop("Something went wrong.")
+  V <- .setDims(V, p = nrow(V))
+  if(anyNA(V)) stop("Something went wrong.")
+  
   # burn-in
-  if (missing(burn)) burn <- max(0.1, 1000)
+  if (missing(burn)) burn <- max(0.5*nsamples, 1000)
   if (burn < 1) burn <- nsamples * burn
   burn <- floor(burn)
   # don't store if don't update
@@ -152,7 +160,7 @@ mNormRE.post <- function(nsamples, Y, V, X, prior = NULL, init, burn,
   post <- HierUneqVModelGibbs(nSamples = as.integer(nsamples),
                               nBurn = as.integer(burn),
                               Y = Y, X = X, V = V,
-                              Lambda = Lamda, Omega = Omega,
+                              Lambda = Lambda, Omega = Omega,
                               Psi = Psi, nu = nu,
                               Beta0 = Beta0, iSigma0 = .solveV(Sigma0),
                               Mu0 = Mu0,

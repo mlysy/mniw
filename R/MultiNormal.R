@@ -59,7 +59,7 @@ dmNorm <- function(x, mu, V, log = FALSE) {
   if(length(N) > 2) stop("Arguments have different lengths.")
   x <- matrix(x, nrow = q) # format for mN
   mu <- matrix(mu, nrow = q) # format for mN
-  if(debug) browser()
+  if(isTRUE(debug)) browser()
   ans <- LogDensityMultivariateNormal(x, mu, V)
   if(!log) ans <- exp(ans)
   ans
@@ -97,7 +97,7 @@ rmNorm <- function(n, mu, V, debug = FALSE) {
   if(length(N) > 2 || (length(N) == 2 && N[2] != n)) {
     stop("Arguments don't all have length n.")
   }
-  if(debug) browser()
+  if(isTRUE(debug)) browser()
   mu <- matrix(mu, nrow = q) # format for mN
   X <- GenerateMultivariateNormal(n, mu, V)
   if(n > 1) {
