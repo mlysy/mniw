@@ -1,18 +1,31 @@
 #--- random effects models -------------------------------------------------
 
-#' Conditional Sampling for Multivariate Normal Random-Effects Model.
+#' Conditional sampling for Multivariate Normal Random-Effects model.
 #'
 #' Sample from the conditional parameter distribution given the data and hyperparameters of the Multivariate Normal Random Effects (mNormRE) model.
 #'
-#' @param n The number of random samples to generate.
-#' @param y Vector of length \code{q} or \code{n x q} matrix of observations.  In the latter case each column is a different vector (see details).
-#' @param V Matrix of size \code{q x q} or \code{q x q x n} array of observation variances.
-#' @param lambda Vector of length \code{q} or \code{n x q} matrix of prior means.  In the latter case each column is a different mean.  Defaults to zeros.
-#' @param A Matrix of size \code{q x q} or \code{q x q x n} array of prior variances.  Defaults to identity matrix.
+#' @param n the number of random samples to generate.
+#' @param y vector of length \code{q} or \code{n x q} matrix of observations.  In the latter case each column is a different vector (see details).
+#' @param V matrix of size \code{q x q} or \code{q x q x n} array of observation variances.
+#' @param lambda vector of length \code{q} or \code{n x q} matrix of prior means.  In the latter case each column is a different mean.  Defaults to zeros.
+#' @param A matrix of size \code{q x q} or \code{q x q x n} array of prior variances.  Defaults to identity matrix.
 #' @details The normal-normal random effects model is:
-#' \deqn{y | mu \sim N(mu, V), \qquad mu \sim \N(lambda, A).}
+#' \deqn{y | mu ~ N(mu, V),}
+#' \deqn{mu ~ \N(lambda, A).}
 #' The posterior distribution for the random effects \code{mu} is
-#' \deqn{mu | y \sim N(,).}
+#' \deqn{mu | y ~ N(B(lambda - y) + y,(I - B)V),}
+#' where \code{B = (V^{-1} + A^{-1})^{-1}A^{-1}}.
+#' 
+#' @examples
+#' ## Conditional sampling with default prior
+#' n = 100
+#' q = 10
+#' y = rnorm(q)
+#' V = rwish(1, diag(q), q+1)
+#' lambda = rep(0,q)
+#' A = diag(q)
+#' rmNormRE(n, y, V, lambda, A)
+#' 
 #' @export
 rmNormRE <- function(n, y, V, lambda, A) {
   # convert to MN format
@@ -70,7 +83,7 @@ rmNormRE <- function(n, y, V, lambda, A) {
   ## N <- c(1, N[N > 1])
   ## if(length(N) > 2 || (length(N) == 2 && N[2] != n))
   ##   stop("Arguments don't all have length n.")
-  Mu <- GenerateRandomEffectsNormal(N, lambda, y, V, A)
+  Mu <- GenerateRandomEffectsNormal(n, lambda, y, V, A)
   Mu
 }
 
@@ -78,15 +91,15 @@ rmNormRE <- function(n, y, V, lambda, A) {
 #'
 #' Gibbs sampler for posterior distribution of parameters and hyperparameters of the Multivariate Normal Random Effects (mNormRE) model.
 #'
-#' @param nsamples Number of posterior samples to draw.
+#' @param nsamples number of posterior samples to draw.
 #' @param Y \code{N x q} matrix of responses.
 #' @param V Either a \code{q x q} variance matrix or an \code{q x q x N} array of such matrices.
 #' @param X \code{N x p} matrix of covariates.
-#' @param prior Parameters of the prior MNIW distribution on the hyperparameters.  See Details.
-#' @param burn Integer number of burn-in samples, or fraction of \code{nsamples} to prepend as burn-in.
-#' @param init Optional list with elements \code{Beta}, \code{Sigma}, and \code{Mu} providing the initial values for these.  Default values are \code{Beta = matrix(0, p, q)}, \code{Sigma = diag(q)}, and \code{Mu = Y}.
-#' @param updateHyp,storeHyp Whether or not to update/store the hyperparameter draws.
-#' @param updateRE,storeRE Whether or not to update/store the random-effects draws.
+#' @param prior parameters of the prior MNIW distribution on the hyperparameters.  See Details.
+#' @param burn integer number of burn-in samples, or fraction of \code{nsamples} to prepend as burn-in.
+#' @param init (optional) list with elements \code{Beta}, \code{Sigma}, and \code{Mu} providing the initial values for these.  Default values are \code{Beta = matrix(0, p, q)}, \code{Sigma = diag(q)}, and \code{Mu = Y}.
+#' @param updateHyp,storeHyp logical. Whether or not to update/store the hyperparameter draws.
+#' @param updateRE,storeRE logical. Whether or not to update/store the random-effects draws.
 #' @details The mNormRE model is given by
 #' \deqn{
 #' y_i \mid \mu_i \sim_iid N(\mu_i, V_i)
@@ -95,17 +108,46 @@ rmNormRE <- function(n, y, V, lambda, A) {
 #' \mu_i \mid \beta, \Sigma ~sim_ind N(x_i' \beta, \Sigma)
 #' }
 #' \deqn{
-#' \beta, \Sigma \sim MNIW(\Lambda, \Omega^{-1}, \Psi, \nu),
+#' \beta, \Sigma ~ MNIW(\Lambda, \Omega^{-1}, \Psi, \nu),
 #' }
 #' where \eqn{y_i} and \eqn{\mu_i} are response and random-effects vectors of length \eqn{q}, \eqn{x_i} are covariate vectors of length \eqn{p}, and \eqn{(\beta, \Sigma)} are hyperparameter matrices of size \eqn{p \times q} and \eqn{\q \times q}.
 #'
 #' The MNIW prior distribution is given by a list with elements \code{Lambda}, \code{Omega}, \code{Psi}, and \code{nu}.  If any of these is \code{NULL} or missing, the default value is 0.  Note that \code{Omega == 0} gives a Lebesgue prior to \eqn{\beta}.
-#' @return A list with potential elements:
+#' @return A list with (potential) elements:
 #' \describe{
 #'   \item{\code{Beta}}{An \code{p x q x nsamples} array of regression coefficient iterations (if \code{storeHyp == TRUE})}
 #'   \item{\code{Sigma}}{An \code{q x q x nsamples} array of regression variance matrices (if \code{storeHyp == TRUE})}
 #'   \item{\code{Mu}}{An \code{n x q x nsamples} array of random effects (if \code{storeRE == TRUE})}
 #' }
+#' 
+#' @examples
+#' ## Input Specifications
+#' Mmniw = 1e3
+#' set.seed(25) # for repeatability
+#' N <- 20
+#' p <- 1
+#' q <- 2
+#' Lambda0 <- rMNorm(1, Mu = matrix(0, p, q))            # prior specification
+#' Omega0 <- crossprod(rMNorm(1, Mu = matrix(0, p, p)))  # prior specification
+#' Psi0 <- crossprod(rMNorm(1, Mu = matrix(0, q, q)))    # prior specification
+#' nu0 <- rexp(1) + (q+1)                                # prior specification
+#' X <- rMNorm(1, matrix(0, N, p))
+#' V <- array(rwish(N, diag(q), q+1),dim=c(q,q,N))
+#' ## Construct True Model
+#' Sigma00 = rwish(1, Psi0, nu0)
+#' Beta00 = rMNorm(1, Lambda0, Omega0, Sigma00)
+#' Mu00 = rmNorm(N, X %*% Beta00, Sigma00) # random effects
+#' Y00 = rmNorm(N, Mu00, V) # Data
+#' hmdata <- list(p = ncol(X), q = ncol(Y00), N = nrow(X),
+#'                X = X, Y = Y00, V = V,
+#'                Psi0=Psi0, Lambda0=Lambda0, Omega0=Omega0, nu0=nu0)
+#'                prior_list = list(Psi=Psi0, Lambda=Lambda0, Omega=solve(Omega0), nu=nu0)
+#'                init_list = list(Beta=Beta00,Sigma=Sigma00,Mu=Mu00)
+#'                               
+#' ## Gibbs sampling to get posterior
+#' r_fit = mNormRE.post(Mmniw, Y=Y00, V=V, X=X, prior = prior_list, burn=ceiling(Mmniw/2), updateHyp = TRUE,
+#'               storeHyp = TRUE, updateRE = TRUE, storeRE = FALSE,  init=init_list)
+#' 
 #' @export
 mNormRE.post <- function(nsamples, Y, V, X, prior = NULL, init, burn,
 			 updateHyp = TRUE, storeHyp = TRUE,

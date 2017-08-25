@@ -2,22 +2,31 @@
 % Please edit documentation in R/crossprodV.R
 \name{crossprodV}
 \alias{crossprodV}
-\title{Matrix Cross-Product}
+\title{Matrix cross-product.}
 \usage{
 crossprodV(X, Y = NULL, V, inverse = FALSE)
 }
 \arguments{
-\item{X}{Either a matrix of size \code{p x q}, or an array of size \code{p x q x n}.}
+\item{X}{either: a matrix of size \code{p x q}, or an array of size \code{p x q x n}.}
 
-\item{Y}{Optionally, either a matriz of size \code{p x r} or an array of size \code{p x r x n}.  If missing uses \code{Y = X}.}
+\item{Y}{(optional), either: a matrix of size \code{p x r}, or an array of size \code{p x r x n}.  If missing uses \code{Y = X}.}
 
-\item{V}{Either a matrix of size \code{p x p}, or an array of size \code{p x p x n}.}
+\item{V}{either: a matrix of size \code{p x p}, or an array of size \code{p x p x n}.}
 
-\item{inverse}{Logical; whether or not the inner product should be calculated with \code{V} or \code{V^{-1}}.}
+\item{inverse}{logical. Indicates whether or not the inner product should be calculated with \code{V} or \code{V^{-1}}.}
 }
 \value{
 An array of size \code{q x r x n}.
 }
 \description{
-Vectorized matrix cross-products \code{X' V Y} or \code{X' V^{-1} Y}.
+Vectorized matrix cross-products \code{X\out{'} V Y} or \code{X\out{'} V^{-1} Y}.
+}
+\examples{
+## Basic vectorized cross-product
+p = 4
+q = 2
+X = matrix(rnorm(p*q),p,q)
+V = diag(p)
+crossprodV(X=X,V=V)
+
 }

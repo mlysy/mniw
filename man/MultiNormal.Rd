@@ -5,29 +5,43 @@
 \alias{dmNorm}
 \alias{rmNorm}
 \alias{rmNorm}
-\title{The Multivariate Normal Distribution.}
+\title{The Multivariate Normal distribution.}
 \usage{
 dmNorm(x, mu, V, log = FALSE)
 
 rmNorm(n, mu, V, debug = FALSE)
 }
 \arguments{
-\item{x}{Argument to the density function.  A vector of length \code{q} or an \code{n x q} matrix.}
+\item{x}{argument to the density function.  A vector of length \code{q} or an \code{n x q} matrix.}
 
-\item{mu}{Mean vector(s).  Either a vector of length \code{q} or an \code{n x q} matrix.}
+\item{mu}{mean vector(s).  Either a vector of length \code{q} or an \code{n x q} matrix.}
 
-\item{V}{Covariance matrix or matrices.  Either a \code{q x q} matrix or a \code{q x q x n} array.}
+\item{V}{covariance matrix or matrices.  Either a \code{q x q} matrix or a \code{q x q x n} array.}
 
-\item{log}{Whether or not to compute the log-density.}
+\item{log}{logical. Whether or not to compute the log-density.}
 
-\item{n}{Number of random vectors to generate.}
+\item{n}{number of random vectors to generate.}
 }
 \value{
 A vector for densities, or a \code{n x q} array for random sampling.
 }
 \description{
-Density and Random sampling for the Multivariate Normal Distribution.
+Density and random sampling for the Multivariate Normal distribution.
 }
 \details{
 \code{dmNorm} and \code{rmNorm} both accept single or multiple values for each argument.
+}
+\examples{
+## Multivariate Normal random sample and subsequent density calculation
+n = 100
+q = 2
+mu = c(1,2)
+V = toeplitz(exp(-seq(1:q)))
+
+# Random sample from Multivariate Normal distribution
+mnormData = rmNorm(n, mu, V)
+
+# Calculate log density for each sampled vector
+dmNorm(mnormData, mu, V, log=TRUE)
+
 }

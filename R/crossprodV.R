@@ -1,11 +1,20 @@
-#' @title Matrix Cross-Product
-#' @description Vectorized matrix cross-products \code{X' V Y} or \code{X' V^{-1} Y}.
+#' @title Matrix cross-product.
+#' @description Vectorized matrix cross-products \code{X\out{'} V Y} or \code{X\out{'} V^{-1} Y}.
 #'
-#' @param X Either a matrix of size \code{p x q}, or an array of size \code{p x q x n}.
-#' @param Y Optionally, either a matriz of size \code{p x r} or an array of size \code{p x r x n}.  If missing uses \code{Y = X}.
-#' @param V Either a matrix of size \code{p x p}, or an array of size \code{p x p x n}.
-#' @param inverse Logical; whether or not the inner product should be calculated with \code{V} or \code{V^{-1}}.
+#' @param X either: a matrix of size \code{p x q}, or an array of size \code{p x q x n}.
+#' @param Y (optional), either: a matrix of size \code{p x r}, or an array of size \code{p x r x n}.  If missing uses \code{Y = X}.
+#' @param V either: a matrix of size \code{p x p}, or an array of size \code{p x p x n}.
+#' @param inverse logical. Indicates whether or not the inner product should be calculated with \code{V} or \code{V^{-1}}.
 #' @return An array of size \code{q x r x n}.
+#' 
+#' @examples
+#' ## Basic vectorized cross-product
+#' p = 4
+#' q = 2
+#' X = matrix(rnorm(p*q),p,q)
+#' V = diag(p)
+#' crossprodV(X=X,V=V)
+#' 
 #' @export
 crossprodV <- function(X, Y = NULL, V, inverse = FALSE) {
   # dimensions of X and V

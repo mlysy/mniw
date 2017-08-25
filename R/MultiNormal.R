@@ -1,18 +1,31 @@
 #--- multivariate normal distribution --------------------------------------
 
 #' @name MultiNormal
-#' @title The Multivariate Normal Distribution.
-#' @description Density and Random sampling for the Multivariate Normal Distribution.
+#' @title The Multivariate Normal distribution.
+#' @description Density and random sampling for the Multivariate Normal distribution.
 #' @aliases dmNorm rmNorm
-#' @param x Argument to the density function.  A vector of length \code{q} or an \code{n x q} matrix.
-#' @param n Number of random vectors to generate.
-#' @param mu Mean vector(s).  Either a vector of length \code{q} or an \code{n x q} matrix.
-#' @param V Covariance matrix or matrices.  Either a \code{q x q} matrix or a \code{q x q x n} array.
-#' @param log Whether or not to compute the log-density.
+#' @param x argument to the density function.  A vector of length \code{q} or an \code{n x q} matrix.
+#' @param n number of random vectors to generate.
+#' @param mu mean vector(s).  Either a vector of length \code{q} or an \code{n x q} matrix.
+#' @param V covariance matrix or matrices.  Either a \code{q x q} matrix or a \code{q x q x n} array.
+#' @param log logical. Whether or not to compute the log-density.
 #' @details  \code{dmNorm} and \code{rmNorm} both accept single or multiple values for each argument.
 #'
 #' @return A vector for densities, or a \code{n x q} array for random sampling.
-
+#' 
+#' @examples
+#' ## Multivariate Normal random sample and subsequent density calculation
+#' n = 100
+#' q = 2
+#' mu = c(1,2)
+#' V = toeplitz(exp(-seq(1:q)))
+#' 
+#' # Random sample from Multivariate Normal distribution
+#' mnormData = rmNorm(n, mu, V)
+#' 
+#' # Calculate log density for each sampled vector
+#' dmNorm(mnormData, mu, V, log=TRUE)
+#' 
 #' @rdname MultiNormal
 #' @export
 dmNorm <- function(x, mu, V, log = FALSE) {

@@ -8,7 +8,7 @@ mNormRE.post(nsamples, Y, V, X, prior = NULL, init, burn, updateHyp = TRUE,
   storeHyp = TRUE, updateRE = TRUE, storeRE = FALSE)
 }
 \arguments{
-\item{nsamples}{Number of posterior samples to draw.}
+\item{nsamples}{number of posterior samples to draw.}
 
 \item{Y}{\code{N x q} matrix of responses.}
 
@@ -16,18 +16,18 @@ mNormRE.post(nsamples, Y, V, X, prior = NULL, init, burn, updateHyp = TRUE,
 
 \item{X}{\code{N x p} matrix of covariates.}
 
-\item{prior}{Parameters of the prior MNIW distribution on the hyperparameters.  See Details.}
+\item{prior}{parameters of the prior MNIW distribution on the hyperparameters.  See Details.}
 
-\item{init}{Optional list with elements \code{Beta}, \code{Sigma}, and \code{Mu} providing the initial values for these.  Default values are \code{Beta = matrix(0, p, q)}, \code{Sigma = diag(q)}, and \code{Mu = Y}.}
+\item{init}{(optional) list with elements \code{Beta}, \code{Sigma}, and \code{Mu} providing the initial values for these.  Default values are \code{Beta = matrix(0, p, q)}, \code{Sigma = diag(q)}, and \code{Mu = Y}.}
 
-\item{burn}{Integer number of burn-in samples, or fraction of \code{nsamples} to prepend as burn-in.}
+\item{burn}{integer number of burn-in samples, or fraction of \code{nsamples} to prepend as burn-in.}
 
-\item{updateHyp, storeHyp}{Whether or not to update/store the hyperparameter draws.}
+\item{updateHyp, storeHyp}{logical. Whether or not to update/store the hyperparameter draws.}
 
-\item{updateRE, storeRE}{Whether or not to update/store the random-effects draws.}
+\item{updateRE, storeRE}{logical. Whether or not to update/store the random-effects draws.}
 }
 \value{
-A list with potential elements:
+A list with (potential) elements:
 \describe{
   \item{\code{Beta}}{An \code{p x q x nsamples} array of regression coefficient iterations (if \code{storeHyp == TRUE})}
   \item{\code{Sigma}}{An \code{q x q x nsamples} array of regression variance matrices (if \code{storeHyp == TRUE})}
@@ -46,9 +46,38 @@ y_i \mid \mu_i \sim_iid N(\mu_i, V_i)
 \mu_i \mid \beta, \Sigma ~sim_ind N(x_i' \beta, \Sigma)
 }
 \deqn{
-\beta, \Sigma \sim MNIW(\Lambda, \Omega^{-1}, \Psi, \nu),
+\beta, \Sigma ~ MNIW(\Lambda, \Omega^{-1}, \Psi, \nu),
 }
 where \eqn{y_i} and \eqn{\mu_i} are response and random-effects vectors of length \eqn{q}, \eqn{x_i} are covariate vectors of length \eqn{p}, and \eqn{(\beta, \Sigma)} are hyperparameter matrices of size \eqn{p \times q} and \eqn{\q \times q}.
 
 The MNIW prior distribution is given by a list with elements \code{Lambda}, \code{Omega}, \code{Psi}, and \code{nu}.  If any of these is \code{NULL} or missing, the default value is 0.  Note that \code{Omega == 0} gives a Lebesgue prior to \eqn{\beta}.
+}
+\examples{
+## Input Specifications
+Mmniw = 1e3
+set.seed(25) # for repeatability
+N <- 20
+p <- 1
+q <- 2
+Lambda0 <- rMNorm(1, Mu = matrix(0, p, q))            # prior specification
+Omega0 <- crossprod(rMNorm(1, Mu = matrix(0, p, p)))  # prior specification
+Psi0 <- crossprod(rMNorm(1, Mu = matrix(0, q, q)))    # prior specification
+nu0 <- rexp(1) + (q+1)                                # prior specification
+X <- rMNorm(1, matrix(0, N, p))
+V <- array(rwish(N, diag(q), q+1),dim=c(q,q,N))
+## Construct True Model
+Sigma00 = rwish(1, Psi0, nu0)
+Beta00 = rMNorm(1, Lambda0, Omega0, Sigma00)
+Mu00 = rmNorm(N, X \%*\% Beta00, Sigma00) # random effects
+Y00 = rmNorm(N, Mu00, V) # Data
+hmdata <- list(p = ncol(X), q = ncol(Y00), N = nrow(X),
+               X = X, Y = Y00, V = V,
+               Psi0=Psi0, Lambda0=Lambda0, Omega0=Omega0, nu0=nu0)
+               prior_list = list(Psi=Psi0, Lambda=Lambda0, Omega=solve(Omega0), nu=nu0)
+               init_list = list(Beta=Beta00,Sigma=Sigma00,Mu=Mu00)
+                              
+## Gibbs sampling to get posterior
+r_fit = mNormRE.post(Mmniw, Y=Y00, V=V, X=X, prior = prior_list, burn=ceiling(Mmniw/2), updateHyp = TRUE,
+              storeHyp = TRUE, updateRE = TRUE, storeRE = FALSE,  init=init_list)
+
 }

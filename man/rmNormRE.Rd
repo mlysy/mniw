@@ -2,27 +2,40 @@
 % Please edit documentation in R/RandomEffects.R
 \name{rmNormRE}
 \alias{rmNormRE}
-\title{Conditional Sampling for Multivariate Normal Random-Effects Model.}
+\title{Conditional sampling for Multivariate Normal Random-Effects model.}
 \usage{
 rmNormRE(n, y, V, lambda, A)
 }
 \arguments{
-\item{n}{The number of random samples to generate.}
+\item{n}{the number of random samples to generate.}
 
-\item{y}{Vector of length \code{q} or \code{n x q} matrix of observations.  In the latter case each column is a different vector (see details).}
+\item{y}{vector of length \code{q} or \code{n x q} matrix of observations.  In the latter case each column is a different vector (see details).}
 
-\item{V}{Matrix of size \code{q x q} or \code{q x q x n} array of observation variances.}
+\item{V}{matrix of size \code{q x q} or \code{q x q x n} array of observation variances.}
 
-\item{lambda}{Vector of length \code{q} or \code{n x q} matrix of prior means.  In the latter case each column is a different mean.  Defaults to zeros.}
+\item{lambda}{vector of length \code{q} or \code{n x q} matrix of prior means.  In the latter case each column is a different mean.  Defaults to zeros.}
 
-\item{A}{Matrix of size \code{q x q} or \code{q x q x n} array of prior variances.  Defaults to identity matrix.}
+\item{A}{matrix of size \code{q x q} or \code{q x q x n} array of prior variances.  Defaults to identity matrix.}
 }
 \description{
 Sample from the conditional parameter distribution given the data and hyperparameters of the Multivariate Normal Random Effects (mNormRE) model.
 }
 \details{
 The normal-normal random effects model is:
-\deqn{y | mu \sim N(mu, V), \qquad mu \sim \N(lambda, A).}
+\deqn{y | mu ~ N(mu, V),}
+\deqn{mu ~ \N(lambda, A).}
 The posterior distribution for the random effects \code{mu} is
-\deqn{mu | y \sim N(,).}
+\deqn{mu | y ~ N(B(lambda - y) + y,(I - B)V),}
+where \code{B = (V^{-1} + A^{-1})^{-1}A^{-1}}.
+}
+\examples{
+## Conditional sampling with default prior
+n = 100
+q = 10
+y = rnorm(q)
+V = rwish(1, diag(q), q+1)
+lambda = rep(0,q)
+A = diag(q)
+rmNormRE(n, y, V, lambda, A)
+
 }

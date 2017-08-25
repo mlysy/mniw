@@ -13,7 +13,7 @@
 \alias{riwish}
 \alias{dwishart}
 \alias{rwishart}
-\title{Wishart and Inverse-Wishart Distributions.}
+\title{Wishart and Inverse-Wishart distributions.}
 \usage{
 dwish(X, Psi, nu, log = FALSE)
 
@@ -28,35 +28,51 @@ dwishart(X, Psi, nu, inverse = FALSE, log = FALSE, debug = FALSE)
 rwishart(n, Psi, nu, inverse = FALSE)
 }
 \arguments{
-\item{X}{Argument to the density function.  Either a \code{q x q} matrix or a \code{q x q x n} array.}
+\item{X}{argument to the density function.  Either a \code{q x q} matrix or a \code{q x q x n} array.}
 
-\item{Psi}{Scale parameter.  Either a \code{q x q} matrix or a \code{q x q x n} array.}
+\item{Psi}{scale parameter.  Either a \code{q x q} matrix or a \code{q x q x n} array.}
 
-\item{nu}{Degrees-of-freedom parameter.  A scalar or vector.}
+\item{nu}{degrees-of-freedom parameter.  A scalar or vector.}
 
-\item{log}{Whether or not to compute the log-density.}
+\item{log}{logical. Whether or not to compute the log-density.}
 
-\item{n}{Number of random matrices to generate.}
+\item{n}{number of random matrices to generate.}
 
-\item{inverse}{Whether or not to use the Inverse-Wishart distribution.}
+\item{inverse}{logical. Whether or not to use the Inverse-Wishart distribution.}
 }
 \value{
 A vector for densities, or a \code{q x q x n} array for random sampling.
 }
 \description{
-Densities and Random Sampling for the Wishart and Inverse-Wishart distributions.
+Densities and random sampling for the Wishart and Inverse-Wishart distributions.
 }
 \details{
 \code{dwish} and \code{diwish} are convenience wrappers for \code{dwishart}, and similarly \code{rwish} and \code{riwish} are wrappers for \code{rwishart}.
 
 The distribution of a \code{q x q} Wishart random matrix is
-\deqn{\code{f(X) = const |X|^{(\nu-q-1)/2} * \exp{-0.5 * Tr(\Psi^{-1} X)}},}
+\deqn{f(X) = const |X|^{(\nu-q-1)/2} * \exp{-0.5 * Tr(\Psi^{-1} X)},}
 where \code{Psi} is a symmetric positive-definite matrix and \code{nu > q-1}.
 
 The distribution of an Inverse-Wishart random matrix is
-\deqn{\code{f(X) \propto |X|^{-(\nu+q+1)/2} * \exp{-0.5 * Tr(\Psi X^{-1})}}.}
+\deqn{f(X) \propto |X|^{-(\nu+q+1)/2} * \exp{-0.5 * Tr(\Psi X^{-1})}.}
 If \code{X ~ Wish(Psi, nu)}, then \code{X^{-1} ~ iWish(Psi^{-1}, nu)}.
 
 Quadratic forms involving a nonrandom vector \code{a} and a Wishart random matrix \code{X} have a chi-square distribution.  That is, for fixed \code{a} and \code{X ~ Wish(Psi, nu)},
-\deqn{\code{(a' X a) / (a' Psi a) ~ chisq(df = nu)}.}
+\deqn{(a' X a) / (a' Psi a) ~ chisq(df = nu).}
+}
+\examples{
+## Random sampling
+n = 100
+q = 2
+Psi1 = matrix(c(1,0.1,0.1,1),q,q)
+Psi2 = solve(Psi1)
+nu = q+1
+
+X1 = rwish(n,Psi1,nu) # Wishart
+X2 = riwish(n, Psi2, nu) # Inverse-Wishart
+
+## log-density calculation for sampled values
+dwish(X1, Psi1, nu, log = TRUE) # Wishart
+diwish(X2, Psi2, nu, log = TRUE) # Inverse Wishart
+
 }
