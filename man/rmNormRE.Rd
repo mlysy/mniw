@@ -9,11 +9,11 @@ rmNormRE(n, y, V, lambda, A)
 \arguments{
 \item{n}{The number of random samples to generate.}
 
-\item{y}{Vector of length \code{q} or \code{n x q} matrix of observations.  In the latter case each column is a different vector (see details).}
+\item{y}{Vector of length \code{q} or \code{n x q} matrix of observations.  In the latter case each row is a different vector (see details).}
 
 \item{V}{Matrix of size \code{q x q} or \code{q x q x n} array of observation variances.}
 
-\item{lambda}{Vector of length \code{q} or \code{n x q} matrix of prior means.  In the latter case each column is a different mean.  Defaults to zeros.}
+\item{lambda}{Vector of length \code{q} or \code{n x q} matrix of prior means.  In the latter case each row is a different mean.  Defaults to zeros.}
 
 \item{A}{Matrix of size \code{q x q} or \code{q x q x n} array of prior variances.  Defaults to identity matrix.}
 }

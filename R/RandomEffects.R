@@ -5,9 +5,9 @@
 #' Sample from the conditional parameter distribution given the data and hyperparameters of the Multivariate Normal Random Effects (mNormRE) model.
 #'
 #' @param n The number of random samples to generate.
-#' @param y Vector of length \code{q} or \code{n x q} matrix of observations.  In the latter case each column is a different vector (see details).
+#' @param y Vector of length \code{q} or \code{n x q} matrix of observations.  In the latter case each row is a different vector (see details).
 #' @param V Matrix of size \code{q x q} or \code{q x q x n} array of observation variances.
-#' @param lambda Vector of length \code{q} or \code{n x q} matrix of prior means.  In the latter case each column is a different mean.  Defaults to zeros.
+#' @param lambda Vector of length \code{q} or \code{n x q} matrix of prior means.  In the latter case each row is a different mean.  Defaults to zeros.
 #' @param A Matrix of size \code{q x q} or \code{q x q x n} array of prior variances.  Defaults to identity matrix.
 #' @details The normal-normal random effects model is:
 #' \deqn{y | mu \sim N(mu, V), \qquad mu \sim \N(lambda, A).}
@@ -19,22 +19,22 @@ rmNormRE <- function(n, y, V, lambda, A) {
   y <- .vec2mn(y)
   if(!missing(lambda)) lambda <- .vec2mn(lambda)
   # problem dimensions
-  PQ1 <- .getPQ(X = y, Lambda = lambda, Psi = V)
-  PQ2 <- .getPQ(X = y, Psi = A)
+  PQ1 <- .getPQ(X = y, Lambda = lambda, Sigma = V)
+  PQ2 <- .getPQ(X = y, Sigma = A)
   p <- PQ1[1]
   q <- PQ1[2]
-  if(p != 1) stop("y and lambda must be vectors or matrices.")
+  if(q != 1) stop("y and lambda must be vectors or matrices.")
   # format arguments
   y <- .setDims(y, p = p, q = q)
   lambda <- .setDims(lambda, p = p, q = q)
   if(anyNA(lambda)) stop("lambda and y have incompatible dimensions.")
-  V <- .setDims(V, q = q)
+  V <- .setDims(V, p = p)
   if(anyNA(V)) stop("V and y have incompatible dimensions.")
-  A <- .setDims(A, q = q)
+  A <- .setDims(A, p = p)
   if(anyNA(A)) stop("A and y have incompatible dimensions.")
   # check lengths
-  N1 <- .getN(p = p, q = q, X = y, Lambda = lambda, Psi = V)
-  N2 <- .getN(p = p, q = q, X = y, Psi = A)
+  N1 <- .getN(p = p, q = q, X = y, Lambda = lambda, Sigma = V)
+  N2 <- .getN(p = p, q = q, X = y, Sigma = A)
   N <- unique(sort(c(N1, N2)))
   N <- c(1, N[N>1])
   if(length(N) > 2 || (length(N) == 2 && N[2] != n)) {
@@ -70,7 +70,12 @@ rmNormRE <- function(n, y, V, lambda, A) {
   ## N <- c(1, N[N > 1])
   ## if(length(N) > 2 || (length(N) == 2 && N[2] != n))
   ##   stop("Arguments don't all have length n.")
-  Mu <- GenerateRandomEffectsNormal(N, lambda, y, V, A)
+  Mu <- GenerateRandomEffectsNormal(n, lambda, y, V, A)
+  if(n > 1) {
+    Mu <- t(Mu)
+  } else {
+    Mu <- c(Mu)
+  }
   Mu
 }
 

@@ -44,3 +44,13 @@ set.seed(1)
 X2 <- rmNorm(n = N, mu = t(Lambda), V = Sigma)
 range(X-X2)
 
+#--- rmNormRE ------------------------------------------------------------------
+
+
+require(mniw)
+
+nSamples = 10
+q = 3
+y = rnorm(q)
+V = diag(q) #rwish(1, diag(q), q+1)
+rmNormRE(n=nSamples, y=y, V=V)
