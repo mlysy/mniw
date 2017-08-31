@@ -4,25 +4,12 @@
 
 //////////////////////////////////////////////////////////////////
 
-#include "mniwSetLib.h"
-
-#ifdef R_FUNCTION_LIBRARY
 #include <Rcpp.h>
 using namespace Rcpp;
-#include <RcppEigen.h>
 // [[Rcpp::depends(RcppEigen)]]
-#endif
-
-#ifdef MATLAB_FUNCTION_LIBRARY
-#include <math.h>
-#include <matrix.h>
-#include <mex.h>
-#include <Eigen/Dense>
-#include "RmathUtils.h"
-#endif
-
-//#include <iostream>
+#include <RcppEigen.h>
 using namespace Eigen;
+//#include <iostream>
 #include "TriUtils.h"
 #include "mniwWishart.h"
 #include "mniwMatNorm.h"

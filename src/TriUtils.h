@@ -10,23 +10,10 @@
 #ifndef TriUtils_h
 #define TriUtils_h 1
 
-#include "mniwSetLib.h"
-
-#ifdef R_FUNCTION_LIBRARY
-#include <Rcpp.h>
-using namespace Rcpp;
-#include <RcppEigen.h>
+/* #include <Rcpp.h> */
+/* using namespace Rcpp; */
 // [[Rcpp::depends(RcppEigen)]]
-#endif
-
-#ifdef MATLAB_FUNCTION_LIBRARY
-#include <math.h>
-#include <matrix.h>
-#include <mex.h>
-#include <Eigen/Dense>
-#include "RmathUtils.h"
-#endif
-
+#include <RcppEigen.h>
 //#include <iostream>
 using namespace Eigen;
 

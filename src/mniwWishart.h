@@ -5,27 +5,14 @@
 #ifndef mniwWishart_h
 #define mniwWishart_h 1
 
-#include "mniwSetLib.h"
-
-#ifdef R_FUNCTION_LIBRARY
 #include <Rcpp.h>
 using namespace Rcpp;
-#include <RcppEigen.h>
 // [[Rcpp::depends(RcppEigen)]]
+#include <RcppEigen.h>
+using namespace Eigen;
 #define gammaln R::lgammafn
 #define chisq_rand Rf_rchisq
-#endif
-
-#ifdef MATLAB_FUNCTION_LIBRARY
-#include <math.h>
-#include <matrix.h>
-#include <mex.h>
-#include <Eigen/Dense>
-#include "RmathUtils.h"
-#endif
-
 //#include <iostream>
-using namespace Eigen;
 #include "mniwUtils.h"
 
 ///////////////////////////////////////////////////////////////////
