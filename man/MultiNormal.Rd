@@ -43,5 +43,4 @@ mnormData = rmNorm(n, mu, V)
 
 # Calculate log density for each sampled vector
 dmNorm(mnormData, mu, V, log=TRUE)
-
 }

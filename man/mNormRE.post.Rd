@@ -75,7 +75,7 @@ hmdata <- list(p = ncol(X), q = ncol(Y00), N = nrow(X),
                Psi0=Psi0, Lambda0=Lambda0, Omega0=Omega0, nu0=nu0)
                prior_list = list(Psi=Psi0, Lambda=Lambda0, Omega=solve(Omega0), nu=nu0)
                init_list = list(Beta=Beta00,Sigma=Sigma00,Mu=Mu00)
-                              
+
 ## Gibbs sampling to get posterior
 r_fit = mNormRE.post(Mmniw, Y=Y00, V=V, X=X, prior = prior_list, burn=ceiling(Mmniw/2), updateHyp = TRUE,
               storeHyp = TRUE, updateRE = TRUE, storeRE = FALSE,  init=init_list)

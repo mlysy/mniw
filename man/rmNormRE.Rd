@@ -9,11 +9,11 @@ rmNormRE(n, y, V, lambda, A)
 \arguments{
 \item{n}{the number of random samples to generate.}
 
-\item{y}{vector of length \code{q} or \code{n x q} matrix of observations.  In the latter case each column is a different vector (see details).}
+\item{y}{vector of length \code{q} or \code{n x q} matrix of observations.  In the latter case each row is a different vector (see Details).}
 
 \item{V}{matrix of size \code{q x q} or \code{q x q x n} array of observation variances.}
 
-\item{lambda}{vector of length \code{q} or \code{n x q} matrix of prior means.  In the latter case each column is a different mean.  Defaults to zeros.}
+\item{lambda}{vector of length \code{q} or \code{n x q} matrix of prior means.  In the latter case each row is a different mean.  Defaults to zeros.}
 
 \item{A}{matrix of size \code{q x q} or \code{q x q x n} array of prior variances.  Defaults to identity matrix.}
 }
@@ -22,14 +22,14 @@ Sample from the conditional parameter distribution given the data and hyperparam
 }
 \details{
 The normal-normal random effects model is:
-\deqn{y | mu ~ N(mu, V),}
-\deqn{mu ~ \N(lambda, A).}
-The posterior distribution for the random effects \code{mu} is
-\deqn{mu | y ~ N(B(lambda - y) + y,(I - B)V),}
-where \code{B = (V^{-1} + A^{-1})^{-1}A^{-1}}.
+\deqn{y | \mu \sim N(\mu, V),}
+\deqn{\mu \sim N(\lambda, A).}
+The posterior distribution for the random effects \eqn{\mu} is
+\deqn{\mu | y \sim N(B(\lambda - y) + y,(I - B)V),}
+where \eqn{B = V(V+A)^{-1}}.
 }
 \examples{
-## Conditional sampling with default prior
+# Conditional sampling with default prior
 n = 100
 q = 10
 y = rnorm(q)

@@ -10,6 +10,7 @@ License: GPL 3
 Imports:
     Rcpp (>= 0.11.6)
 LinkingTo: Rcpp, RcppEigen
+LazyData: true
 Suggests:
     testthat
 RoxygenNote: 6.0.1
