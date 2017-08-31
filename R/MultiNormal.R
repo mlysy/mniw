@@ -10,22 +10,19 @@
 #' @param V covariance matrix or matrices.  Either a \code{q x q} matrix or a \code{q x q x n} array.
 #' @param log logical. Whether or not to compute the log-density.
 #' @details  \code{dmNorm} and \code{rmNorm} both accept single or multiple values for each argument.
-#'
 #' @return A vector for densities, or a \code{n x q} array for random sampling.
-#' 
 #' @examples
 #' ## Multivariate Normal random sample and subsequent density calculation
 #' n = 100
 #' q = 2
 #' mu = c(1,2)
 #' V = toeplitz(exp(-seq(1:q)))
-#' 
+#'
 #' # Random sample from Multivariate Normal distribution
 #' mnormData = rmNorm(n, mu, V)
-#' 
+#'
 #' # Calculate log density for each sampled vector
 #' dmNorm(mnormData, mu, V, log=TRUE)
-#' 
 #' @rdname MultiNormal
 #' @export
 dmNorm <- function(x, mu, V, log = FALSE) {
@@ -53,10 +50,10 @@ dmNorm <- function(x, mu, V, log = FALSE) {
   ##     mu <- array(mu, dim = c(1,dim(mu)))
   ##   }
   ## }
-  PQ <- .getPQ(X = x, Lambda = mu, Psi = V)
+  PQ <- .getPQ(X = x, Lambda = mu, Sigma = V)
   p <- PQ[1]
   q <- PQ[2]
-  if(p != 1) stop("x and mu must be vectors or matrices.")
+  if(q != 1) stop("x and mu must be vectors or matrices.")
   if(anyNA(PQ)) {
     stop("Problem dimensions are undetermined (too many missing inputs).")
   }
@@ -65,14 +62,14 @@ dmNorm <- function(x, mu, V, log = FALSE) {
   if(anyNA(x)) stop("Something went wrong.  Please report bug.")
   mu <- .setDims(mu, p = p, q = q)
   if(anyNA(mu)) stop("mu and x have incompatible dimensions.")
-  V <- .setDims(V, q = q)
+  V <- .setDims(V, p = p)
   if(anyNA(V)) stop("V and x have incompatible dimensions.")
   # check lengths
-  N <- .getN(p = p, q = q, X = x, Lambda = mu, Psi = V)
+  N <- .getN(p = p, q = q, X = x, Lambda = mu, Sigma = V)
   if(length(N) > 2) stop("Arguments have different lengths.")
   x <- matrix(x, nrow = q) # format for mN
   mu <- matrix(mu, nrow = q) # format for mN
-  if(isTRUE(debug)) browser()
+  if(debug) browser()
   ans <- LogDensityMultivariateNormal(x, mu, V)
   if(!log) ans <- exp(ans)
   ans
@@ -92,25 +89,25 @@ rmNorm <- function(n, mu, V, debug = FALSE) {
   ##     mu <- array(mu, dim = c(1,dim(mu)))
   ##   }
   ## }
-  PQ <- .getPQ(Lambda = mu, Psi = V)
-  if(is.na(PQ[1])) PQ[1] <- 1
+  PQ <- .getPQ(Lambda = mu, Sigma = V)
+  #if(is.na(PQ[1])) PQ[1] <- 1 # what is this for???
   p <- PQ[1]
   q <- PQ[2]
-  if(p != 1) stop("mu must be a vector or matrix.")
+  if(q != 1) stop("mu must be a vector or matrix.")
   if(anyNA(PQ)) {
-    stop("Problem dimensions are undetermined (too many missing inputs).")
+    stop("Problem dimensions are undetermined: must provide mu or V.")
   }
   # format arguments
   mu <- .setDims(mu, p = p, q = q)
   if(anyNA(mu)) stop("mu and V have incompatible dimensions.")
-  V <- .setDims(V, q = q)
+  V <- .setDims(V, p = q)
   if(anyNA(V)) stop("V and mu have incompatible dimensions.")
   # check lengths
-  N <- .getN(p = p, q = q, Lambda = mu, Psi = V)
+  N <- .getN(p = p, q = q, Lambda = mu, Sigma = V)
   if(length(N) > 2 || (length(N) == 2 && N[2] != n)) {
     stop("Arguments don't all have length n.")
   }
-  if(isTRUE(debug)) browser()
+  if(debug) browser()
   mu <- matrix(mu, nrow = q) # format for mN
   X <- GenerateMultivariateNormal(n, mu, V)
   if(n > 1) {

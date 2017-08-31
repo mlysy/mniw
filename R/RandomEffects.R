@@ -5,19 +5,18 @@
 #' Sample from the conditional parameter distribution given the data and hyperparameters of the Multivariate Normal Random Effects (mNormRE) model.
 #'
 #' @param n the number of random samples to generate.
-#' @param y vector of length \code{q} or \code{n x q} matrix of observations.  In the latter case each column is a different vector (see details).
+#' @param y vector of length \code{q} or \code{n x q} matrix of observations.  In the latter case each row is a different vector (see Details).
 #' @param V matrix of size \code{q x q} or \code{q x q x n} array of observation variances.
-#' @param lambda vector of length \code{q} or \code{n x q} matrix of prior means.  In the latter case each column is a different mean.  Defaults to zeros.
+#' @param lambda vector of length \code{q} or \code{n x q} matrix of prior means.  In the latter case each row is a different mean.  Defaults to zeros.
 #' @param A matrix of size \code{q x q} or \code{q x q x n} array of prior variances.  Defaults to identity matrix.
 #' @details The normal-normal random effects model is:
-#' \deqn{y | mu ~ N(mu, V),}
-#' \deqn{mu ~ \N(lambda, A).}
-#' The posterior distribution for the random effects \code{mu} is
-#' \deqn{mu | y ~ N(B(lambda - y) + y,(I - B)V),}
-#' where \code{B = (V^{-1} + A^{-1})^{-1}A^{-1}}.
-#' 
+#' \deqn{y | \mu \sim N(\mu, V),}
+#' \deqn{\mu \sim N(\lambda, A).}
+#' The posterior distribution for the random effects \eqn{\mu} is
+#' \deqn{\mu | y \sim N(B(\lambda - y) + y,(I - B)V),}
+#' where \eqn{B = V(V+A)^{-1}}.
 #' @examples
-#' ## Conditional sampling with default prior
+#' # Conditional sampling with default prior
 #' n = 100
 #' q = 10
 #' y = rnorm(q)
@@ -25,29 +24,29 @@
 #' lambda = rep(0,q)
 #' A = diag(q)
 #' rmNormRE(n, y, V, lambda, A)
-#' 
+#'
 #' @export
 rmNormRE <- function(n, y, V, lambda, A) {
   # convert to MN format
   y <- .vec2mn(y)
   if(!missing(lambda)) lambda <- .vec2mn(lambda)
   # problem dimensions
-  PQ1 <- .getPQ(X = y, Lambda = lambda, Psi = V)
-  PQ2 <- .getPQ(X = y, Psi = A)
+  PQ1 <- .getPQ(X = y, Lambda = lambda, Sigma = V)
+  PQ2 <- .getPQ(X = y, Sigma = A)
   p <- PQ1[1]
   q <- PQ1[2]
-  if(p != 1) stop("y and lambda must be vectors or matrices.")
+  if(q != 1) stop("y and lambda must be vectors or matrices.")
   # format arguments
   y <- .setDims(y, p = p, q = q)
   lambda <- .setDims(lambda, p = p, q = q)
   if(anyNA(lambda)) stop("lambda and y have incompatible dimensions.")
-  V <- .setDims(V, q = q)
+  V <- .setDims(V, p = p)
   if(anyNA(V)) stop("V and y have incompatible dimensions.")
-  A <- .setDims(A, q = q)
+  A <- .setDims(A, p = p)
   if(anyNA(A)) stop("A and y have incompatible dimensions.")
   # check lengths
-  N1 <- .getN(p = p, q = q, X = y, Lambda = lambda, Psi = V)
-  N2 <- .getN(p = p, q = q, X = y, Psi = A)
+  N1 <- .getN(p = p, q = q, X = y, Lambda = lambda, Sigma = V)
+  N2 <- .getN(p = p, q = q, X = y, Sigma = A)
   N <- unique(sort(c(N1, N2)))
   N <- c(1, N[N>1])
   if(length(N) > 2 || (length(N) == 2 && N[2] != n)) {
@@ -84,6 +83,11 @@ rmNormRE <- function(n, y, V, lambda, A) {
   ## if(length(N) > 2 || (length(N) == 2 && N[2] != n))
   ##   stop("Arguments don't all have length n.")
   Mu <- GenerateRandomEffectsNormal(n, lambda, y, V, A)
+  if(n > 1) {
+    Mu <- t(Mu)
+  } else {
+    Mu <- c(Mu)
+  }
   Mu
 }
 
@@ -119,7 +123,7 @@ rmNormRE <- function(n, y, V, lambda, A) {
 #'   \item{\code{Sigma}}{An \code{q x q x nsamples} array of regression variance matrices (if \code{storeHyp == TRUE})}
 #'   \item{\code{Mu}}{An \code{n x q x nsamples} array of random effects (if \code{storeRE == TRUE})}
 #' }
-#' 
+#'
 #' @examples
 #' ## Input Specifications
 #' Mmniw = 1e3
@@ -143,11 +147,11 @@ rmNormRE <- function(n, y, V, lambda, A) {
 #'                Psi0=Psi0, Lambda0=Lambda0, Omega0=Omega0, nu0=nu0)
 #'                prior_list = list(Psi=Psi0, Lambda=Lambda0, Omega=solve(Omega0), nu=nu0)
 #'                init_list = list(Beta=Beta00,Sigma=Sigma00,Mu=Mu00)
-#'                               
+#'
 #' ## Gibbs sampling to get posterior
 #' r_fit = mNormRE.post(Mmniw, Y=Y00, V=V, X=X, prior = prior_list, burn=ceiling(Mmniw/2), updateHyp = TRUE,
 #'               storeHyp = TRUE, updateRE = TRUE, storeRE = FALSE,  init=init_list)
-#' 
+#'
 #' @export
 mNormRE.post <- function(nsamples, Y, V, X, prior = NULL, init, burn,
 			 updateHyp = TRUE, storeHyp = TRUE,
@@ -183,16 +187,8 @@ mNormRE.post <- function(nsamples, Y, V, X, prior = NULL, init, burn,
   if(!identical(dim(Mu0), c(n, q))) {
     stop("init$Mu and Y have incompatible dimensions.")
   }
-  # X, Y and V
-  X <- .setDims(X, p = nrow(X), q = ncol(X))
-  if(anyNA(X)) stop("Something went wrong.")
-  Y <- .setDims(Y, p = nrow(Y), q = ncol(Y))
-  if(anyNA(Y)) stop("Something went wrong.")
-  V <- .setDims(V, p = nrow(V))
-  if(anyNA(V)) stop("Something went wrong.")
-  
   # burn-in
-  if (missing(burn)) burn <- max(0.5*nsamples, 1000)
+  if (missing(burn)) burn <- max(0.1, 1000)
   if (burn < 1) burn <- nsamples * burn
   burn <- floor(burn)
   # don't store if don't update
@@ -202,7 +198,7 @@ mNormRE.post <- function(nsamples, Y, V, X, prior = NULL, init, burn,
   post <- HierUneqVModelGibbs(nSamples = as.integer(nsamples),
                               nBurn = as.integer(burn),
                               Y = Y, X = X, V = V,
-                              Lambda = Lambda, Omega = Omega,
+                              Lambda = Lamda, Omega = Omega,
                               Psi = Psi, nu = nu,
                               Beta0 = Beta0, iSigma0 = .solveV(Sigma0),
                               Mu0 = Mu0,
