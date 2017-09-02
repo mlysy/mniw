@@ -17,53 +17,9 @@ using namespace Eigen;
 
 // log-densities
 
-// multivariate normal
-inline double LogDensNormal(const Ref<VectorXd>& x, const Ref<VectorXd>& mu,
-		     const Ref<MatrixXd>& V, bool CalcV,
-		     Ref<VectorXd> z,
-		     double &ldV, LLT<MatrixXd> cholV);
-
-// matrix normal
-inline double LogDensMatrixNormal(const Ref<const MatrixXd>& X,
-			   const Ref<const MatrixXd>& Mu,
-			   const Ref<const MatrixXd>& RowV, bool CalcRowV,
-			   const Ref<const MatrixXd>& ColV, bool CalcColV,
-			   Ref<MatrixXd> Z,
-			   double& ldRowV, LLT<MatrixXd> cholRowV,
-			   double& ldColV, LLT<MatrixXd> cholColV);
-
-///////////////////////////////////////////////////////////////////
-
-// simulation of matrix normal distribution
-
-// both variances on the covariance scale.
-inline void GenerateMatrixNormalRowSColS(Ref<MatrixXd> X,
-				  const Ref<const MatrixXd>& Lambda,
-				  const Ref<const MatrixXd>& RowSigmaL,
-				  const Ref<const MatrixXd>& ColSigmaU,
-				  Ref<MatrixXd> Z);
-
-// between-row on covariance scale, between-col on precision scale.
-inline void GenerateMatrixNormalRowSColO(Ref<MatrixXd> X,
-				  const Ref<const MatrixXd>& Lambda,
-				  const Ref<const MatrixXd>& RowSigmaL,
-				  const Ref<const MatrixXd>& ColOmegaL,
-				  Ref<MatrixXd> Z);
-
-// both variances are on the precision scale.
-inline void GenerateMatrixNormalRowOColO(Ref<MatrixXd> X,
-				  const Ref<MatrixXd>& Lambda,
-				  const Ref<const MatrixXd>& RowOmegaU,
-				  const Ref<const MatrixXd>& ColOmegaL,
-				  Ref<MatrixXd> Z);
-
-///////////////////////////////////////////////////////////////////
-
-// log-densities
-
 // multivariate normal x ~ N(0, V)
 // CalcV indicates whether to calculate the Cholesky factor and the log-determinant.
-double LogDensNormal(const Ref<VectorXd>& x, const Ref<VectorXd>& mu,
+inline double LogDensNormal(const Ref<VectorXd>& x, const Ref<VectorXd>& mu,
                      const Ref<MatrixXd>& V, bool CalcV,
                      Ref<VectorXd> z,
                      double &ldV, LLT<MatrixXd> cholV) {
@@ -84,7 +40,7 @@ double LogDensNormal(const Ref<VectorXd>& x, const Ref<VectorXd>& mu,
 // matrix normal X ~ N(0, RowV, ColV)
 // calcRowV and calcColV indicate whether to calculate the row and column cholesky
 // factors and determinants
-double LogDensMatrixNormal(const Ref<const MatrixXd>& X,
+inline double LogDensMatrixNormal(const Ref<const MatrixXd>& X,
                            const Ref<const MatrixXd>& Mu,
                            const Ref<const MatrixXd>& RowV, bool CalcRowV,
                            const Ref<const MatrixXd>& ColV, bool CalcColV,
@@ -126,7 +82,7 @@ double LogDensMatrixNormal(const Ref<const MatrixXd>& X,
 // Lambda: mean matrix
 // RowSigmaL: _lower_ triangular cholesky of the between-row _covariance_ matrix
 // ColSigmaU: _upper_ triangular cholesky of the between-column _covariance_ matrix
-void GenerateMatrixNormalRowSColS(Ref<MatrixXd> X,
+inline void GenerateMatrixNormalRowSColS(Ref<MatrixXd> X,
                                   const Ref<const MatrixXd>& Lambda,
                                   const Ref<const MatrixXd>& RowSigmaL,
                                   const Ref<const MatrixXd>& ColSigmaU,
@@ -151,7 +107,7 @@ void GenerateMatrixNormalRowSColS(Ref<MatrixXd> X,
 // Lambda: mean matrix
 // RowSigmaL: _lower_ triangular cholesky of the between-row _covariance_ matrix
 // ColOmegaL: _lower_ triangular cholesky of the between-column _precision_ matrix
-void GenerateMatrixNormalRowSColO(Ref<MatrixXd> X,
+inline void GenerateMatrixNormalRowSColO(Ref<MatrixXd> X,
                                   const Ref<const MatrixXd>& Lambda,
                                   const Ref<const MatrixXd>& RowSigmaL,
                                   const Ref<const MatrixXd>& ColOmegaL,
@@ -176,7 +132,7 @@ void GenerateMatrixNormalRowSColO(Ref<MatrixXd> X,
 // Lambda: mean matrix
 // RowOmegaU: _upper_ triangular cholesky of the between-row _precision_ matrix
 // ColOmegaU: _lower_ triangular cholesky of the between-column _precision_ matrix
-void GenerateMatrixNormalRowOColO(Ref<MatrixXd> X,
+inline void GenerateMatrixNormalRowOColO(Ref<MatrixXd> X,
                                   const Ref<MatrixXd>& Lambda,
                                   const Ref<const MatrixXd>& RowOmegaU,
                                   const Ref<const MatrixXd>& ColOmegaL,

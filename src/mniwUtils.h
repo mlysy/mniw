@@ -33,12 +33,6 @@ public:
   LLT<MatrixXd> lltq; // (q x q) cholesky solver
 };
 
-// Reverse Cholesky decomposition
-inline void AntiTransposeLowerTri(Ref<MatrixXd> Y, const Ref<MatrixXd>& X);
-inline void ReverseCholesky(Ref<MatrixXd> L, const Ref<MatrixXd>& V, TempPQ *tmp);
-
-// log|V|
-inline double logDetV(MatrixXd V, LLT<MatrixXd> cholV);
 
 ////////////////////////////////////////////////////////////
 
@@ -73,7 +67,7 @@ inline TempPQ::TempPQ(int p, int q) {
 
 // transpose the lower triangular elements of square matrix X across the anti-diagonal.
 // does not operate in place.
-void AntiTransposeLowerTri(Ref<MatrixXd> Y, const Ref<MatrixXd>& X) {
+inline void AntiTransposeLowerTri(Ref<MatrixXd> Y, const Ref<MatrixXd>& X) {
   int q = X.cols();
   int ii, jj;
   // anti-transpose lower part of X into Y
@@ -86,7 +80,7 @@ void AntiTransposeLowerTri(Ref<MatrixXd> Y, const Ref<MatrixXd>& X) {
 }
 
 // reverse cholesky decomposition V = L'L.
-void ReverseCholesky(Ref<MatrixXd> L, const Ref<MatrixXd>& V, TempPQ *tmp) {
+inline void ReverseCholesky(Ref<MatrixXd> L, const Ref<MatrixXd>& V, TempPQ *tmp) {
   AntiTransposeLowerTri(tmp->Mq, V);
   tmp->lltq.compute(tmp->Mq);
   tmp->Lq = tmp->lltq.matrixL();
@@ -95,7 +89,7 @@ void ReverseCholesky(Ref<MatrixXd> L, const Ref<MatrixXd>& V, TempPQ *tmp) {
 }
 
 // log|V|
-double logDetV(MatrixXd V, LLT<MatrixXd> cholV) {
+inline double logDetV(MatrixXd V, LLT<MatrixXd> cholV) {
   double ldV = 0.0;
   cholV.compute(V);
   for(int ii=0; ii<V.cols(); ii++) {
@@ -103,6 +97,5 @@ double logDetV(MatrixXd V, LLT<MatrixXd> cholV) {
   }
   return 2.0*ldV;
 }
-
 
 #endif

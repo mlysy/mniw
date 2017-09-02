@@ -161,5 +161,4 @@ void InverseLLt(Ref<MatrixXd> X,
   return;
 }
 
-
 #endif

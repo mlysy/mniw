@@ -13,18 +13,6 @@ using namespace Eigen;
 //#include <iostream>
 #include "mniwUtils.h"
 
-// Generate mu = [(I-B)*V]^{1/2} * z + B * x,
-// OmegaL * OmegaU = Sigma^{-1}.
-inline void GenerateRandomEffectsOL(Ref<VectorXd> mu, const Ref<VectorXd>& x,
-			     const Ref<MatrixXd>& C, const Ref<MatrixXd>& OmegaL,
-			     TempPQ *tmp);
-
-// Generate mu = [(I-B)*V]^{1/2} * z + B * x,
-// Omega = Sigma^{-1}.
-inline void GenerateRandomEffectsO(Ref<VectorXd> mu, const Ref<VectorXd>& x,
-			    const Ref<MatrixXd>& C, const Ref<MatrixXd>& Omega,
-			    TempPQ *tmp);
-
 ///////////////////////////////////////////////////////////////////
 
 // Generates a draw from p(mu | x) from the random effects model:
@@ -36,7 +24,7 @@ inline void GenerateRandomEffectsO(Ref<VectorXd> mu, const Ref<VectorXd>& x,
 // To be compatible with MNIW simulation, the parameters are:
 // C = V^{-1}
 // OmegaL, where OmegaL * OmegaU = Sigma^{-1}.
-void GenerateRandomEffectsOL(Ref<VectorXd> mu, const Ref<VectorXd>& x,
+inline void GenerateRandomEffectsOL(Ref<VectorXd> mu, const Ref<VectorXd>& x,
                              const Ref<MatrixXd>& C, const Ref<MatrixXd>& OmegaL,
                              TempPQ *tmp) {
   int q = mu.size();
@@ -61,7 +49,7 @@ void GenerateRandomEffectsOL(Ref<VectorXd> mu, const Ref<VectorXd>& x,
 // the parameters are:
 // C = V^{-1}
 // Omega = Sigma^{-1}.
-void GenerateRandomEffectsO(Ref<VectorXd> mu, const Ref<VectorXd>& x,
+inline void GenerateRandomEffectsO(Ref<VectorXd> mu, const Ref<VectorXd>& x,
                             const Ref<MatrixXd>& C, const Ref<MatrixXd>& Omega,
                             TempPQ *tmp) {
   int q = mu.size();
@@ -80,7 +68,5 @@ void GenerateRandomEffectsO(Ref<VectorXd> mu, const Ref<VectorXd>& x,
   tmp->lltq.matrixU().solveInPlace(mu);
   return;
 }
-
-
 
 #endif
