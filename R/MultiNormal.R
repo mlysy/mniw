@@ -100,7 +100,7 @@ rmNorm <- function(n, mu, V, debug = FALSE) {
   # format arguments
   mu <- .setDims(mu, p = p, q = q)
   if(anyNA(mu)) stop("mu and V have incompatible dimensions.")
-  V <- .setDims(V, p = q)
+  V <- .setDims(V, p = p)
   if(anyNA(V)) stop("V and mu have incompatible dimensions.")
   # check lengths
   N <- .getN(p = p, q = q, Lambda = mu, Sigma = V)
@@ -108,7 +108,7 @@ rmNorm <- function(n, mu, V, debug = FALSE) {
     stop("Arguments don't all have length n.")
   }
   if(debug) browser()
-  mu <- matrix(mu, nrow = q) # format for mN
+  mu <- matrix(mu, nrow = p) # format for mN
   X <- GenerateMultivariateNormal(n, mu, V)
   if(n > 1) {
     X <- t(X)
