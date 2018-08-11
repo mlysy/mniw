@@ -3,8 +3,9 @@ Type: Package
 Title: Density and Simulation for the Matrix-Normal Inverse-Wishart (MNIW) Distribution
 Version: 0.0.0.9013
 Date: 2016-06-03
-Author: Martin Lysy
-Maintainer: Martin Lysy <mlysy@uwaterloo.ca>
+Authors@R: c(person("Martin", "Lysy", role = c("aut", "cre"),
+                    email = "mlysy@uwaterloo.ca"),
+             person("Bryan", "Yates", role = "aut"))
 Description: C++ implementations of Matrix-Normal Inverse-Wishart (MNIW) distributions and their constituent components using the Eigen linear algebra library.  All functions arguments accept scalar, vector, matrix, and array inputs whenever possible.  Also provides a Gibbs sampler for the posterior distribution of a matrix-valued random-effects model.
 License: GPL 3
 Imports:
