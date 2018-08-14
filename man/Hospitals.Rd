@@ -15,7 +15,7 @@
 Hospitals
 }
 \description{
-Information on patient-reported problem rates for 27 teaching hosptials and private academic health centers in the United States.
+Information on patient-reported problem rates for 27 teaching hospitals and private academic health centers in the United States.
 }
 \references{
 Everson & Morris, 2000; original data in Cleary et al, 1991.

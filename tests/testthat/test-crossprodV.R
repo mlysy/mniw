@@ -3,6 +3,8 @@ library(mniw)
 source("mniw-testfunctions.R")
 context("Cross-Products")
 
+tol <- 1e-6
+
 test_that("Cross-product X'VX is same in C++ as R", {
   case.par <- expand.grid(p = 1:4, q = 1:4,
                           single.X = c(TRUE, FALSE), single.V = c(TRUE, FALSE),
@@ -37,7 +39,7 @@ test_that("Cross-product X'VX is same in C++ as R", {
     if(all(unlist(cp[c("single.X", "single.V")]))) {
       ipcpp <- array(ipcpp, c(q,q,n))
     }
-    expect_equal(ipR, ipcpp)
+    expect_equal(ipR, ipcpp, tolerance = tol)
   }
 })
 
@@ -85,6 +87,6 @@ test_that("Cross-product X'VY is same in C++ as R", {
       ipcpp <- array(ipcpp, c(q,r,n))
     }
     #message("ii = ", ii, ", max(abs) = ", signif(max(abs(ipR - ipcpp)),2))
-    expect_equal(ipR, ipcpp)
+    expect_equal(ipR, ipcpp, tolerance = tol)
   }
 })

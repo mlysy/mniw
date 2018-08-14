@@ -2,6 +2,8 @@ library(mniw)
 source("mniw-testfunctions.R")
 context("Matrix-Normal Inverse-Wishart Distribution")
 
+tol <- 1e-6
+
 test_that("MNIW sampling is same in C++ as R", {
   calc.diff <- FALSE
   case.par <- expand.grid(p = c(1,2,4), q = c(1,2,3),
@@ -68,7 +70,7 @@ test_that("MNIW sampling is same in C++ as R", {
     if(calc.diff) {
       MaxDiff[ii,] <- mx
     } else {
-      expect_equal(mx, c(0,0), tolerance = 1e-6)
+      expect_equal(mx, c(0,0), tolerance = tol)
     }
   }
 })
@@ -100,6 +102,6 @@ if(FALSE) {
                   Psi = Psi,
                   nu = nu,
                   prec = prec)
-  tmp <- expect_equal(XVR2, XVcpp2)
+  tmp <- expect_equal(XVR2, XVcpp2, tolerance = tol)
   tmp
 }

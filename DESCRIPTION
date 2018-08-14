@@ -7,9 +7,9 @@ Authors@R: c(person("Martin", "Lysy", role = c("aut", "cre"),
                     email = "mlysy@uwaterloo.ca"),
              person("Bryan", "Yates", role = "aut"))
 Description: C++ implementations of Matrix-Normal Inverse-Wishart (MNIW) distributions and their constituent components using the Eigen linear algebra library.  All functions arguments accept scalar, vector, matrix, and array inputs whenever possible.  Also provides a Gibbs sampler for the posterior distribution of a matrix-valued random-effects model.
-License: GPL 3
-Imports:
-    Rcpp (>= 0.11.6)
+License: GPL-3
+Depends: R (>= 2.10)
+Imports: Rcpp (>= 0.11.6)
 LinkingTo: Rcpp, RcppEigen
 LazyData: true
 Suggests:

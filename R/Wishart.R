@@ -4,9 +4,11 @@
 #
 #---------------------------------------------------------------------------
 
+#' Wishart and Inverse-Wishart distributions.
+#'
+#' Densities and random sampling for the Wishart and Inverse-Wishart distributions.
+#'
 #' @name Wishart
-#' @title Wishart and Inverse-Wishart distributions.
-#' @description Densities and random sampling for the Wishart and Inverse-Wishart distributions.
 #' @aliases dwish rwish diwish riwish dwishart rwishart
 #' @param X argument to the density function.  Either a \code{q x q} matrix or a \code{q x q x n} array.
 #' @param n number of random matrices to generate.
@@ -26,7 +28,7 @@
 #'
 #' Quadratic forms involving a nonrandom vector \code{a} and a Wishart random matrix \code{X} have a chi-square distribution.  That is, for fixed \code{a} and \code{X ~ Wish(Psi, nu)},
 #' \deqn{(a' X a) / (a' Psi a) ~ chisq(df = nu).}
-#' 
+#'
 #' @examples
 #' ## Random sampling
 #' n = 100
@@ -34,14 +36,14 @@
 #' Psi1 = matrix(c(1,0.1,0.1,1),q,q)
 #' Psi2 = solve(Psi1)
 #' nu = q+1
-#' 
+#'
 #' X1 = rwish(n,Psi1,nu) # Wishart
 #' X2 = riwish(n, Psi2, nu) # Inverse-Wishart
-#' 
+#'
 #' ## log-density calculation for sampled values
 #' dwish(X1, Psi1, nu, log = TRUE) # Wishart
 #' diwish(X2, Psi2, nu, log = TRUE) # Inverse Wishart
-#' 
+#'
 #' @return A vector for densities, or a \code{q x q x n} array for random sampling.
 
 #--- convenience wrappers --------------------------------------------------
@@ -80,8 +82,7 @@ riwish <- function(n, Psi, nu) {
 
 #' @rdname Wishart
 #' @export
-dwishart <- function(X, Psi, nu, inverse = FALSE, log = FALSE, debug = FALSE) {
-  if(debug) browser()
+dwishart <- function(X, Psi, nu, inverse = FALSE, log = FALSE) {
   # get dimensions
   PQ <- .getPQ(X = X, Psi = Psi)
   if(is.na(PQ[2])) stop("Undetermined problem dimensions.")

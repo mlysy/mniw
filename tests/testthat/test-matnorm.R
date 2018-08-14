@@ -3,6 +3,8 @@ library(mniw)
 source("mniw-testfunctions.R")
 context("Matrix Normal Distribution")
 
+tol <- 1e-6
+
 test_that("Matrix Normal density is same in C++ as R", {
   calc.diff <- FALSE
   case.par <- expand.grid(p = c(1,2,4), q = c(1,2,3),
@@ -60,7 +62,7 @@ test_that("Matrix Normal density is same in C++ as R", {
     if(calc.diff) {
       MaxDiff[ii] <- mx
     } else {
-      expect_equal(mx, 0)
+      expect_equal(mx, 0, tolerance = tol)
     }
   }
 })
@@ -119,7 +121,7 @@ test_that("Matrix Normal simulation is same in C++ as R", {
     if(calc.diff) {
       MaxDiff[ii] <- mx
     } else {
-      expect_equal(mx, 0)
+      expect_equal(mx, 0, tolerance = tol)
     }
   }
 })

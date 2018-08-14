@@ -126,8 +126,7 @@ rmNormRE <- function(n, y, V, lambda, A) {
 #'
 #' @examples
 #' ## Input Specifications
-#' Mmniw = 1e3
-#' set.seed(25) # for repeatability
+#' nsamples <- 10
 #' N <- 20
 #' p <- 1
 #' q <- 2
@@ -137,20 +136,20 @@ rmNormRE <- function(n, y, V, lambda, A) {
 #' nu0 <- rexp(1) + (q+1)                                # prior specification
 #' X <- rMNorm(1, matrix(0, N, p))
 #' V <- array(rwish(N, diag(q), q+1),dim=c(q,q,N))
-#' ## Construct True Model
+#'
+#' ## Simulate data from True Model
 #' Sigma00 = rwish(1, Psi0, nu0)
 #' Beta00 = rMNorm(1, Lambda0, Omega0, Sigma00)
 #' Mu00 = rmNorm(N, X %*% Beta00, Sigma00) # random effects
 #' Y00 = rmNorm(N, Mu00, V) # Data
-#' hmdata <- list(p = ncol(X), q = ncol(Y00), N = nrow(X),
-#'                X = X, Y = Y00, V = V,
-#'                Psi0=Psi0, Lambda0=Lambda0, Omega0=Omega0, nu0=nu0)
-#'                prior_list = list(Psi=Psi0, Lambda=Lambda0, Omega=solve(Omega0), nu=nu0)
-#'                init_list = list(Beta=Beta00,Sigma=Sigma00,Mu=Mu00)
+#' prior_list <- list(Psi=Psi0, Lambda=Lambda0, Omega=solve(Omega0), nu=nu0) # Prior
+#' init_list <- list(Beta=Beta00,Sigma=Sigma00,Mu=Mu00) # Initialize MCMC
 #'
 #' ## Gibbs sampling to get posterior
-#' r_fit = mNormRE.post(Mmniw, Y=Y00, V=V, X=X, prior = prior_list, burn=ceiling(Mmniw/2), updateHyp = TRUE,
-#'               storeHyp = TRUE, updateRE = TRUE, storeRE = FALSE,  init=init_list)
+#' r_fit <- mNormRE.post(nsamples, Y=Y00, V=V, X=X,
+#'                       prior = prior_list,
+#'                       init = init_list,
+#'                       burn = ceiling(nsamples/2))
 #'
 #' @export
 mNormRE.post <- function(nsamples, Y, V, X, prior = NULL, init, burn,
@@ -162,7 +161,10 @@ mNormRE.post <- function(nsamples, Y, V, X, prior = NULL, init, burn,
   p <- ncol(X)
   if(nrow(X) != n) stop("Y and X have incompatible dimensions.")
   if(is.matrix(V)) V <- array(c(V), dim = c(dim(V), n))
-  if(!identical(dim(V), c(q,q,n))) stop("Y and V have incompatible dimensions.")
+  V <- .setDims(V, q, q)
+  if(anyNA(V) || !identical(dim(V), c(q,q*n))) {
+    stop("Y and V have incompatible dimensions.")
+  }
   # prior
   if(is.null(prior)) prior <- list()
   Lambda <- .setDims(prior$Lambda, p, q)
@@ -198,7 +200,7 @@ mNormRE.post <- function(nsamples, Y, V, X, prior = NULL, init, burn,
   post <- HierUneqVModelGibbs(nSamples = as.integer(nsamples),
                               nBurn = as.integer(burn),
                               Y = Y, X = X, V = V,
-                              Lambda = Lamda, Omega = Omega,
+                              Lambda = Lambda, Omega = Omega,
                               Psi = Psi, nu = nu,
                               Beta0 = Beta0, iSigma0 = .solveV(Sigma0),
                               Mu0 = Mu0,

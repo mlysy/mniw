@@ -9,7 +9,7 @@
 \usage{
 dmNorm(x, mu, V, log = FALSE)
 
-rmNorm(n, mu, V, debug = FALSE)
+rmNorm(n, mu, V)
 }
 \arguments{
 \item{x}{argument to the density function.  A vector of length \code{q} or an \code{n x q} matrix.}

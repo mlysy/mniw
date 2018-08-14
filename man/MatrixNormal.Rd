@@ -5,11 +5,11 @@
 \alias{dMNorm}
 \alias{rMNorm}
 \alias{rMNorm}
-\title{Matrix-Normal distribution.}
+\title{The Matrix-Normal distribution.}
 \usage{
-dMNorm(X, Mu, RowV, ColV, log = FALSE, debug = FALSE)
+dMNorm(X, Mu, RowV, ColV, log = FALSE)
 
-rMNorm(n, Mu, RowV, ColV, debug = FALSE)
+rMNorm(n, Mu, RowV, ColV)
 }
 \arguments{
 \item{X}{argument to the density function.  Either a \code{p x q} matrix or a \code{p x q x n} array.}

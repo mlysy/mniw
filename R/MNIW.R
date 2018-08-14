@@ -1,6 +1,7 @@
 #--- MNIW distribution -----------------------------------------------------
 
-#' @title Generate samples from the Matrix-Normal Inverse-Wishart distribution.
+#' Generate samples from the Matrix-Normal Inverse-Wishart distribution.
+#'
 #' @param n number of samples.
 #' @param Lambda \code{p x q} mean matrix of \code{X} (see details).
 #' @param Sigma \code{p x p} conditional row variance matrix of \code{X}.
@@ -10,13 +11,13 @@
 #' @details The Matrix-Normal Inverse-Wishart (MNIW) distribution on \code{p x q} matrix \code{X} and \code{q x q} matrix \code{V} is:
 #' \deqn{X | V ~ MN(Lambda, Sigma, V),}
 #' \deqn{V ~ iWish(Psi, nu).}
-#' 
+#'
 #' @return A list with the folllwing elements:
 #' \describe{
 #' \item{X}{Random samples for X ~ MN(Lambda, Sigma, V).}
 #' \item{V}{Random samples for V ~ iWish(Psi, nu).}
 #' }
-#' 
+#'
 #' @examples
 #' ## Sample from MNIW distribution
 #' n = 100
@@ -27,14 +28,13 @@
 #' Psi = matrix(c(1,0.1,0.1,1),p,q)
 #' nu = q + 1
 #' rMNIW(n, Lambda, Sigma, Psi, nu)
-#' 
+#'
 #' @export
-rMNIW <- function(n, Lambda, Sigma, Psi, nu, prec = FALSE, debug = FALSE) {
+rMNIW <- function(n, Lambda, Sigma, Psi, nu, prec = FALSE) {
   # get dimensions
   PQ <- .getPQ(Lambda = Lambda, Sigma = Sigma, Psi = Psi)
   p <- PQ[1]
   q <- PQ[2]
-  if(debug) browser()
   if(anyNA(PQ)) {
     stop("Problem dimensions are undetermined (too many missing inputs).")
   }

@@ -1,37 +1,45 @@
-//////////////////////////////////////////////////////////////////
-
-// Utility functions for Triangular Matrices
-// triangular views in Eigen need to be templated inside functions, so can't separate
-// declaration and implementation in the usual way.
-// instead include them both in this small header and proceed as usual in other headers.
-
-//////////////////////////////////////////////////////////////////
+/// @file TriUtils.h
+/// @author Martin Lysy (mlysy@uwaterloo.ca)
+///
+/// Utility functions for triangular matrices
+///
+/// Various types of products and solvers for linear systems involving lower/upper triangular matrices.  All arguments to these functions can be subsets of larger matrices; see "Writing Functions Taking Eigen Types as Parameters" in the Eigen documentation.
+///
+/// @note TODO:
+///
+/// - Put in namespace
+/// - Remove `using namespace Eigen`
+/// - Remove macro documentation (
+///
 
 #ifndef TriUtils_h
 #define TriUtils_h 1
 
-/* #include <Rcpp.h> */
-/* using namespace Rcpp; */
 // [[Rcpp::depends(RcppEigen)]]
 #include <RcppEigen.h>
 //#include <iostream>
 using namespace Eigen;
 
-//////////////////////////////////////////////////////////////////
+//------------------------------------------------------------------------------
 
-// various types of triangular multiplications
-// NOTE: none of these work properly if source and destination refer to same space in memory
-// NOTE: For safest results set all "off-triangular" arguments to zero.
-
-// X = L1 * L2
+/// Multiplication of two lower triangular matrices
+///
+/// Performs the matrix multiplication `X = L1 * L2`, where `L1` and `L2` are lower triangular matrices.
+///
+/// @param [in] L1 First `n x n` lower triangular matrix.
+/// @param [in] L2 Second `n x n` lower triangular matrix.
+/// @param [out] X Matrix of size `n x n` containing the product of `L1` and `L2`.
+///
+/// @note Does not work properly if any of the inputs arguments are also outputs.
+/// @note For safest results, all "off-triangular" elements of triangular arguments should be set to zero.
 template <typename T1, typename T2>
   void triMultLL(const Eigen::MatrixBase<T1>& X,
-		 const Ref<MatrixXd>& L1,
+		 const Ref<const MatrixXd>& L1,
 		 const Eigen::MatrixBase<T2>& L2) {
   // hack to use triangularView: see Eigen documentation
   //"Writing Functions Taking Eigen Types as Parameters"
-  #define _VL const_cast<Eigen::MatrixBase<T1>& >(VL)
-  #define _XL const_cast<Eigen::MatrixBase<T2>& >(XL)
+  // #define _VL const_cast<Eigen::MatrixBase<T1>& >(VL)
+  // #define _XL const_cast<Eigen::MatrixBase<T2>& >(XL)
   #define _X const_cast<Eigen::MatrixBase<T1>& >(X)
   #define _L2 const_cast<Eigen::MatrixBase<T2>& >(L2)
   _X.template triangularView<Eigen::Lower>() = L1 * _L2.template triangularView<Eigen::Lower>();
@@ -40,7 +48,14 @@ template <typename T1, typename T2>
   return;
 }
 
-// X = L^{-1} * X
+/// In-place solution of a lower triangular system
+///
+/// Performs the matrix multiplication `X = L^{-1} * X`, where `L` is a lower triangular matrix.
+///
+/// @param [in,out] X Matrix of size `n x p` on RHS of linear system.  This is also where solution will be returned, i.e., in-place.
+/// @param [in] L Lower triangular matrix of size `n x n` on LHS of linear system.
+///
+/// @note For safest results, all "off-triangular" elements of triangular arguments should be set to zero.
 template <typename T1>
 void triMultLiX(Ref<MatrixXd> X, const Eigen::MatrixBase<T1>& L) {
   #ifdef _MSC_VER
@@ -51,7 +66,16 @@ void triMultLiX(Ref<MatrixXd> X, const Eigen::MatrixBase<T1>& L) {
   return;
 }
 
-// Y = X * U;
+/// Right-multiplication by upper triangular matrix
+///
+/// Performs the matrix multiplication `Y = X * U`, where `U` is an upper triangular matrix.
+///
+/// @param [in] X Matrix of size `n x p` to be multiplied.
+/// @param [in] U Lower triangular matrix of size `n x n` right-multiplying `X`.
+/// @param [out] Y Matrix of size `n x p` containing the product of `X` and `U`.
+///
+/// @note Does not work properly if any of the inputs arguments are also outputs.
+/// @note For safest results, all "off-triangular" elements of triangular arguments should be set to zero.
 template <typename T1>
 void triMultXU(Ref<MatrixXd> Y, const Ref<const MatrixXd>& X,
 	       const Eigen::MatrixBase<T1>& U) {
@@ -59,7 +83,16 @@ void triMultXU(Ref<MatrixXd> Y, const Ref<const MatrixXd>& X,
   return;
 }
 
-// Y = L * X
+/// Left-multiplication by a lower triangular matrix
+///
+/// Performs the matrix multiplication `Y = L * X`, where `L` is a lower triangular matrix.
+///
+/// @param [in] X Matrix of size `n x p` to be multiplied.
+/// @param [in] L Lower triangular matrix of size `n x n` left-multiplying `X`.
+/// @param [out] Y Matrix of size `n x p` containing the product of `L` and `X`.
+///
+/// @note Does not work properly if any of the inputs arguments are also outputs.
+/// @note For safest results, all "off-triangular" elements of triangular arguments should be set to zero.
 template <typename T1>
 void triMultLX(Ref<MatrixXd> Y, const Eigen::MatrixBase<T1>& L,
 		const Ref<const MatrixXd>& X) {
@@ -67,7 +100,15 @@ void triMultLX(Ref<MatrixXd> Y, const Eigen::MatrixBase<T1>& L,
   return;
 }
 
-// X = X * L^{-1}
+/// In-place solution of a reverse lower triangular system
+///
+/// Performs the multiplication `X = X * L^{-1}`, where `L` is a lower triangular matrix.
+///
+/// @param [in,out] X Matrix of size `n x p` on RHS of linear system.  This is also where solution will be returned, i.e., in-place.
+/// @param [in] L Lower triangular matrix of size `n x n` on LHS of linear system.
+///
+/// @note Does not work properly if any of the inputs arguments are also outputs.
+/// @note For safest results, all "off-triangular" elements of triangular arguments should be set to zero.
 template <typename T1>
 void triMultXLi(Ref<MatrixXd> X, const Eigen::MatrixBase<T1>& L) {
   #ifdef _MSC_VER
@@ -78,7 +119,14 @@ void triMultXLi(Ref<MatrixXd> X, const Eigen::MatrixBase<T1>& L) {
   return;
 }
 
-// X = U^{-1} * X
+/// In-place solution of an upper triangular system
+/// Performs the multiplication `X = U^{-1} * X`, where `U` is an upper triangular matrix.
+///
+/// @param [in,out] X Matrix of size `n x p` on RHS of linear system.  This is also where solution will be returned, i.e., in-place.
+/// @param [in] U Upper triangular matrix of size `n x n` on LHS of linear system.
+///
+/// @note Does not work properly if any of the inputs arguments are also outputs.
+/// @note For safest results, all "off-triangular" elements of triangular arguments should be set to zero.
 template <typename T1>
 void triMultUiX(const Eigen::MatrixBase<T1>& U, Ref<MatrixXd> X) {
   #ifdef _MSC_VER
@@ -90,17 +138,21 @@ void triMultUiX(const Eigen::MatrixBase<T1>& U, Ref<MatrixXd> X) {
 }
 
 
-//////////////////////////////////////////////////////////////////
+//------------------------------------------------------------------------------
 
-// various types of "crossproducts"
-// NOTE: none of these work properly if source and destination refer to same space in memory
-// NOTE: For safest results set all "off-triangular" arguments to zero.
-
-// X = U' * U for upper triangular U
-// L is scratch space
+/// Transpose-product of upper triangular matrices
+///
+/// Performs the multiplication `X = U' * U`, where `U` is an upper triangular matrix.
+///
+/// @param [out] X Matrix of size `n x n` containing the transpose-product of `U`.
+/// @param [in] U Upper triangular matrix of size `n x n`.
+/// @param [in] L Lower triangular matrix of size `n x n` used for intermediate calculations.
+///
+/// @note Does not work properly if any of the inputs arguments are also outputs.
+/// @note For safest results, all "off-triangular" elements of triangular arguments should be set to zero.
 template <typename T1, typename T2>
 void crossProdUtU(const Eigen::MatrixBase<T1>& X,
-		  const Ref<MatrixXd>& U,
+		  const Ref<const MatrixXd>& U,
 		  const Eigen::MatrixBase<T2>& L) {
   // hack
   #define _X const_cast<Eigen::MatrixBase<T1>& >(X)
@@ -113,11 +165,19 @@ void crossProdUtU(const Eigen::MatrixBase<T1>& X,
   return;
 }
 
-// X = L * L' for lower triangular L
-// U is scratch space
+/// Reverse transpose-product of lower triangular matrices
+///
+/// Performs the multiplication `X = L * L'`, where `L` is a lower triangular matrix.
+///
+/// @param [out] X Matrix of size `n x n` containing the reverse transpose-product of `L`.
+/// @param [in] L Lower triangular matrix of size `n x n`.
+/// @param [in] U Upper triangular matrix of size `n x n` used for intermediate calculations.
+///
+/// @note Does not work properly if any of the inputs arguments are also outputs.
+/// @note For safest results, all "off-triangular" elements of triangular arguments should be set to zero.
 template <typename T1, typename T2>
 void CrossProdLLt(const Eigen::MatrixBase<T1>& X,
-		  const Ref<MatrixXd>& L,
+		  const Ref<const MatrixXd>& L,
 		  const Eigen::MatrixBase<T2>& U) {
   // hack
   #define _X const_cast<Eigen::MatrixBase<T1>& >(X)
@@ -130,11 +190,19 @@ void CrossProdLLt(const Eigen::MatrixBase<T1>& X,
   return;
 }
 
-// X = L' * L for lower triangular L
-// U is scratch space
+/// Transpose-product of lower triangular matrices
+///
+/// Performs the multiplication `X = L' * L`, where `L` is a lower triangular matrix.
+///
+/// @param [out] X Matrix of size `n x n` containing the transpose-product of `L`.
+/// @param [in] L Lower triangular matrix of size `n x n`.
+/// @param [in] U Upper triangular matrix of size `n x n` used for intermediate calculations.
+///
+/// @note Does not work properly if any of the inputs arguments are also outputs.
+/// @note For safest results, all "off-triangular" elements of triangular arguments should be set to zero.
 template <typename T1, typename T2>
 void CrossProdLtL(const Eigen::MatrixBase<T1>& X,
-		  const Ref<MatrixXd>& L,
+		  const Ref<const MatrixXd>& L,
 		  const Eigen::MatrixBase<T2>& U) {
   // hack
   #define _X const_cast<Eigen::MatrixBase<T1>& >(X)
@@ -147,13 +215,25 @@ void CrossProdLtL(const Eigen::MatrixBase<T1>& X,
   return;
 }
 
-// X = (LL')^{-1} for lower triangular L
+/// Inverse of reverse transpose-product
+///
+/// Performs the calculation `X = (L * L')^{-1}`, where `L` is a lower triangular matrix.
+///
+/// @param [out] X Matrix of size `n x n` containing the inverse of the reverse transpose-product of `L`.
+/// @param [in] L Lower triangular matrix of size `n x n`.
+/// @param [in] U Upper triangular matrix of size `n x n` used for intermediate calculations.
+///
+/// @param [in] L2 Lower triangular matrix of size `n x n` used for intermediate calculations.
+/// @param [in] I Identity matrix of size `n x n` used for intermediate calculations.
+///
+/// @note Does not work properly if any of the inputs arguments are also outputs.
+/// @note For safest results, all "off-triangular" elements of triangular arguments should be set to zero.
 template <typename T1>
 void InverseLLt(Ref<MatrixXd> X,
 		const Eigen::MatrixBase<T1>& L,
 		Ref<MatrixXd> L2,
 		Ref<MatrixXd> U,
-		const Ref<MatrixXd>& I) {
+		const Ref<const MatrixXd>& I) {
   // invert L
   L2 = L.template triangularView<Eigen::Lower>().solve(I);
   //calculate L2' * L2

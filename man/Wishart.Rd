@@ -23,7 +23,7 @@ diwish(X, Psi, nu, log = FALSE)
 
 riwish(n, Psi, nu)
 
-dwishart(X, Psi, nu, inverse = FALSE, log = FALSE, debug = FALSE)
+dwishart(X, Psi, nu, inverse = FALSE, log = FALSE)
 
 rwishart(n, Psi, nu, inverse = FALSE)
 }

@@ -4,7 +4,7 @@
 \alias{rMNIW}
 \title{Generate samples from the Matrix-Normal Inverse-Wishart distribution.}
 \usage{
-rMNIW(n, Lambda, Sigma, Psi, nu, prec = FALSE, debug = FALSE)
+rMNIW(n, Lambda, Sigma, Psi, nu, prec = FALSE)
 }
 \arguments{
 \item{n}{number of samples.}
@@ -25,6 +25,9 @@ A list with the folllwing elements:
 \item{X}{Random samples for X ~ MN(Lambda, Sigma, V).}
 \item{V}{Random samples for V ~ iWish(Psi, nu).}
 }
+}
+\description{
+Generate samples from the Matrix-Normal Inverse-Wishart distribution.
 }
 \details{
 The Matrix-Normal Inverse-Wishart (MNIW) distribution on \code{p x q} matrix \code{X} and \code{q x q} matrix \code{V} is:

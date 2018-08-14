@@ -1,6 +1,6 @@
 #' Hospital profiling data.
 #'
-#' Information on patient-reported problem rates for 27 teaching hosptials and private academic health centers in the United States.
+#' Information on patient-reported problem rates for 27 teaching hospitals and private academic health centers in the United States.
 #'
 #' @format A data frame with 27 rows (one for each hospital) and 4 variables:
 #' \describe{

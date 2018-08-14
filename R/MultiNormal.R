@@ -1,8 +1,10 @@
 #--- multivariate normal distribution --------------------------------------
 
+#' The Multivariate Normal distribution.
+#'
+#' Density and random sampling for the Multivariate Normal distribution.
+#'
 #' @name MultiNormal
-#' @title The Multivariate Normal distribution.
-#' @description Density and random sampling for the Multivariate Normal distribution.
 #' @aliases dmNorm rmNorm
 #' @param x argument to the density function.  A vector of length \code{q} or an \code{n x q} matrix.
 #' @param n number of random vectors to generate.
@@ -69,7 +71,6 @@ dmNorm <- function(x, mu, V, log = FALSE) {
   if(length(N) > 2) stop("Arguments have different lengths.")
   x <- matrix(x, nrow = q) # format for mN
   mu <- matrix(mu, nrow = q) # format for mN
-  if(debug) browser()
   ans <- LogDensityMultivariateNormal(x, mu, V)
   if(!log) ans <- exp(ans)
   ans
@@ -77,7 +78,7 @@ dmNorm <- function(x, mu, V, log = FALSE) {
 
 #' @rdname MultiNormal
 #' @export
-rmNorm <- function(n, mu, V, debug = FALSE) {
+rmNorm <- function(n, mu, V) {
   # get dimensions
   # first convert to appropriate MN format
   if(!missing(mu)) mu <- .vec2mn(mu)
@@ -107,7 +108,6 @@ rmNorm <- function(n, mu, V, debug = FALSE) {
   if(length(N) > 2 || (length(N) == 2 && N[2] != n)) {
     stop("Arguments don't all have length n.")
   }
-  if(debug) browser()
   mu <- matrix(mu, nrow = p) # format for mN
   X <- GenerateMultivariateNormal(n, mu, V)
   if(n > 1) {

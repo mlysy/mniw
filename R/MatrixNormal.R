@@ -1,8 +1,10 @@
 #--- matrix normal distribution --------------------------------------------
 
+#' The Matrix-Normal distribution.
+#'
+#' Density and random sampling for the Matrix-Normal distribution.
+#'
 #' @name MatrixNormal
-#' @title Matrix-Normal distribution.
-#' @description Density and random sampling for the Matrix-Normal distribution.
 #' @aliases dMNorm rMNorm
 #' @param X argument to the density function.  Either a \code{p x q} matrix or a \code{p x q x n} array.
 #' @param n number of random matrices to generate.
@@ -16,7 +18,7 @@
 #' \deqn{f(X) = const * \exp{-0.5 Tr( ColV^{-1}(X-Mu)''RowV^{-1}(X-Mu) )}.}
 #' Linear combinations of Matrix-Normals are normal.  That is, for fixed \code{a} and \code{b} and \code{X ~ MNorm(Mu, RowV, ColV)}, then
 #' \deqn{a' X b \sim N( a' Mu b, (a' RowV a) * (b' ColV b) ).}
-#' 
+#'
 #' @examples
 #' ## Matrix-Normal random sample and subsequent density calculation
 #' n = 100
@@ -25,20 +27,20 @@
 #' Mu = matrix(1,p,q)
 #' RowV = toeplitz(exp(-seq(1:p)))
 #' ColV = diag(q)
-#' 
+#'
 #' # Random sample from Matrix-Normal distribution
 #' mnData = rMNorm(n, Mu, RowV, ColV)
-#' 
+#'
 #' # Calculate log-density for each sampled matrix
 #' dMNorm(mnData, Mu, RowV, ColV, log=TRUE)
-#' 
+#'
 #' @return A vector for densities, or a \code{p x q x n} array for random sampling.
 
 #--- lower-level functions -------------------------------------------------
 
 #' @rdname MatrixNormal
 #' @export
-dMNorm <- function(X, Mu, RowV, ColV, log = FALSE, debug = FALSE) {
+dMNorm <- function(X, Mu, RowV, ColV, log = FALSE) {
   # get dimensions
   PQ <- .getPQ(X = X, Lambda = Mu, Sigma = RowV, Psi = ColV)
   p <- PQ[1]
@@ -59,7 +61,6 @@ dMNorm <- function(X, Mu, RowV, ColV, log = FALSE, debug = FALSE) {
   N <- .getN(p = p, q = q, X = X, Lambda = Mu, Sigma = RowV,
              Psi = ColV)
   if(length(N) > 2) stop("Arguments have different lengths.")
-  if(isTRUE(debug)) browser()
   ans <- LogDensityMatrixNormal(X, Mu, RowV, ColV)
   if(!log) ans <- exp(ans)
   ans
@@ -67,7 +68,7 @@ dMNorm <- function(X, Mu, RowV, ColV, log = FALSE, debug = FALSE) {
 
 #' @rdname MatrixNormal
 #' @export
-rMNorm <- function(n, Mu, RowV, ColV, debug = FALSE) {
+rMNorm <- function(n, Mu, RowV, ColV) {
   # get dimensions
   PQ <- .getPQ(Lambda = Mu, Sigma = RowV, Psi = ColV)
   p <- PQ[1]
@@ -87,7 +88,6 @@ rMNorm <- function(n, Mu, RowV, ColV, debug = FALSE) {
              Psi = ColV)
   if(length(N) > 2 || (length(N) == 2 && N[2] != n))
     stop("Arguments don't all have length n.")
-  if(isTRUE(debug)) browser()
   X <- GenerateMatrixNormal(n, Mu, RowV, ColV)
   if(n > 1) X <- array(X, dim = c(p,q,n))
   X

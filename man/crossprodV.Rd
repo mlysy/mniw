@@ -19,7 +19,7 @@ crossprodV(X, Y = NULL, V, inverse = FALSE)
 An array of size \code{q x r x n}.
 }
 \description{
-Vectorized matrix cross-products \code{X\out{'} V Y} or \code{X\out{'} V^{-1} Y}.
+Vectorized matrix cross-products \code{t(X) V Y} or \code{t(X) V^{-1} Y}.
 }
 \examples{
 ## Basic vectorized cross-product

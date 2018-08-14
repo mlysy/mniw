@@ -3,6 +3,8 @@ library(mniw)
 source("mniw-testfunctions.R")
 context("Wishart and Inverse Wishart Distributions")
 
+tol <- 1e-6
+
 test_that("Wishart density is same in C++ as R", {
   calc.diff <- FALSE
   case.par <- expand.grid(q = c(1,2,4),
@@ -57,7 +59,7 @@ test_that("Wishart density is same in C++ as R", {
     if(calc.diff) {
       MaxDiff[ii] <- mx
     } else {
-      expect_equal(mx, 0)
+      expect_equal(mx, 0, tolerance = tol)
     }
   }
 })
@@ -115,7 +117,7 @@ test_that("Wishart sampling is same in C++ as R", {
     if(calc.diff) {
       MaxDiff[ii] <- mx
     } else {
-      expect_equal(mx, 0)
+      expect_equal(mx, 0, tolerance = tol)
     }
   }
 })
