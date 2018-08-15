@@ -3,13 +3,13 @@
 ///
 /// Utility functions for triangular matrices
 ///
-/// Various types of products and solvers for linear systems involving lower/upper triangular matrices.  All arguments to these functions can be subsets of larger matrices; see "Writing Functions Taking Eigen Types as Parameters" in the Eigen documentation.
+/// Various types of products, solvers, and decompositions involving lower and upper triangular matrices.  Almost all arguments to these functions can be subsets of larger matrices; see "Writing Functions Taking Eigen Types as Parameters" in the Eigen documentation.
 ///
 /// @note TODO:
 ///
 /// - Put in namespace
 /// - Remove `using namespace Eigen`
-/// - Remove macro documentation (
+/// - Remove macro documentation
 ///
 
 #ifndef TriUtils_h
@@ -20,7 +20,7 @@
 //#include <iostream>
 using namespace Eigen;
 
-//------------------------------------------------------------------------------
+// --- matrix multiplication ---------------------------------------------------
 
 /// Multiplication of two lower triangular matrices
 ///
@@ -45,24 +45,6 @@ template <typename T1, typename T2>
   _X.template triangularView<Eigen::Lower>() = L1 * _L2.template triangularView<Eigen::Lower>();
   #undef _X
   #undef _L2
-  return;
-}
-
-/// In-place solution of a lower triangular system
-///
-/// Performs the matrix multiplication `X = L^{-1} * X`, where `L` is a lower triangular matrix.
-///
-/// @param [in,out] X Matrix of size `n x p` on RHS of linear system.  This is also where solution will be returned, i.e., in-place.
-/// @param [in] L Lower triangular matrix of size `n x n` on LHS of linear system.
-///
-/// @note For safest results, all "off-triangular" elements of triangular arguments should be set to zero.
-template <typename T1>
-void triMultLiX(Ref<MatrixXd> X, const Eigen::MatrixBase<T1>& L) {
-  #ifdef _MSC_VER
-  L.template triangularView<Eigen::Lower>().solveInPlace(X);
-  #else
-  L.template triangularView<Eigen::Lower>().template solveInPlace(X);
-  #endif
   return;
 }
 
@@ -100,6 +82,26 @@ void triMultLX(Ref<MatrixXd> Y, const Eigen::MatrixBase<T1>& L,
   return;
 }
 
+// --- solution of linear system -----------------------------------------------
+
+/// In-place solution of a lower triangular system
+///
+/// Performs the matrix multiplication `X = L^{-1} * X`, where `L` is a lower triangular matrix.
+///
+/// @param [in,out] X Matrix of size `n x p` on RHS of linear system.  This is also where solution will be returned, i.e., in-place.
+/// @param [in] L Lower triangular matrix of size `n x n` on LHS of linear system.
+///
+/// @note For safest results, all "off-triangular" elements of triangular arguments should be set to zero.
+template <typename T1>
+void triMultLiX(Ref<MatrixXd> X, const Eigen::MatrixBase<T1>& L) {
+  #ifdef _MSC_VER
+  L.template triangularView<Eigen::Lower>().solveInPlace(X);
+  #else
+  L.template triangularView<Eigen::Lower>().template solveInPlace(X);
+  #endif
+  return;
+}
+
 /// In-place solution of a reverse lower triangular system
 ///
 /// Performs the multiplication `X = X * L^{-1}`, where `L` is a lower triangular matrix.
@@ -120,6 +122,7 @@ void triMultXLi(Ref<MatrixXd> X, const Eigen::MatrixBase<T1>& L) {
 }
 
 /// In-place solution of an upper triangular system
+///
 /// Performs the multiplication `X = U^{-1} * X`, where `U` is an upper triangular matrix.
 ///
 /// @param [in,out] X Matrix of size `n x p` on RHS of linear system.  This is also where solution will be returned, i.e., in-place.
@@ -138,7 +141,7 @@ void triMultUiX(const Eigen::MatrixBase<T1>& U, Ref<MatrixXd> X) {
 }
 
 
-//------------------------------------------------------------------------------
+// --- transpose-products ------------------------------------------------------
 
 /// Transpose-product of upper triangular matrices
 ///
@@ -238,6 +241,49 @@ void InverseLLt(Ref<MatrixXd> X,
   L2 = L.template triangularView<Eigen::Lower>().solve(I);
   //calculate L2' * L2
   CrossProdLtL(X, L2, U);
+  return;
+}
+
+// --- reverse cholesky decomposition ------------------------------------------
+
+/// Anti-transpose of a matrix
+///
+/// Transpose the lower triangular elements of a square matrix across the anti-diagonal (the remaining elements of the output are left untouched).  So for example, we would have
+///
+/// \f[
+/// \begin{bmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \\ 7 & 8 & 9 \end{bmatrix}
+/// \qquad \longrightarrow \qquad
+/// \begin{bmatrix} 9 & & \\ 8 & 5 & \\ 7 & 4 & 1 \end{bmatrix}.
+/// \f]
+///
+/// @param [out] Y Matrix of size `n x n` to which anti-transpose is output.
+/// @param [in] X Matrix of size `n x n` of which the lower triangular elements will be anti-transposed.
+///
+/// @note Does not work properly if any of the inputs arguments are also outputs.
+inline void AntiTransposeLowerTri(Ref<MatrixXd> Y, const Ref<const MatrixXd>& X) {
+  int q = X.cols();
+  int ii, jj;
+  // anti-transpose lower part of X into Y
+  for(ii=0; ii<q; ii++) {
+    for(jj=0; jj<=ii; jj++) {
+      Y(q-1-jj,q-1-ii) = X(ii,jj);
+    }
+  }
+  return;
+}
+
+/// Reverse-Cholesky decomposition of a positive-definite matrix
+///
+/// Calculates the lower triangular matrix `L` satisfying `V = L'L`, where `V` is a positive-definite matrix.
+///
+/// @param [out] L Lower triangular matrix of size `n x n`.
+/// @param [in] V Positive-definite matrix of size `n x n`.
+/// @param [in] tmp Object of class `TempPQ` used to store intermediate calculations.
+inline void ReverseCholesky(Ref<MatrixXd> L, const Ref<const MatrixXd>& V, TempPQ *tmp) {
+  AntiTransposeLowerTri(tmp->Mq, V);
+  tmp->lltq.compute(tmp->Mq);
+  tmp->Lq = tmp->lltq.matrixL();
+  AntiTransposeLowerTri(L, tmp->Lq);
   return;
 }
 
