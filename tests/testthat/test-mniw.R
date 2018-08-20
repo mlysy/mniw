@@ -70,38 +70,37 @@ test_that("MNIW sampling is same in C++ as R", {
     if(calc.diff) {
       MaxDiff[ii,] <- mx
     } else {
-      expect_equal(mx, c(0,0), tolerance = tol)
+      ## expect_equal(mx, c(0,0), tolerance = tol)
+      expect_Rcpp_equal("rMNIW", ii, mx, tolerance = tol)
     }
   }
 })
 
 
-if(FALSE) {
-  range(MaxDiff)
+## range(MaxDiff)
 
-  cp <- case.par[ii,]
-  p <- cp$p
-  q <- cp$q
-  Lambda <- if(cp$Lambda == "none") matrix(0,p,q) else rMnorm(p,q)
-  Sigma <- if(cp$Sigma == "none") diag(p) else crossprod(rMnorm(p))
-  Psi <- if(cp$Psi == "none") crossprod(rMnorm(q)) else diag(q)
-  nu <- runif(1, q, 2*q)
-  prec <- cp$prec
+## cp <- case.par[ii,]
+## p <- cp$p
+## q <- cp$q
+## Lambda <- if(cp$Lambda == "none") matrix(0,p,q) else rMnorm(p,q)
+## Sigma <- if(cp$Sigma == "none") diag(p) else crossprod(rMnorm(p))
+## Psi <- if(cp$Psi == "none") crossprod(rMnorm(q)) else diag(q)
+## nu <- runif(1, q, 2*q)
+## prec <- cp$prec
 
-  n <- 1
-  set.seed(test.seed)
-  XVR2 <- rmniwR(Lambda = Lambda,
-                 Sigma = Sigma,
-                 Psi = Psi,
-                 nu = nu,
-                 prec = prec)
-  set.seed(test.seed)
-  XVcpp2 <- rMNIW(n = 1,
-                  Lambda = Lambda,
-                  Sigma = Sigma,
-                  Psi = Psi,
-                  nu = nu,
-                  prec = prec)
-  tmp <- expect_equal(XVR2, XVcpp2, tolerance = tol)
-  tmp
-}
+## n <- 1
+## set.seed(test.seed)
+## XVR2 <- rmniwR(Lambda = Lambda,
+##                Sigma = Sigma,
+##                Psi = Psi,
+##                nu = nu,
+##                prec = prec)
+## set.seed(test.seed)
+## XVcpp2 <- rMNIW(n = 1,
+##                 Lambda = Lambda,
+##                 Sigma = Sigma,
+##                 Psi = Psi,
+##                 nu = nu,
+##                 prec = prec)
+## tmp <- expect_equal(XVR2, XVcpp2, tolerance = tol)
+## tmp

@@ -115,7 +115,7 @@ dMNormR <- function(X, Lambda, SigmaU, SigmaV, log = FALSE,
   ans
 }
 
-# simulation of multivariate normal
+# simulation of matrix normal
 rMNormR <- function(Lambda, SigmaU, SigmaV) {
   p <- nrow(Lambda)
   q <- ncol(Lambda)
@@ -160,6 +160,17 @@ rmniwR <- function(Lambda, Sigma, Psi, nu, prec = FALSE, debug = FALSE) {
   #XL <- solve(XiL, XL)
 }
 
+# random effects normal simulation in R
+rmNormRER <- function(y, V, lambda, A) {
+  C <- solveV(V)
+  Q <- solveV(A)
+  G <- C + Q
+  GU <- chol(G)
+  z <- rnorm(length(y))
+  mu <- backsolve(r = GU, x = Q %*% (lambda - y), transpose = TRUE)
+  drop(backsolve(r = GU, x = z + mu) + y)
+}
+
 # reverse cholesky decomposition x = L'L
 revchol <- function(x) solve(t(chol(solve(x)))) # L
 
@@ -174,6 +185,14 @@ unlistM <- function(X, sArg, dropLast) {
   if(dropLast) {
     if(dim(X)[3] == 1) X <- array(X, dim = PQ)
   }
+  X
+}
+
+# convert a list of vectors into a matrix.
+# optionally keep only first element (sArg = TRUE)
+unlistV <- function(X, sArg) {
+  X <- do.call(rbind, X)
+  if(sArg) X <- X[1,]
   X
 }
 
@@ -212,4 +231,20 @@ rMM <- function(n, p, q, noArg) {
 arDiff <- function(x0, xhat) {
   mx <- abs(xhat - x0)
   min(max(mx), max(mx/abs(x0)))
+}
+
+# solve for variance matrices
+solveV <- function(V, x) {
+  C <- chol(V)
+  if(missing(x)) x <- diag(nrow(V))
+  backsolve(r = C, x = backsolve(r = C, x = x, transpose = TRUE))
+}
+
+# check R vs cpp code
+expect_Rcpp_equal <- function(fun, icase, mx, ...) {
+  Rcpp_comp <- function(fun, icase) mx
+  eval(bquote({
+    expect_equal(object = Rcpp_comp(.(fun), .(icase)),
+                 expected = .(rep(0, length(mx))), ...)
+  }))
 }

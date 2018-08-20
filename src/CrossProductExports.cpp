@@ -4,13 +4,14 @@
 
 //////////////////////////////////////////////////////////////////
 
-#include <Rcpp.h>
-using namespace Rcpp;
+// #include <Rcpp.h>
+// using namespace Rcpp;
 // [[Rcpp::depends(RcppEigen)]]
 #include <RcppEigen.h>
 //#include <iostream>
 using namespace Eigen;
-#include "mniwUtils.h"
+// #include "mniwUtils.h"
+// #include "TriUtils.h"
 
 //////////////////////////////////////////////////////////////////
 

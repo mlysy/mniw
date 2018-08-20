@@ -52,7 +52,8 @@ test_that("Matrix Normal density is same in C++ as R", {
     ColV <- unlistM(ColV, sColV, arr.drop)
     arg.list <- list(X = X, Mu = Mu, RowV = RowV, ColV = ColV)
     arg.list <- arg.list[!c(noX, noMu, noRowV, noColV)]
-    llcpp <- do.call(dMNorm, args = c(arg.list, list(log = TRUE)))
+    arg.list <- c(arg.list, list(log = TRUE))
+    llcpp <- do.call(dMNorm, args = arg.list)
     # if all inputs to c++ are single it returns only one value
     if(all(c(sX, sMu, sRowV, sColV))) {
       llcpp <- rep(llcpp, n)
@@ -62,7 +63,8 @@ test_that("Matrix Normal density is same in C++ as R", {
     if(calc.diff) {
       MaxDiff[ii] <- mx
     } else {
-      expect_equal(mx, 0, tolerance = tol)
+      ## expect_equal(mx, 0, tolerance = tol)
+      expect_Rcpp_equal("dMNorm", ii, mx, tolerance = tol)
     }
   }
 })
@@ -113,15 +115,17 @@ test_that("Matrix Normal simulation is same in C++ as R", {
     ColV <- unlistM(ColV, sColV, arr.drop)
     arg.list <- list(Mu = Mu, RowV = RowV, ColV = ColV)
     arg.list <- arg.list[!c(noMu, noRowV, noColV)]
+    arg.list <- c(arg.list, list(n = n))
     set.seed(TestSeed[ii]) # seed
-    llcpp <- do.call(rMNorm, args = c(arg.list, list(n = n)))
+    llcpp <- do.call(rMNorm, args = arg.list)
     #llcpp <- rMNorm(n = n, Mu = Mu, RowV = RowV, ColV = ColV)
     mx <- abs(range(llR - llcpp))
     mx <- min(max(mx), max(mx/abs(llR)))
     if(calc.diff) {
       MaxDiff[ii] <- mx
     } else {
-      expect_equal(mx, 0, tolerance = tol)
+      ## expect_equal(mx, 0, tolerance = tol)
+      expect_Rcpp_equal("rMNorm", ii, mx, tolerance = tol)
     }
   }
 })

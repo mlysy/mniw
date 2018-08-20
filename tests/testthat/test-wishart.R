@@ -14,10 +14,8 @@ test_that("Wishart density is same in C++ as R", {
                           inverse = c(TRUE, FALSE),
                           drop = c(TRUE, FALSE))
   ncases <- nrow(case.par)
-  n <- 10
-  if(calc.diff) {
-    MaxDiff <- rep(NA, ncases)
-  }
+  if(calc.diff) MaxDiff <- rep(NA, ncases)
+  n <- 12 # tests per case
   for(ii in 1:ncases) {
     cp <- case.par[ii,]
     q <- cp$q
@@ -45,21 +43,21 @@ test_that("Wishart density is same in C++ as R", {
     if(snu) nu <- nu[1]
     arg.list <- list(X = X, Psi = Psi)
     arg.list <- arg.list[!c(noX, noPsi)]
-    llcpp <- do.call(dwishart,
-                     args = c(arg.list,
-                       list(inverse = cp$inverse, nu = nu, log = TRUE)))
-    #llcpp <- dwishart(X = X, Psi = Psi, nu = nu,
-    #                  inverse = cp$inverse, log = TRUE)
+    arg.list <- c(arg.list, list(inverse = cp$inverse, nu = nu, log = TRUE))
+    llcpp <- do.call(dwishart, args = arg.list)
     # C++ produces single output if all inputs are single
     if(all(c(sX, sPsi, snu))) {
       llcpp <- rep(llcpp, n)
     }
     mx <- abs(llR - llcpp)
     mx <- min(max(mx), max(mx/abs(llR)))
+    ## cp <- case.par[ii,]
+    ## mx <- Rcpp_dwishart(cp)
     if(calc.diff) {
       MaxDiff[ii] <- mx
     } else {
-      expect_equal(mx, 0, tolerance = tol)
+      expect_Rcpp_equal("dwishart", ii, mx, tolerance = tol)
+      ## expect_equal(mx, 0, tolerance = tol)
     }
   }
 })
@@ -117,7 +115,7 @@ test_that("Wishart sampling is same in C++ as R", {
     if(calc.diff) {
       MaxDiff[ii] <- mx
     } else {
-      expect_equal(mx, 0, tolerance = tol)
+      expect_Rcpp_equal("rwishart", ii, mx, tolerance = tol)
     }
   }
 })

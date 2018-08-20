@@ -4,7 +4,6 @@
 \alias{MultiNormal}
 \alias{dmNorm}
 \alias{rmNorm}
-\alias{rmNorm}
 \title{The Multivariate Normal distribution.}
 \usage{
 dmNorm(x, mu, V, log = FALSE)

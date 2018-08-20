@@ -4,7 +4,6 @@
 \alias{MatrixNormal}
 \alias{dMNorm}
 \alias{rMNorm}
-\alias{rMNorm}
 \title{The Matrix-Normal distribution.}
 \usage{
 dMNorm(X, Mu, RowV, ColV, log = FALSE)

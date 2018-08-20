@@ -1,18 +1,21 @@
 ///////////////////////////////////////////////////////////////////
 
-// Exported Wishart functions
+// Exported Matrix Normal Inverse Wishart functions
 
 //////////////////////////////////////////////////////////////////
 
-#include <Rcpp.h>
-using namespace Rcpp;
+// #include <Rcpp.h>
+// using namespace Rcpp;
 // [[Rcpp::depends(RcppEigen)]]
 #include <RcppEigen.h>
+using namespace Rcpp;
 using namespace Eigen;
 //#include <iostream>
 #include "TriUtils.h"
-#include "mniwWishart.h"
-#include "mniwMatNorm.h"
+#include "Wishart.h"
+#include "MatrixNormal.h"
+// #include "mniwWishart.h"
+// #include "mniwMatNorm.h"
 
 //////////////////////////////////////////////////////////////////
 
@@ -34,14 +37,20 @@ List GenerateMatrixNIW(int N,
   bool singleNu = (nu.size() == 1);
   int ii;
   // internal variables
-  TempPQ *tmp = new TempPQ(p,q);
+  // TempPQ *tmp = new TempPQ(p,q);
+  LLT<MatrixXd> lltq(q);
+  MatrixXd Lq = MatrixXd::Zero(q,q);
+  MatrixXd Uq = MatrixXd::Zero(q,q);
+  MatrixXd Iq = MatrixXd::Identity(q,q);
   MatrixXd CL = MatrixXd::Zero(q,q);
   MatrixXd SigmaL = MatrixXd::Zero(p,p);
   MatrixXd OmegaU = MatrixXd::Zero(p,p);
   MatrixXd XiL = MatrixXd::Zero(q,q);
   LLT<MatrixXd> lltp(p);
+  Wishart wish(q);
+  MatrixNormal matnorm(p,q);
   if(singlePsi) {
-    ReverseCholesky(XiL, Psi, tmp);
+    ReverseCholesky(XiL, Psi, lltq);
   }
   if(singleSigma) {
     lltp.compute(Sigma);
@@ -57,9 +66,9 @@ List GenerateMatrixNIW(int N,
   MatrixXd V(q,N*q);
   for(ii=0; ii<N; ii++) {
     if(!singlePsi) {
-      ReverseCholesky(XiL, Psi.block(0,ii*q,q,q), tmp);
+      ReverseCholesky(XiL, Psi.block(0,ii*q,q,q), lltq);
     }
-    GenerateWishartLowerTriXi(CL, XiL, nu(ii*(!singleNu)));
+    wish.GenerateLowerTriXi(CL, XiL, nu(ii*(!singleNu)));
     if(!singleSigma) {
       lltp.compute(Sigma.block(0,ii*p,p,p));
     }
@@ -67,21 +76,27 @@ List GenerateMatrixNIW(int N,
       if(!singleSigma) {
 	SigmaL = lltp.matrixL();
       }
-      GenerateMatrixNormalRowSColO(X.block(0,ii*q,p,q),
-				   Lambda.block(0,ii*q*(!singleLambda),p,q),
-				   SigmaL, CL, tmp->Xpq);
+      matnorm.GenerateRowSColO(X.block(0,ii*q,p,q),
+			       Lambda.block(0,ii*q*(!singleLambda),p,q),
+			       SigmaL, CL);
+      // GenerateMatrixNormalRowSColO(X.block(0,ii*q,p,q),
+      // 				   Lambda.block(0,ii*q*(!singleLambda),p,q),
+      // 				   SigmaL, CL, tmp->Xpq);
     }
     else {
       if(!singleSigma) {
 	OmegaU = lltp.matrixU();
       }
-      GenerateMatrixNormalRowOColO(X.block(0,ii*q,p,q),
-				   Lambda.block(0,ii*q*(!singleLambda),p,q),
-				   OmegaU, CL, tmp->Xpq);
+      matnorm.GenerateRowOColO(X.block(0,ii*q,p,q),
+			       Lambda.block(0,ii*q*(!singleLambda),p,q),
+			       OmegaU, CL);
+      // GenerateMatrixNormalRowOColO(X.block(0,ii*q,p,q),
+      // 				   Lambda.block(0,ii*q*(!singleLambda),p,q),
+      // 				   OmegaU, CL, tmp->Xpq);
     }
-    InverseLLt(V.block(0,ii*q,q,q), CL, tmp->Lq, tmp->Uq, tmp->Iq);
+    InverseLLt(V.block(0,ii*q,q,q), CL, Lq, Uq, Iq);
   }
-  delete tmp;
+  // delete tmp;
   return List::create(_["X"] = wrap(X),
 		      _["V"] = wrap(V));
 }

@@ -8,11 +8,6 @@
 \alias{riwish}
 \alias{dwishart}
 \alias{rwishart}
-\alias{rwish}
-\alias{diwish}
-\alias{riwish}
-\alias{dwishart}
-\alias{rwishart}
 \title{Wishart and Inverse-Wishart distributions.}
 \usage{
 dwish(X, Psi, nu, log = FALSE)

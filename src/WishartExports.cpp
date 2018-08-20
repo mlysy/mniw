@@ -10,7 +10,9 @@ using namespace Rcpp;
 #include <RcppEigen.h>
 using namespace Eigen;
 //#include <iostream>
-#include "mniwWishart.h"
+// #include "mniwUtils.h"
+// #include "mniwWishart.h"
+#include "Wishart.h"
 
 //////////////////////////////////////////////////////////////////
 
@@ -28,7 +30,8 @@ Eigen::VectorXd LogDensityWishart(Eigen::MatrixXd X, Eigen::MatrixXd Psi,
   // output variables
   VectorXd logDens(N);
   // internal variables
-  MatrixXd Z(q,q);
+  Wishart wish(q);
+  // MatrixXd Z(q,q);
   LLT<MatrixXd> cholX(q);
   LLT<MatrixXd> cholPsi(q);
   double ldPsi;
@@ -38,23 +41,36 @@ Eigen::VectorXd LogDensityWishart(Eigen::MatrixXd X, Eigen::MatrixXd Psi,
   bool singleNu = nu.size() == 1;
   if(singleX) {
     cholX.compute(X);
-    ldX = 0.0;
-    for(int ii=0; ii<q; ii++) {
-      ldX += log(cholX.matrixL()(ii,ii));
-    }
+    ldX = logDetCholV(cholX);
+    // ldX = 0.0;
+    // for(int ii=0; ii<q; ii++) {
+    //   ldX += log(cholX.matrixL()(ii,ii));
+    // }
   }
   if(singlePsi) {
     cholPsi.compute(Psi);
-    ldPsi = 0.0;
-    for(int ii=0; ii<q; ii++) {
-      ldPsi += log(cholPsi.matrixL()(ii,ii));
-    }
+    ldPsi = logDetCholV(cholPsi);
+    // ldPsi = 0.0;
+    // for(int ii=0; ii<q; ii++) {
+    //   ldPsi += log(cholPsi.matrixL()(ii,ii));
+    // }
   }
   for(int ii=0; ii<N; ii++) {
-    logDens(ii) = LogDensWishart(X.block(0,ii*(!singleX)*q,q,q),
-				 Psi.block(0,ii*(!singlePsi)*q,q,q),
-				 nu(ii*(!singleNu)), inverse, !singleX, !singlePsi,
-				 Z, ldX, cholX, ldPsi, cholPsi);
+    if(!singleX) {
+      cholX.compute(X.block(0,ii*q,q,q));
+      ldX = logDetCholV(cholX);
+    }
+    if(!singlePsi) {
+      cholPsi.compute(Psi.block(0,ii*q,q,q));
+      ldPsi = logDetCholV(cholPsi);
+    }
+    logDens(ii) = wish.LogDens(X.block(0,ii*(!singleX)*q,q,q), cholX, ldX,
+			       Psi.block(0,ii*(!singlePsi)*q,q,q), cholPsi,
+			       ldPsi, nu(ii*(!singleNu)), inverse);
+    // logDens(ii) = LogDensWishart(X.block(0,ii*(!singleX)*q,q,q),
+    // 				 Psi.block(0,ii*(!singlePsi)*q,q,q),
+    // 				 nu(ii*(!singleNu)), inverse, !singleX, !singlePsi,
+    // 				 Z, ldX, cholX, ldPsi, cholPsi);
   }
   return logDens;
 }
@@ -73,37 +89,53 @@ Eigen::MatrixXd GenerateWishart(int N, Eigen::MatrixXd Psi, Eigen::VectorXd nu,
   // output variables
   MatrixXd X(q,N*q);
   // internal variables
-  TempPQ *tmp = new TempPQ(1,q);
+  // TempPQ *tmp = new TempPQ(1,q);
+  LLT<MatrixXd> lltq(q);
+  MatrixXd Lq = MatrixXd::Zero(q,q);
+  MatrixXd Uq = MatrixXd::Zero(q,q);
+  MatrixXd Iq = MatrixXd::Identity(q,q);
   MatrixXd PsiL = MatrixXd::Zero(q,q);
   MatrixXd VL = MatrixXd::Zero(q,q);
+  Wishart wish(q);
   // wishart lower triangular factor
   if(singlePsi) {
     if(!inverse) {
-      tmp->lltq.compute(Psi);
-      PsiL = tmp->lltq.matrixL();
+      // tmp->lltq.compute(Psi);
+      // PsiL = tmp->lltq.matrixL();
+      lltq.compute(Psi);
+      PsiL = lltq.matrixL();
     }
     else {
-      ReverseCholesky(PsiL, Psi, tmp);
+      // ReverseCholesky(PsiL, Psi, tmp->lltq);
+      ReverseCholesky(PsiL, Psi, lltq);
     }
   }
   // for-loop
   for(int ii=0; ii<N; ii++) {
     if(!inverse) {
       if(!singlePsi) {
-	tmp->lltq.compute(Psi.block(0,ii*q,q,q));
-	PsiL = tmp->lltq.matrixL();
+	// tmp->lltq.compute(Psi.block(0,ii*q,q,q));
+	// PsiL = tmp->lltq.matrixL();
+	lltq.compute(Psi.block(0,ii*q,q,q));
+	PsiL = lltq.matrixL();
       }
-      GenerateWishartLowerTri(VL, PsiL, nu(ii*(!singleNu)), tmp->Lq);
-      CrossProdLLt(X.block(0,ii*q,q,q), VL, tmp->Uq);
+      // GenerateWishartLowerTri(VL, PsiL, nu(ii*(!singleNu)), tmp->Lq);
+      // CrossProdLLt(X.block(0,ii*q,q,q), VL, tmp->Uq);
+      wish.GenerateLowerTri(VL, PsiL, nu(ii*(!singleNu)));
+      CrossProdLLt(X.block(0,ii*q,q,q), VL, Uq);
     }
     else {
       if(!singlePsi) {
-	ReverseCholesky(PsiL, Psi.block(0,ii*q,q,q), tmp);
+	// ReverseCholesky(PsiL, Psi.block(0,ii*q,q,q), tmp->lltq);
+	ReverseCholesky(PsiL, Psi.block(0,ii*q,q,q), lltq);
       }
-      GenerateWishartLowerTriXi(VL, PsiL, nu(ii*(!singleNu)));
-      InverseLLt(X.block(0,ii*q,q,q), VL, tmp->Lq, tmp->Uq, tmp->Iq);
+      // GenerateWishartLowerTriXi(VL, PsiL, nu(ii*(!singleNu)));
+      wish.GenerateLowerTriXi(VL, PsiL, nu(ii*(!singleNu)));
+      // InverseLLt(X.block(0,ii*q,q,q), VL, tmp->Lq, tmp->Uq, tmp->Iq);
+      // wish.GenerateLowerTriXi(VL, PsiL, nu(ii*(!singleNu)));
+      InverseLLt(X.block(0,ii*q,q,q), VL, Lq, Uq, Iq);
     }
   }
-  delete tmp;
+  // delete tmp;
   return X;
 }

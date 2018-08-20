@@ -10,6 +10,7 @@
 /// - Put in namespace
 /// - Remove `using namespace Eigen`
 /// - Remove macro documentation
+/// - Move Reverse-Cholesky here once dependence on tempPQ is removed
 ///
 
 #ifndef TriUtils_h
@@ -220,7 +221,7 @@ void CrossProdLtL(const Eigen::MatrixBase<T1>& X,
 
 /// Inverse of reverse transpose-product
 ///
-/// Performs the calculation `X = (L * L')^{-1}`, where `L` is a lower triangular matrix.
+/// Performs the calculation `X = (L' * L)^{-1}`, where `L` is a lower triangular matrix.
 ///
 /// @param [out] X Matrix of size `n x n` containing the inverse of the reverse transpose-product of `L`.
 /// @param [in] L Lower triangular matrix of size `n x n`.
@@ -237,40 +238,40 @@ void InverseLLt(Ref<MatrixXd> X,
 		Ref<MatrixXd> L2,
 		Ref<MatrixXd> U,
 		const Ref<const MatrixXd>& I) {
-  // invert L
+  // L2 = L^{-1}
   L2 = L.template triangularView<Eigen::Lower>().solve(I);
-  //calculate L2' * L2
+  // X = L2' * L2 = L'{-1} * L^{-1} = (L * L')^{-1}
   CrossProdLtL(X, L2, U);
   return;
 }
 
-// --- reverse cholesky decomposition ------------------------------------------
+// --- reverse-cholesky --------------------------------------------------------
 
-/// Anti-transpose of a matrix
-///
-/// Transpose the lower triangular elements of a square matrix across the anti-diagonal (the remaining elements of the output are left untouched).  So for example, we would have
-///
-/// \f[
-/// \begin{bmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \\ 7 & 8 & 9 \end{bmatrix}
-/// \qquad \longrightarrow \qquad
-/// \begin{bmatrix} 9 & & \\ 8 & 5 & \\ 7 & 4 & 1 \end{bmatrix}.
-/// \f]
-///
-/// @param [out] Y Matrix of size `n x n` to which anti-transpose is output.
-/// @param [in] X Matrix of size `n x n` of which the lower triangular elements will be anti-transposed.
-///
-/// @note Does not work properly if any of the inputs arguments are also outputs.
-inline void AntiTransposeLowerTri(Ref<MatrixXd> Y, const Ref<const MatrixXd>& X) {
-  int q = X.cols();
-  int ii, jj;
-  // anti-transpose lower part of X into Y
-  for(ii=0; ii<q; ii++) {
-    for(jj=0; jj<=ii; jj++) {
-      Y(q-1-jj,q-1-ii) = X(ii,jj);
-    }
-  }
-  return;
-}
+// /// Anti-transpose of a matrix
+// ///
+// /// Transpose the lower triangular elements of a square matrix across the anti-diagonal (the remaining elements of the output are left untouched).  So for example, we would have
+// ///
+// /// \f[
+// /// \begin{bmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \\ 7 & 8 & 9 \end{bmatrix}
+// /// \qquad \longrightarrow \qquad
+// /// \begin{bmatrix} 9 & & \\ 8 & 5 & \\ 7 & 4 & 1 \end{bmatrix}.
+// /// \f]
+// ///
+// /// @param [out] Y Matrix of size `n x n` to which anti-transpose is output.
+// /// @param [in] X Matrix of size `n x n` of which the lower triangular elements will be anti-transposed.
+// ///
+// /// @note Does not work properly if any of the inputs arguments are also outputs.
+// inline void AntiTransposeLowerTri(Ref<MatrixXd> Y, const Ref<const MatrixXd>& X) {
+//   int q = X.cols();
+//   int ii, jj;
+//   // anti-transpose lower part of X into Y
+//   for(ii=0; ii<q; ii++) {
+//     for(jj=0; jj<=ii; jj++) {
+//       Y(q-1-jj,q-1-ii) = X(ii,jj);
+//     }
+//   }
+//   return;
+// }
 
 /// Reverse-Cholesky decomposition of a positive-definite matrix
 ///
@@ -278,13 +279,68 @@ inline void AntiTransposeLowerTri(Ref<MatrixXd> Y, const Ref<const MatrixXd>& X)
 ///
 /// @param [out] L Lower triangular matrix of size `n x n`.
 /// @param [in] V Positive-definite matrix of size `n x n`.
-/// @param [in] tmp Object of class `TempPQ` used to store intermediate calculations.
-inline void ReverseCholesky(Ref<MatrixXd> L, const Ref<const MatrixXd>& V, TempPQ *tmp) {
-  AntiTransposeLowerTri(tmp->Mq, V);
-  tmp->lltq.compute(tmp->Mq);
-  tmp->Lq = tmp->lltq.matrixL();
-  AntiTransposeLowerTri(L, tmp->Lq);
+/// @param [in] llt Cholesky solver via reference to `Eigen::LLT` object used for intermediate calculations.
+///
+/// @note These calculations leave the upper triangular half of `L` unchanged, such that the output is truly triangular only if the upper triangular half of `L` was initialized to zero.
+///
+inline void ReverseCholesky(Ref<MatrixXd> L,
+			    const Ref<const MatrixXd>& V,
+			    LLT<MatrixXd>& llt) {
+  int q = L.cols();
+  int ii, jj;
+  // L = anti_transpose(lower_tri(V))
+  for(ii=0; ii<q; ii++) {
+    for(jj=0; jj<=ii; jj++) {
+      L(q-1-jj,q-1-ii) = V(ii,jj);
+    }
+  }
+  // llt "=" chol(L)
+  llt.compute(L.triangularView<Eigen::Lower>());
+  // L "=" anti_transpose(llq)
+  for(ii=0; ii<q; ii++) {
+    for(jj=0; jj<=ii; jj++) {
+      L(q-1-jj,q-1-ii) = llt.matrixL()(ii,jj);
+    }
+  }
+  // // upper_tri(L) = 0
+  // if(upperZero) {
+  L = L.triangularView<Eigen::Lower>();
+  // }
   return;
+}
+
+
+// --- log-determinant ---------------------------------------------------------
+
+/// Logarithm of the determinant of a Cholesky decomposition
+///
+/// Calculates `log|L|`, where `L` is the lower triangular factor of a Cholesky decomposition.
+///
+/// @param [in] cholV Cholesky factor of size `n x n`.  This is represented by an object of class `Eigen::LLT`, such that the triangular factor is given by `L = cholV.matrixL()`.
+/// @return The logarithm of the determinant of `L`.
+inline double logDetCholV(LLT<MatrixXd>& cholV) {
+  double ldC = 0.0;
+  for(int ii=0; ii<cholV.cols(); ii++) {
+    ldC += log(cholV.matrixL()(ii,ii));
+  }
+  return ldC;
+}
+
+/// Logarithm of the determinant of a positive-definite matrix
+///
+/// Calculates `log|V|`, where `V` is a positive-definite matrix.
+///
+/// @param [in] V Positive-definite matrix of size `n x n`.
+/// @param [in] cholV Cholesky solver of size `n x n` required for intermediate calculations.
+/// @return The logarithm of the determinant of `V`.
+inline double logDetV(MatrixXd V, LLT<MatrixXd> cholV) {
+  double ldV = 0.0;
+  cholV.compute(V);
+  return 2.0 * logDetCholV(cholV);
+  // for(int ii=0; ii<V.cols(); ii++) {
+  //   ldV += log(cholV.matrixL()(ii,ii));
+  // }
+  // return 2.0*ldV;
 }
 
 #endif
