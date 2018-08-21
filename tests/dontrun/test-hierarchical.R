@@ -44,11 +44,13 @@ for(ii in 1:ncases) {
                         updateHyp = case$updateHyp, updateRE = case$updateRE,
                         storeHyp = case$storeHyp, storeRE = case$storeRE)
   set.seed(seed)
-  r_fit2 <- mNormRE.post(nsamples, Y=Y00, V=V, X=X,
-                         prior = prior_list,
-                         init = init_list,
-                         burn = ceiling(nsamples/2),
-                         updateHyp = case$updateHyp, updateRE = case$updateRE,
-                         storeHyp = case$storeHyp, storeRE = case$storeRE)
+  r_fit2 <- mNormRE.post2(nsamples, Y=Y00, V=V, X=X,
+                          prior = prior_list,
+                          init = init_list,
+                          burn = ceiling(nsamples/2),
+                          updateHyp = case$updateHyp, updateRE = case$updateRE,
+                          storeHyp = case$storeHyp, storeRE = case$storeRE)
   test_eq[ii] <- identical(r_fit, r_fit2)
 }
+
+all(test_eq)

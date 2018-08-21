@@ -124,7 +124,7 @@ List HierUneqVModelGibbs(int nSamples, int nBurn,
 	// InverseLLt(SigmaOut.block(0,ii*q,q,q), OmegaL, tmp->Lq, tmp->Uq, tmp->Iq);
       }
       if(storeMu) {
-	hiernorm.getMu(MuOut.block(0,ii*N,q,N));
+	hiernorm.getMut(MuOut.block(0,ii*N,q,N));
 	// MuOut.block(0,ii*N,q,N) = Mu;
       }
     }

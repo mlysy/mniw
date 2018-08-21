@@ -22,16 +22,15 @@ using namespace Eigen;
 // the hyperparameters are Lambda, Omega, Psi, nu.
 // setting all(Omega == 0) = TRUE is equivalent to a Lebesgue prior on beta.
 //[[Rcpp::export]]
-List HierUneqVModelGibbs(int nSamples, int nBurn,
-			 Eigen::MatrixXd Y, Eigen::MatrixXd X,
-			 Eigen::MatrixXd V,
-			 Eigen::MatrixXd Lambda, Eigen::MatrixXd Omega,
-			 Eigen::MatrixXd Psi, double nu,
-			 Eigen::MatrixXd Beta0, Eigen::MatrixXd iSigma0,
-			 Eigen::MatrixXd Mu0,
-			 bool updateBetaSigma, bool updateMu,
-			 bool storeBetaSigma, bool storeMu) {
-			 //MatrixXd Beta0, MatrixXd Sigma0, MatrixXd Mu0
+List HierUneqVModelGibbs_old(int nSamples, int nBurn,
+			     Eigen::MatrixXd Y, Eigen::MatrixXd X,
+			     Eigen::MatrixXd V,
+			     Eigen::MatrixXd Lambda, Eigen::MatrixXd Omega,
+			     Eigen::MatrixXd Psi, double nu,
+			     Eigen::MatrixXd Beta0, Eigen::MatrixXd iSigma0,
+			     Eigen::MatrixXd Mu0,
+			     bool updateBetaSigma, bool updateMu,
+			     bool storeBetaSigma, bool storeMu) {
   // dimensions of the problem
   int N = Y.rows();
   int p = X.cols();

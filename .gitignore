@@ -8,6 +8,9 @@ vignettes/.build.timestamp
 *.o
 *.so
 *.dll
-
 # osx
 *.DS_Store
+# unignore Doxyfile
+!/inst/doc
+inst/doc/*
+!inst/doc/doxygen/Doxyfile

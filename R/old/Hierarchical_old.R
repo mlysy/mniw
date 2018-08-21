@@ -53,15 +53,15 @@
 #' init_list <- list(Beta=Beta00,Sigma=Sigma00,Mu=Mu00) # Initialize MCMC
 #'
 #' ## Gibbs sampling to get posterior
-#' r_fit <- mNormRE.post(nsamples, Y=Y00, V=V, X=X,
-#'                       prior = prior_list,
-#'                       init = init_list,
-#'                       burn = ceiling(nsamples/2))
+#' r_fit <- mNormRE.post2(nsamples, Y=Y00, V=V, X=X,
+#'                        prior = prior_list,
+#'                        init = init_list,
+#'                        burn = ceiling(nsamples/2))
 #'
 #' @export
-mNormRE.post <- function(nsamples, Y, V, X, prior = NULL, init, burn,
-			 updateHyp = TRUE, storeHyp = TRUE,
-                         updateRE = TRUE, storeRE = FALSE) {
+mNormRE.post2 <- function(nsamples, Y, V, X, prior = NULL, init, burn,
+                          updateHyp = TRUE, storeHyp = TRUE,
+                          updateRE = TRUE, storeRE = FALSE) {
   # argument check
   q <- ncol(Y)
   n <- nrow(Y)
@@ -104,7 +104,7 @@ mNormRE.post <- function(nsamples, Y, V, X, prior = NULL, init, burn,
   if(!updateHyp) storeHyp <- FALSE
   if(!updateRE) storeRE <- FALSE
   # MCMC
-  post <- HierUneqVModelGibbs(nSamples = as.integer(nsamples),
+  post <- HierUneqVModelGibbs_old(nSamples = as.integer(nsamples),
                               nBurn = as.integer(burn),
                               Y = Y, X = X, V = V,
                               Lambda = Lambda, Omega = Omega,

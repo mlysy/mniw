@@ -12,3 +12,14 @@ ans <- replicate(n = 100, {
   OmegaL <- t(chol(Omega))
   mniw:::GenerateRandomEffectsOL(n = 1, x = x, C = C, OmegaL = OmegaL)
 })
+
+# check the matrix product
+
+p <- 4
+V <- crossprod(matrix(rnorm(p^2), p))
+A <- crossprod(matrix(rnorm(p^2), p))
+C <- solve(V)
+Q <- solve(A)
+
+B1 <- solve(C+Q, Q)
+B2 <- V %*% solve(V+A)
