@@ -66,6 +66,18 @@ X \mid V & \sim \mathrm{MatNorm}(\Lambda, \Sigma, V).
 \end{aligned}
 $$
 
+## Matrix-t Distribution
+
+The Matrix-$t$ distribution on a random matrix $X_{p \times q}$ is denoted $X \sim \mathrm{MatT}(\Lambda, \Sigma_R, \Sigma_C, \nu)$, and defined as the marginal distribution of $X$ for $(X, V) \sim \mathrm{MNIW}(\Lambda, \Sigma_R, \Sigma_C, \nu)$.  Its log-density is given by
+$$
+\begin{aligned}
+\log p(X \mid \Lambda, \Sigma_R, \Sigma_C, \nu) 
+& = -\tfrac 1 2 \Big[(\nu+p+q-1)\log | I + \Sigma_R^{-1}(X-\Lambda)\Sigma_C^{-1}(X-\Lambda)'| \\
+& \phantom{= -\tfrac 1 2 \Big[} + q \log |\Sigma_R| + p \log |\Sigma_C| \\
+& \phantom{= -\tfrac 1 2 \Big[} + pq \log(\pi) - \log \Gamma_q(\tfrac{\nu+p+q-1}{2}) + \log \Gamma_q(\tfrac{\nu+q-1}{2})\Big].
+\end{aligned}
+$$
+
 ## Random-Effects Normal Distribution
 
 Consider the multivariate normal distribution on $q$-dimensional vectors $x$ and $\mu$ given by

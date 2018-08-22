@@ -108,6 +108,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// LogDensityMatrixT
+Eigen::VectorXd LogDensityMatrixT(Eigen::MatrixXd X, Eigen::MatrixXd Mu, Eigen::MatrixXd RowV, Eigen::MatrixXd ColV, Eigen::VectorXd nu);
+RcppExport SEXP _mniw_LogDensityMatrixT(SEXP XSEXP, SEXP MuSEXP, SEXP RowVSEXP, SEXP ColVSEXP, SEXP nuSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type X(XSEXP);
+    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type Mu(MuSEXP);
+    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type RowV(RowVSEXP);
+    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type ColV(ColVSEXP);
+    Rcpp::traits::input_parameter< Eigen::VectorXd >::type nu(nuSEXP);
+    rcpp_result_gen = Rcpp::wrap(LogDensityMatrixT(X, Mu, RowV, ColV, nu));
+    return rcpp_result_gen;
+END_RCPP
+}
 // LogDensityMultivariateNormal
 Eigen::VectorXd LogDensityMultivariateNormal(Eigen::MatrixXd X, Eigen::MatrixXd Mu, Eigen::MatrixXd V);
 RcppExport SEXP _mniw_LogDensityMultivariateNormal(SEXP XSEXP, SEXP MuSEXP, SEXP VSEXP) {
@@ -185,6 +200,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_mniw_GenerateMatrixNIW", (DL_FUNC) &_mniw_GenerateMatrixNIW, 6},
     {"_mniw_LogDensityMatrixNormal", (DL_FUNC) &_mniw_LogDensityMatrixNormal, 4},
     {"_mniw_GenerateMatrixNormal", (DL_FUNC) &_mniw_GenerateMatrixNormal, 4},
+    {"_mniw_LogDensityMatrixT", (DL_FUNC) &_mniw_LogDensityMatrixT, 5},
     {"_mniw_LogDensityMultivariateNormal", (DL_FUNC) &_mniw_LogDensityMultivariateNormal, 3},
     {"_mniw_GenerateMultivariateNormal", (DL_FUNC) &_mniw_GenerateMultivariateNormal, 3},
     {"_mniw_GenerateRandomEffectsNormal", (DL_FUNC) &_mniw_GenerateRandomEffectsNormal, 5},

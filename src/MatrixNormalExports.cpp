@@ -29,15 +29,15 @@ Eigen::VectorXd LogDensityMatrixNormal(Eigen::MatrixXd X, Eigen::MatrixXd Mu,
   // output variables
   VectorXd logDens(N);
   // internal variables
-  int ii;
-  MatrixXd Z(p,q);
+  // int ii;
+  // MatrixXd Z(p,q);
   LLT<MatrixXd> cholRowV(p);
   LLT<MatrixXd> cholColV(q);
   double ldRowV, ldColV;
-  bool singleX = X.cols() == q;
-  bool singleMu = Mu.cols() == q;
-  bool singleRowV = RowV.cols() == p;
-  bool singleColV = ColV.cols() == q;
+  bool singleX = (X.cols() == q);
+  bool singleMu = (Mu.cols() == q);
+  bool singleRowV = (RowV.cols() == p);
+  bool singleColV = (ColV.cols() == q);
   MatrixNormal matnorm(p,q);
   if(singleRowV) {
     cholRowV.compute(RowV);
@@ -55,7 +55,7 @@ Eigen::VectorXd LogDensityMatrixNormal(Eigen::MatrixXd X, Eigen::MatrixXd Mu,
     //   ldColV += log(cholColV.matrixL()(ii,ii));
     // }
   }
-  for(ii=0; ii<N; ii++) {
+  for(int ii=0; ii<N; ii++) {
     if(!singleRowV) {
       cholRowV.compute(RowV.block(0,p*ii,p,p));
       ldRowV = logDetCholV(cholRowV);

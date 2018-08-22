@@ -19,9 +19,9 @@ class MatrixNormal {
   int q_;
   MatrixXd Z_;
   LLT<MatrixXd> cholRowV_;
-  double ldRowV;
+  // double ldRowV;
   LLT<MatrixXd> cholColV_;
-  double ldColV;
+  // double ldColV;
  public:
   /// Constructor
   MatrixNormal(int p, int q);
@@ -67,7 +67,7 @@ inline MatrixNormal::MatrixNormal(int p, int q) {
 /// @param [in] RowV Row-variance matrix of size `p x p`.
 /// @param [in] ColV Column-variance matrix of size `q x q`.
 ///
-/// @return The log-density evaluated as `X`.
+/// @return The log-density evaluated at `X`.
 inline double MatrixNormal::LogDens(const Ref<const MatrixXd>& X,
 				    const Ref<const MatrixXd>& Mu,
 				    const Ref<const MatrixXd>& RowV,

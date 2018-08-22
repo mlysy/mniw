@@ -50,14 +50,12 @@ lmgamma <- function(x, p) p*(p-1)/4 * log(pi) + sum(lgamma(x + (1-1:p)/2))
 #}
 
 # density of wishart and inverse wishart
-dwishR <- function(X, Psi, nu, inverse = FALSE, log = FALSE,
-                   debug = FALSE) {
+dwishR <- function(X, Psi, nu, inverse = FALSE, log = FALSE) {
   if(length(X) == 1) {
     X <- as.matrix(X)
     Psi <- as.matrix(Psi)
   }
   d <- nrow(X)
-  if(debug) browser()
   if(!inverse) {
     ans <- (nu-d-1) * ldet(X)
     ans <- ans - nu * ldet(Psi)
@@ -99,13 +97,11 @@ rwishR <- function(Psi, nu, inverse = FALSE) {
 }
 
 # density of matrix normal
-dMNormR <- function(X, Lambda, SigmaU, SigmaV, log = FALSE,
-                    debug = FALSE) {
+dMNormR <- function(X, Lambda, SigmaU, SigmaV, log = FALSE) {
   X <- as.matrix(X)
   Lambda <- as.matrix(Lambda)
   SigmaU <- as.matrix(SigmaU)
   SigmaV <- as.matrix(SigmaV)
-  if(debug) browser()
   n <- nrow(X)
   p <- ncol(X)
   ans <- n*p*log(2*pi) + sum(diag(solve(SigmaV, t(X-Lambda)) %*% solve(SigmaU, X-Lambda)))
@@ -125,6 +121,26 @@ rMNormR <- function(Lambda, SigmaU, SigmaV) {
   X + Lambda
 }
 
+# density of matrix t
+dMTR <- function(X, Lambda, SigmaU, SigmaV, nu, log = FALSE) {
+  X <- as.matrix(X)
+  Lambda <- as.matrix(Lambda)
+  SigmaU <- as.matrix(SigmaU)
+  SigmaV <- as.matrix(SigmaV)
+  n <- nrow(X)
+  p <- ncol(X)
+  Z <- X - Lambda
+  xi <- nu+n+p-1
+  ans <- diag(n) + solve(SigmaU, Z) %*% solve(SigmaV, t(Z))
+  ## .5 * ldet(ans)
+  ans <- xi * ldet(ans) + n * ldet(SigmaV) + p * ldet(SigmaU) + n*p * log(pi)
+  ans <- -.5 * ans + lmgamma(.5*xi, p) - lmgamma(.5*(xi-n), p)
+  ## ans <- ans + n*p * log(pi) + lmgamma(.5*(xi-n), p) - lmgamma(.5*xi, p)
+  ## ans <- -2 * ans
+  if(!log) ans <- exp(ans)
+  ans
+}
+
 # density of mniw distribution
 dmniwR <- function(X, V, Lambda, Sigma, Psi, nu, log = FALSE) {
   ans <- diwish(V = V, Psi = Psi, nu = nu, log = TRUE)
@@ -134,7 +150,7 @@ dmniwR <- function(X, V, Lambda, Sigma, Psi, nu, log = FALSE) {
 }
 
 # simulation of mniw. row variance can be on precision scale by seting Omega.
-rmniwR <- function(Lambda, Sigma, Psi, nu, prec = FALSE, debug = FALSE) {
+rmniwR <- function(Lambda, Sigma, Psi, nu, prec = FALSE) {
   p <- nrow(Lambda)
   q <- ncol(Lambda)
   V <- rwishR(Psi = Psi, nu = nu, inverse = TRUE)

@@ -2,6 +2,7 @@
 
 export(crossprodV)
 export(dMNorm)
+export(dMT)
 export(diwish)
 export(dmNorm)
 export(dwish)

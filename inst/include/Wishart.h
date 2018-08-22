@@ -121,7 +121,7 @@ inline double Wishart::LogDens(const Ref<const MatrixXd>& X,
   else {
     ldens = -(nu+q_+1) * ldX + nu * ldPsi;
   }
-  ldens -= .5*(Z_.trace() + q_*nu * M_LN2) +  + logMultiGamma(.5*nu, q_);
+  ldens -= .5*(Z_.trace() + q_*nu * M_LN2) + logMultiGamma(.5*nu, q_);
   return ldens;
 }
 

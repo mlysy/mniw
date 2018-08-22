@@ -9,5 +9,5 @@
 #'   \item{\code{Severity}}{Average health index for surveyed patients.}
 #'   \item{\code{Size}}{Number of patients surveyed.}
 #' }
-#' @references Everson & Morris, 2000; original data in Cleary et al, 1991.
+#' @references Everson, P.J. and Morris, C.N. "Inference for multivariate normal hierarchical models." \emph{Journal of the Royal Statistical Society, Series B} 62:2 (2000): 399-412.
 "Hospitals"

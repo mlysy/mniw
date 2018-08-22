@@ -42,8 +42,7 @@ test_that("Matrix Normal density is same in C++ as R", {
                          Lambda = Mu[[ifelse(sMu, 1, jj)]],
                          SigmaU = RowV[[ifelse(sRowV, 1, jj)]],
                          SigmaV = ColV[[ifelse(sColV, 1, jj)]],
-                         log = TRUE,
-                         debug = FALSE)
+                         log = TRUE)
     }
     # C++ test
     X <- unlistM(X, sX, arr.drop)
