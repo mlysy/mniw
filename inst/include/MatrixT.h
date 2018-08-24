@@ -11,6 +11,7 @@
 using namespace Eigen;
 #include "TriUtils.h"
 #include "Wishart.h"
+#include "MatrixNormal.h"
 
 /// The Matrix-t distribution
 class MatrixT {
@@ -19,7 +20,6 @@ class MatrixT {
   int p_;
   int q_;
   int pq_; // p * q
-  // int d_; // min(p, q)
   bool pMin_; // isTRUE(p < q)
   MatrixXd Z_;
   LLT<MatrixXd> cholRowV_;
@@ -27,13 +27,14 @@ class MatrixT {
   LLT<MatrixXd> lltd_;
   MatrixXd A_;
   MatrixXd B_;
-  // MatrixXd Mqp_;
-  // MatrixXd Mpq_;
-  // MatrixXd Mp_;
-  // VectorXd Ip_;
+  MatrixXd CL_;
+  Wishart *wish_;
+  MatrixNormal *matnorm_;
  public:
   /// Constructor
   MatrixT(int p, int q);
+  /// Destructor
+  ~MatrixT();
   /// Log-density evaluation
   double LogDens(const Ref<const MatrixXd>&  X,
 		 const Ref<const MatrixXd>& Mu,
@@ -47,6 +48,16 @@ class MatrixT {
 		 LLT<MatrixXd>& cholRowV, double ldRowV,
 		 const Ref<const MatrixXd>& ColV,
 		 LLT<MatrixXd>& cholColV, double ldColV, double nu);
+  /// Random draw with RowV/ColV on the variance/precision scale
+  void GenerateRowSColO(Ref<MatrixXd> X,
+			const Ref<const MatrixXd>& Mu,
+			const Ref<const MatrixXd>& RowVL,
+			const Ref<const MatrixXd>& iColVL, double nu);
+  /// Random draw with RowV/ColV on the precision/precision scale
+  void GenerateRowOColO(Ref<MatrixXd> X,
+			const Ref<const MatrixXd>& Mu,
+			const Ref<const MatrixXd>& iRowVU,
+			const Ref<const MatrixXd>& iColVL, double nu);
 };
 
 /// @param [in] p Number of rows of Matrix-t distribution.
@@ -72,12 +83,17 @@ inline MatrixT::MatrixT(int p, int q) {
     B_ = MatrixXd::Zero(q_,q_);
     lltd_.compute(MatrixXd::Identity(q_,q_));
   }
-  // lltd_.compute(MatrixXd::Identity(d_,d_));
-  // Mpq_ = MatrixXd::Zero(p_,q_);
-  // Mqp_ = MatrixXd::Zero(q_,p_);
-  // Mp_ = MatrixXd::Zero(p_,p_);
-  // Ip_ = VectorXd::Ones(p_);
+  CL_ = MatrixXd::Zero(q_,q_);
+  wish_ = new Wishart(q_);
+  matnorm_ = new MatrixNormal(p_,q_);
 }
+
+inline MatrixT::~MatrixT() {
+  delete wish_;
+  delete matnorm_;
+}
+
+// --- log-density --------------------------------------------------------
 
 /// @param [in] X Observation matrix of size `p x q`.
 /// @param [in] Mu Mean matrix of size `p x q`.
@@ -137,9 +153,39 @@ inline double MatrixT::LogDens(const Ref<const MatrixXd>& X,
   }
   // add components
   ldens = nupq * ldens + q_ * ldRowV + p_ * ldColV + pq_ * M_LN_SQRT_PI;
-  // return ldens;
-  // ldens += pq_ * M_LN_SQRT_PI;
   return -ldens + logMultiGamma(.5 * nupq, q_) - logMultiGamma(.5 * nuq, q_);
+}
+
+// --- rng ----------------------------------------------------------------
+
+/// @param [out] X Matrix of size `p x q` in which to store the random draw.
+/// @param [in] Mu Mean matrix of size `p x q`.
+/// @param [in] RowVL Lower Cholesky factor of the row-variance matrix `RowV` (a matrix of size `p x p`).
+/// @param [in] iColVL Lower Cholesky factor of the column-precision matrix: `ColV^{-1} = iColVL * iColVL'` (a matrix of size `q x q`).
+/// @param [in] nu Shape parameter.
+inline void MatrixT::GenerateRowSColO(Ref<MatrixXd> X,
+				      const Ref<const MatrixXd>& Mu,
+				      const Ref<const MatrixXd>& RowVL,
+				      const Ref<const MatrixXd>& iColVL,
+				      double nu) {
+  wish_->GenerateLowerTriXi(CL_, iColVL, nu);
+  matnorm_->GenerateRowSColO(X, Mu, RowVL, CL_);
+  return;
+}
+
+/// @param [out] X Matrix of size `p x q` in which to store the random draw.
+/// @param [in] Mu Mean matrix of size `p x q`.
+/// @param [in] iRowVU Upper Cholesky factor of the row-precision matrix: `RowV^{-1} = iRowVU' * iRowVU` (a matrix of size `p x p`).
+/// @param [in] iColVL Lower Cholesky factor of the column-precision matrix: `ColV^{-1} = iColVL * iColVL'` (a matrix of size `q x q`).
+/// @param [in] nu Shape parameter.
+inline void MatrixT::GenerateRowOColO(Ref<MatrixXd> X,
+				      const Ref<const MatrixXd>& Mu,
+				      const Ref<const MatrixXd>& iRowVU,
+				      const Ref<const MatrixXd>& iColVL,
+				      double nu) {
+  wish_->GenerateLowerTriXi(CL_, iColVL, nu);
+  matnorm_->GenerateRowOColO(X, Mu, iRowVU, CL_);
+  return;
 }
 
 #endif

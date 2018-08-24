@@ -5,100 +5,158 @@ date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:
     toc: true
+    keep_md: true
 vignette: >
   %\VignetteIndexEntry{Distributions provided by mniw}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-## Wishart and Inverse-Wishart Distributions
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    TeX: {
+	Macros: {
+	    bm: ["{\\boldsymbol{#1}}",1],
+	    tfrac: ["{\\textstyle{\\frac{#1}{#2}}}",2],
+		rv: ["{#2_{#1},\\ldots,#2_{#3}}",3,"1"],
+		iid: ["{\\stackrel{\\mathrm{iid}}{\\sim}}"],
+		ind: ["{\\stackrel{\\mathrm{ind}}{\\sim}}"],
+	    XX: ["{\\bm{X}}"],
+	    YY: ["{\\bm{Y}}"],
+	    LL: ["{\\bm{L}}"],
+	    PPs: ["{\\bm{\\Psi}}"],
+	    ZZ: ["{\\bm{Z}}"],
+	    N: ["{\\mathcal{N}}"],
+	    LLa: ["{\\bm{\\Lambda}}"],
+	    SSi: ["{\\bm{\\Sigma}}"],
+	    UU: ["{\\bm{U}}"],
+	    VV: ["{\\bm{V}}"],
+		aa: ["{\\bm{a}}"],
+	    xx: ["{\\bm{x}}"],
+		yy: ["{\\bm{y}}"],
+		bbe: ["{\\bm{\\beta}}"],
+	    mmu: ["{\\bm{\\mu}}"],
+		kka: ["{\\bm{\\kappa}}"],
+		TTh: ["{\\bm{\\Theta}}"],
+	    GG: ["{\\bm{G}}"],
+	    OOm: ["{\\bm{\\Omega}}"],
+		bz: ["{\\bm{0}}"],
+		wish: ["{\\mathrm{Wish}}"],
+		iwish: ["{\\mathrm{InvWish}}"],
+		MN: ["{\\mathrm{MatNorm}}"],
+		MT: ["{\\mathrm{MatT}}"],
+		mniw: ["{\\mathrm{MNIW}}"],
+		re: ["{\\mathrm{RfxNorm}}"]
+	}
+    }
+});
+</script>
 
-The Wishart distribution on a random positive-definite matrix $X_{q\times q}$ is is denoted $X \sim \mathrm{Wish}(\Psi, \nu)$, and defined as $X = (L Z)(L Z)'$, where 
+## Wishart Distribution
 
-- $\Psi_{q\times q} = LL'$ is the positive-definite matrix scale parameter,
+The Wishart distribution on a random positive-definite matrix $\XX_{q\times q}$ is is denoted $\XX \sim \wish(\PPs, \nu)$, and defined as $\XX = (\LL \ZZ)(\LL \ZZ)'$, where 
+
+- $\PPs_{q\times q} = \LL\LL'$ is the positive-definite matrix scale parameter,
 - $\nu > q$ is the shape parameter, 
 
-and $Z_{q\times q}$ is a random lower-triangular matrix with elements
-$$
+and $\ZZ_{q\times q}$ is a random lower-triangular matrix with elements
+\[
 Z_{ij} \begin{cases} 
-       \stackrel{\mathrm{iid}}{\sim} \mathcal N(0,1) & i < j \\ 
-       \stackrel{\mathrm{ind}}{\sim} \chi^2_{(\nu-i+1)} & i = j \\
+       \iid \N(0,1) & i < j \\ 
+       \ind \chi^2_{(\nu-i+1)} & i = j \\
        = 0 & i > j.
        \end{cases}
-$$
+\]
 
 The log-density of the Wishart distribution is
-$$
-\log p(X \mid \Psi, \nu) = -\tfrac{1}{2} \left[\mathrm{tr}(\Psi^{-1} X) + (q+1-\nu)\log |X| + \nu \log |\Psi|  + \nu q \log(2) + 2 \log \Gamma_q(\tfrac \nu 2)\right],
-$$
+\[
+\log p(\XX \mid \PPs, \nu) = -\tfrac{1}{2} \left[\mathrm{tr}(\PPs^{-1} \XX) + (q+1-\nu)\log |\XX| + \nu \log |\PPs|  + \nu q \log(2) + 2 \log \Gamma_q(\tfrac \nu 2)\right],
+\]
 where  $\Gamma_n(x)$ is the multivariate Gamma function defined as
-$$
+\[
 \Gamma_n(x) = \pi^{n(n-1)/4} \prod_{j=1}^n \Gamma\big(x + \tfrac 1 2 (1-j)\big).
-$$
+\]
 
-The Inverse-Wishart distribution $X \sim \mathrm{InvWish}(\Psi, \nu)$ is defined as $X^{-1} \sim \mathrm{Wish}(\Psi^{-1}, \nu)$.  Its log-density is given by
-$$
-\log p(X \mid \Psi, \nu) = -\tfrac 1 2 \left[\mathrm{tr}(\Psi X^{-1}) + (\nu+q+1) \log |X| - \nu \log |\Psi| + \nu q \log(2) + 2 \log \Gamma_q(\tfrac \nu 2)\right].
-$$
+### Inverse-Wishart Distribution
+
+The Inverse-Wishart distribution $\XX \sim \iwish(\PPs, \nu)$ is defined as $\XX^{-1} \sim \wish(\PPs^{-1}, \nu)$.  Its log-density is given by
+\[
+\log p(\XX \mid \PPs, \nu) = -\tfrac 1 2 \left[\mathrm{tr}(\PPs \XX^{-1}) + (\nu+q+1) \log |\XX| - \nu \log |\PPs| + \nu q \log(2) + 2 \log \Gamma_q(\tfrac \nu 2)\right].
+\]
+
+### Properties
+
+If $\XX_{q\times q} \sim \wish(\PPs,\nu)$ and $\aa$ is a $a$-dimensional vector, then
+\[
+\frac{\aa'\XX\aa}{\aa'\PPs\aa} \sim \chi^2_{(\nu)}.
+\]
 
 ## Matrix-Normal Distribution
 
-The Matrix-Normal distribution on a random matrix $X_{p \times q}$ is denoted $X \sim \mathrm{MatNorm}(\Lambda, \Sigma_R, \Sigma_C)$, and defined as $X = LZ U + \Lambda$, where
+The Matrix-Normal distribution on a random matrix $\XX_{p \times q}$ is denoted $\XX \sim \MN(\LLa, \SSi_R, \SSi_C)$, and defined as $\XX = \LL\ZZ \UU + \LLa$, where
 
-- $\Lambda_{p \times q}$ is the mean matrix parameter,
-- ${\Sigma_R}_{p \times p} = LL'$ is the row-variance matrix parameter,
-- ${\Sigma_C}_{q \times q} = U'U$ is the column-variance matrix parameter,
+- $\LLa_{p \times q}$ is the mean matrix parameter,
+- ${\SSi_R}_{p \times p} = \LL\LL'$ is the row-variance matrix parameter,
+- ${\SSi_C}_{q \times q} = \UU'\UU$ is the column-variance matrix parameter,
 
-and $Z_{q\times q}$ is a random matrix with $Z_{ij} \stackrel{\mathrm{iid}}{\sim} \mathcal N(0,1)$.
+and $\ZZ_{q\times q}$ is a random matrix with $Z_{ij} \iid \N(0,1)$.
 
 The log-density of the Matrix-Normal distribution is
-$$
-\log p(X \mid \Lambda, \Sigma_R, \Sigma_C) = -\tfrac 1 2 \left[\mathrm{tr}\big(\Sigma_C^{-1}(X-\Lambda)'\Sigma_R^{-1}(X-\Lambda)\big) + \nu q \log(2\pi) + \nu \log |\Sigma_C| + q \log |\Sigma_R|\right].
-$$
+\[
+\log p(\XX \mid \LLa, \SSi_R, \SSi_C) = -\tfrac 1 2 \left[\mathrm{tr}\big(\SSi_C^{-1}(\XX-\LLa)'\SSi_R^{-1}(\XX-\LLa)\big) + \nu q \log(2\pi) + \nu \log |\SSi_C| + q \log |\SSi_R|\right].
+\]
 
 ## Matrix-Normal Inverse-Wishart Distribution
 
-The Matrix-Normal Inverse-Wishart Distribution on a random matrix $X_{p \times q}$ and random positive-definite matrix $V_{q\times q}$ is denoted $(X,V) \sim \mathrm{MNIW}(\Lambda, \Sigma, \Psi, \nu)$, and defined as
-$$
+The Matrix-Normal Inverse-Wishart Distribution on a random matrix $\XX_{p \times q}$ and random positive-definite matrix $\VV_{q\times q}$ is denoted $(\XX,\VV) \sim \mniw(\LLa, \SSi, \PPs, \nu)$, and defined as
+\[
 \begin{aligned}
-V & \sim \mathrm{InvWish}(\Psi, \nu) \\
-X \mid V & \sim \mathrm{MatNorm}(\Lambda, \Sigma, V).
+\XX \mid \VV & \sim \MN(\LLa, \SSi, \VV) \\
+\VV & \sim \iwish(\PPs, \nu).
 \end{aligned}
-$$
+\]
 
 ## Matrix-t Distribution
 
-The Matrix-$t$ distribution on a random matrix $X_{p \times q}$ is denoted $X \sim \mathrm{MatT}(\Lambda, \Sigma_R, \Sigma_C, \nu)$, and defined as the marginal distribution of $X$ for $(X, V) \sim \mathrm{MNIW}(\Lambda, \Sigma_R, \Sigma_C, \nu)$.  Its log-density is given by
-$$
+The Matrix-$t$ distribution on a random matrix $\XX_{p \times q}$ is denoted $\XX \sim \MT(\LLa, \SSi_R, \SSi_C, \nu)$, and defined as the marginal distribution of $\XX$ for $(\XX, \VV) \sim \mniw(\LLa, \SSi_R, \SSi_C, \nu)$.  Its log-density is given by
+\[
 \begin{aligned}
-\log p(X \mid \Lambda, \Sigma_R, \Sigma_C, \nu) 
-& = -\tfrac 1 2 \Big[(\nu+p+q-1)\log | I + \Sigma_R^{-1}(X-\Lambda)\Sigma_C^{-1}(X-\Lambda)'| \\
-& \phantom{= -\tfrac 1 2 \Big[} + q \log |\Sigma_R| + p \log |\Sigma_C| \\
+\log p(\XX \mid \LLa, \SSi_R, \SSi_C, \nu) 
+& = -\tfrac 1 2 \Big[(\nu+p+q-1)\log | I + \SSi_R^{-1}(\XX-\LLa)\SSi_C^{-1}(\XX-\LLa)'| \\
+& \phantom{= -\tfrac 1 2 \Big[} + q \log |\SSi_R| + p \log |\SSi_C| \\
 & \phantom{= -\tfrac 1 2 \Big[} + pq \log(\pi) - \log \Gamma_q(\tfrac{\nu+p+q-1}{2}) + \log \Gamma_q(\tfrac{\nu+q-1}{2})\Big].
 \end{aligned}
-$$
+\]
 
 ## Random-Effects Normal Distribution
 
-Consider the multivariate normal distribution on $q$-dimensional vectors $x$ and $\mu$ given by
-$$
+Consider the multivariate normal distribution on $q$-dimensional vectors $\xx$ and $\mmu$ given by
+\[
 \begin{aligned}
-\mu & \sim \mathcal N(0, \Sigma_\mu) \\
-x \mid \mu & \sim \mathcal N(\mu, \Sigma_x).
+\xx \mid \mmu & \sim \N(\mmu, \VV) \\
+\mmu & \sim \N(\bz, \SSi).
 \end{aligned}
-$$
-The random-effects normal distribution is defined as the posterior distribution $\mu \sim p(\mu \mid x)$, which is given by
-$$
-\mu \mid x \sim \mathcal N\big(G x, G\Sigma_X\big), \qquad G = \Sigma_\mu(\Sigma_x + \Sigma_\mu)^{-1}.
-$$
+\]
+The random-effects normal distribution is defined as the posterior distribution $\mmu \sim p(\mmu \mid \xx)$, which is given by
+\[
+\mmu \mid \xx \sim \N\big(\GG \xx, \GG\VV\big), \qquad \GG = \SSi(\VV + \SSi)^{-1}.
+\]
+The notation for this distribution is $\mmu \sim \re(\xx, \VV, \SSi)$.
 
 ## Hierarchical Normal-Normal Model
 
 The hierarchical Normal-Normal model is defined as
-$$
+\[
 \begin{aligned}
-y_i \mid \mu_i, \beta, \Sigma & \stackrel{\mathrm{ind}}{\sim} \mathcal N(\mu_i, V_i) \\
-\mu_i \mid \beta, \Sigma & \stackrel{\mathrm{iid}}{\sim} \mathcal N(x_i'\beta, \Sigma) \\
-(\beta, \Sigma) & \sim \mathrm{MNIW}(\Lambda, \Omega, \Psi, \nu).
+\yy_i \mid \mmu_i, \bbe, \SSi & \ind \N(\mmu_i, \VV_i) \\
+\mmu_i \mid \bbe, \SSi & \iid \N(\xx_i'\bbe, \SSi) \\
+(\bbe, \SSi) & \sim \mniw(\LLa, \Omega, \PPs, \nu).
 \end{aligned}
-$$
+\]
+Let $\YY = (\rv \yy n)$, $\XX = (\rv \xx n)$, and $\TTh = (\rv \mmu n)$.  If interest lies in the posterior distribution $p(\TTh, \bbe, \SSi \mid \YY, \XX)$, then a Gibbs sampler can be used to cycle through the following conditional distributions:
+\[
+\begin{aligned}
+\mmu_i - \xx_i'\bbe \mid \bbe, \SSi, \YY, \XX & \ind \re(\yy_i, \VV_i, \SSi) \\
+\bbe, \SSi \mid \TTh, \YY, \XX & \sim \mniw(\hat \LLa, \hat \OOm, \hat \PPs, \hat \nu).
+\end{aligned}
+\]

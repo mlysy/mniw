@@ -3,9 +3,12 @@
 \name{MatrixT}
 \alias{MatrixT}
 \alias{dMT}
+\alias{rMT}
 \title{The Matrix-t distribution.}
 \usage{
 dMT(X, Mu, RowV, ColV, nu, log = FALSE)
+
+rMT(n, Mu, RowV, ColV, nu)
 }
 \arguments{
 \item{X}{argument to the density function.  Either a \code{p x q} matrix or a \code{p x q x n} array.}
@@ -19,10 +22,15 @@ dMT(X, Mu, RowV, ColV, nu, log = FALSE)
 \item{nu}{degrees-of-freedom parameter.  A scalar or vector.}
 
 \item{log}{logical. Whether or not to compute the log-density.}
+
+\item{n}{number of random matrices to generate.}
 }
 \value{
 A vector for densities, or a \code{p x q x n} array for random sampling.
 }
 \description{
 Density and sampling for the Matrix-t distribution.
+}
+\details{
+\code{dMT} and \code{rMT} both accept single or multiple values for each argument.
 }

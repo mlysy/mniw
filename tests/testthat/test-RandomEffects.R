@@ -1,10 +1,10 @@
 library(mniw)
 source("mniw-testfunctions.R")
-context("Multivariate Random Effects Normal Distribution")
+context("Random-Effects Normal Distribution")
 
 tol <- 1e-6
 
-test_that("Random Effects Normal sampling is same in C++ as R", {
+test_that("Random-Effects Normal sampling is same in C++ as R", {
   calc.diff <- FALSE
   case.par <- expand.grid(q = c(1,2,4),
                           y = c("single", "multi"),

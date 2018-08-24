@@ -45,7 +45,7 @@ class MatrixNormal {
 			const Ref<const MatrixXd>& ColOmegaL);
   /// Random number generation with RowV/ColV on the precision/precision scale
   void GenerateRowOColO(Ref<MatrixXd> X,
-			const Ref<MatrixXd>& Lambda,
+			const Ref<const MatrixXd>& Lambda,
 			const Ref<const MatrixXd>& RowOmegaU,
 			const Ref<const MatrixXd>& ColOmegaL);
 };
@@ -172,7 +172,7 @@ inline void MatrixNormal::GenerateRowSColO(Ref<MatrixXd> X,
 /// @param [in] RowOmegaU Upper Cholesky factor of the row-precision matrix `RowV^{-1}` (a matrix of size `p x p`).
 /// @param [in] ColSigmaL Lower Cholesky factor of the column-precision matrix `ColV^{-1}` (a matrix of size `q x q`).
 inline void MatrixNormal::GenerateRowOColO(Ref<MatrixXd> X,
-					   const Ref<MatrixXd>& Lambda,
+					   const Ref<const MatrixXd>& Lambda,
 					   const Ref<const MatrixXd>& RowOmegaU,
 					   const Ref<const MatrixXd>& ColOmegaL) {
   int ii, jj;

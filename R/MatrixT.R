@@ -7,12 +7,15 @@
 #' @name MatrixT
 #' @aliases dMT
 #' @param X argument to the density function.  Either a \code{p x q} matrix or a \code{p x q x n} array.
+#' @param n number of random matrices to generate.
 #' @param Mu mean matrix or matrices.  Either a \code{p x q} matrix or a \code{p x q x n} array.
 #' @param RowV between-row covariance matrix or matrices.  Either a \code{p x p} matrix or a \code{p x p x n} array.
 #' @param ColV between-column covariance matrix or matrices.  Either a \code{q x q} matrix or a \code{q x q x n} array.
 #' @param nu degrees-of-freedom parameter.  A scalar or vector.
 #' @param log logical. Whether or not to compute the log-density.
 #' @return A vector for densities, or a \code{p x q x n} array for random sampling.
+#' @details  \code{dMT} and \code{rMT} both accept single or multiple values for each argument.
+
 
 #--- lower-level functions ------------------------------------------------
 
@@ -43,4 +46,32 @@ dMT <- function(X, Mu, RowV, ColV, nu, log = FALSE) {
   ans <- LogDensityMatrixT(X, Mu, RowV, ColV, nu)
   if(!log) ans <- exp(ans)
   ans
+}
+
+#' @rdname MatrixT
+#' @export
+rMT <- function(n, Mu, RowV, ColV, nu) {
+  # get dimensions
+  PQ <- .getPQ(Lambda = Mu, Sigma = RowV, Psi = ColV)
+  p <- PQ[1]
+  q <- PQ[2]
+  if(anyNA(PQ)) {
+    stop("Problem dimensions are undetermined (too many missing inputs).")
+  }
+  Mu <- .setDims(Mu, p = p, q = q)
+  if(anyNA(Mu)) stop("Something went wrong.  Please report bug.")
+  RowV <- .setDims(RowV, p = p)
+  if(anyNA(RowV)) stop("RowV and Mu have incompatible dimensions.")
+  ColV <- .setDims(ColV, q = q)
+  if(anyNA(ColV)) stop("ColV and Mu have incompatible dimensions.")
+  nu <- c(nu)
+  # check lengths
+  N <- .getN(p = p, q = q, Lambda = Mu, Sigma = RowV,
+             Psi = ColV, nu = nu)
+  if(length(N) > 2 || (length(N) == 2 && N[2] != n)) {
+    stop("Arguments don't all have length n.")
+  }
+  X <- GenerateMatrixT(n, Mu, RowV, ColV, nu)
+  if(n > 1) X <- array(X, dim = c(p,q,n))
+  X
 }

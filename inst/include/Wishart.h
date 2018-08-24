@@ -37,6 +37,36 @@ inline double logMultiGamma(double alpha, int q) {
 }
 
 /// The Wishart and Inverse Wishart distributions
+///
+/// The %Wishart distribution is on a random positive-definite matrix \f$\bm{X}_{q\times q}\f$ is is denoted \f$X \sim \mathrm{Wish}(\Psi, \nu)\f$, and defined as \f$X = (L Z)(L Z)'\f$, where 
+/// 
+/// - \f$\Psi_{q\times q} = LL'\f$ is the positive-definite matrix scale parameter,
+/// - \f$\nu > \f$ is the shape parameter, 
+/// 
+/// and \f$Z_{q\times q}\f$ is a random lower-triangular matrix with elements
+/// \f[
+///   Z_{ij}
+///   \begin{cases} 
+///     \stackrel{\mathrm{iid}}{\sim} \mathcal N(0,1) & i < j \\ 
+///     \stackrel{\mathrm{ind}}{\sim} \chi^2_{(\nu-i+1)} & i = j \\
+///     = 0 & i > j.
+///   \end{cases}
+/// \f]
+/// 
+/// The log-density of the %Wishart distribution is
+/// \f[
+/// \log p(X \mid \Psi, \nu) = -\tfrac{1}{2} \left[\mathrm{tr}(\Psi^{-1} X) + (q+1-\nu)\log |X| + \nu \log |\Psi|  + \nu q \log(2) + 2 \log \Gamma_q(\tfrac \nu 2)\right],
+/// \f]
+/// where  \f$\Gamma_n(x)\f$ is the multivariate Gamma function defined as
+/// \f[
+/// \Gamma_n(x) = \pi^{n(n-1)/4} \prod_{j=1}^n \Gamma\big(x + \tfrac 1 2 (1-j)\big).
+/// \f]
+/// 
+/// The Inverse-%Wishart distribution \f$X \sim \mathrm{InvWish}(\Psi, \nu)\f$ is defined as \f$X^{-1} \sim \mathrm{Wish}(\Psi^{-1}, \nu)\f$.  Its log-density is given by
+/// \f[
+/// \log p(X \mid \Psi, \nu) = -\tfrac 1 2 \left[\mathrm{tr}(\Psi X^{-1}) + (\nu+q+1) \log |X| - \nu \log |\Psi| + \nu q \log(2) + 2 \log \Gamma_q(\tfrac \nu 2)\right].
+/// \f]
+///
 class Wishart {
  private:
   // storage
@@ -49,11 +79,14 @@ class Wishart {
   /// Constructor
   Wishart(int q);
   /// Log-density
-  double LogDens(const Ref<const MatrixXd>& X, const Ref<const MatrixXd>& Psi,
+  double LogDens(const Ref<const MatrixXd>& X,
+		 const Ref<const MatrixXd>& Psi,
 		 double nu, bool inv);
   /// Log-density with pre-computations
-  double LogDens(const Ref<const MatrixXd>& X, LLT<MatrixXd>& cholX, double ldX,
-		 const Ref<const MatrixXd>& Psi, LLT<MatrixXd>& cholPsi, double ldPsi,
+  double LogDens(const Ref<const MatrixXd>& X,
+		 LLT<MatrixXd>& cholX, double ldX,
+		 const Ref<const MatrixXd>& Psi,
+		 LLT<MatrixXd>& cholPsi, double ldPsi,
 		 double nu, bool inv);
   /// Random draw with scale matrix input
   void GenerateLowerTri(Ref<MatrixXd> VL,

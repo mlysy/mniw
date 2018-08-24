@@ -29,6 +29,10 @@ LogDensityMatrixT <- function(X, Mu, RowV, ColV, nu) {
     .Call('_mniw_LogDensityMatrixT', PACKAGE = 'mniw', X, Mu, RowV, ColV, nu)
 }
 
+GenerateMatrixT <- function(N, Lambda, RowSigma, ColSigma, nu, inverse = FALSE) {
+    .Call('_mniw_GenerateMatrixT', PACKAGE = 'mniw', N, Lambda, RowSigma, ColSigma, nu, inverse)
+}
+
 LogDensityMultivariateNormal <- function(X, Mu, V) {
     .Call('_mniw_LogDensityMultivariateNormal', PACKAGE = 'mniw', X, Mu, V)
 }

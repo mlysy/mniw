@@ -141,6 +141,23 @@ dMTR <- function(X, Lambda, SigmaU, SigmaV, nu, log = FALSE) {
   ans
 }
 
+# simulation of matrix T
+rMTR <- function(Lambda, SigmaU, SigmaV, nu, prec = FALSE) {
+  p <- nrow(Lambda)
+  q <- ncol(Lambda)
+  V <- rwishR(Psi = SigmaV, nu = nu, inverse = TRUE)
+  CL <- t(chol(solve(V)))
+  Z <- t(rMnorm(q, p))
+  Z <- Z %*% solve(CL)
+  if(!prec) {
+    X <- t(chol(SigmaU)) %*% Z + Lambda
+  } else {
+    X <- solve(chol(SigmaU)) %*% Z + Lambda
+  }
+  X
+}
+
+
 # density of mniw distribution
 dmniwR <- function(X, V, Lambda, Sigma, Psi, nu, log = FALSE) {
   ans <- diwish(V = V, Psi = Psi, nu = nu, log = TRUE)

@@ -29,15 +29,14 @@ List GenerateMatrixNIW(int N,
 		       Eigen::MatrixXd Lambda, Eigen::MatrixXd Sigma,
 		       Eigen::MatrixXd Psi, Eigen::VectorXd nu,
 		       bool inverse = false) {
+  // problem dimensions
   int p = Lambda.rows();
   int q = Psi.rows();
   bool singleLambda = (Lambda.cols() == q);
   bool singleSigma = (Sigma.cols() == p);
   bool singlePsi = (Psi.cols() == q);
   bool singleNu = (nu.size() == 1);
-  int ii;
   // internal variables
-  // TempPQ *tmp = new TempPQ(p,q);
   LLT<MatrixXd> lltq(q);
   MatrixXd Lq = MatrixXd::Zero(q,q);
   MatrixXd Uq = MatrixXd::Zero(q,q);
@@ -49,6 +48,10 @@ List GenerateMatrixNIW(int N,
   LLT<MatrixXd> lltp(p);
   Wishart wish(q);
   MatrixNormal matnorm(p,q);
+  // output variables
+  MatrixXd X(p,N*q);
+  MatrixXd V(q,N*q);
+  // precomputations
   if(singlePsi) {
     ReverseCholesky(XiL, Psi, lltq);
   }
@@ -61,10 +64,8 @@ List GenerateMatrixNIW(int N,
       OmegaU = lltp.matrixU();
     }
   }
-  // output variables
-  MatrixXd X(p,N*q);
-  MatrixXd V(q,N*q);
-  for(ii=0; ii<N; ii++) {
+  // main loop
+  for(int ii=0; ii<N; ii++) {
     if(!singlePsi) {
       ReverseCholesky(XiL, Psi.block(0,ii*q,q,q), lltq);
     }
@@ -79,9 +80,6 @@ List GenerateMatrixNIW(int N,
       matnorm.GenerateRowSColO(X.block(0,ii*q,p,q),
 			       Lambda.block(0,ii*q*(!singleLambda),p,q),
 			       SigmaL, CL);
-      // GenerateMatrixNormalRowSColO(X.block(0,ii*q,p,q),
-      // 				   Lambda.block(0,ii*q*(!singleLambda),p,q),
-      // 				   SigmaL, CL, tmp->Xpq);
     }
     else {
       if(!singleSigma) {
@@ -90,13 +88,9 @@ List GenerateMatrixNIW(int N,
       matnorm.GenerateRowOColO(X.block(0,ii*q,p,q),
 			       Lambda.block(0,ii*q*(!singleLambda),p,q),
 			       OmegaU, CL);
-      // GenerateMatrixNormalRowOColO(X.block(0,ii*q,p,q),
-      // 				   Lambda.block(0,ii*q*(!singleLambda),p,q),
-      // 				   OmegaU, CL, tmp->Xpq);
     }
     InverseLLt(V.block(0,ii*q,q,q), CL, Lq, Uq, Iq);
   }
-  // delete tmp;
   return List::create(_["X"] = wrap(X),
 		      _["V"] = wrap(V));
 }
