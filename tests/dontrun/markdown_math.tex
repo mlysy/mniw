@@ -1,0 +1,28 @@
+The Wishart distribution is on a random positive-definite matrix $\bm{X}_{q\times q}$ is is denoted $X \sim \mathrm{Wish}(\Psi, \nu)$, and defined as $X = (L Z)(L Z)'$, where 
+
+- $\Psi_{q\times q} = LL'$ is the positive-definite matrix scale parameter,
+- $\nu > q$ is the shape parameter, 
+
+and $Z_{q\times q}$ is a random lower-triangular matrix with elements
+\[
+  Z_{ij}
+  \begin{cases} 
+    \stackrel{\mathrm{iid}}{\sim} \mathcal N(0,1) & i < j \\ 
+    \stackrel{\mathrm{ind}}{\sim} \chi^2_{(\nu-i+1)} & i = j \\
+    = 0 & i > j.
+  \end{cases}
+\]
+
+The log-density of the Wishart distribution is
+\[
+\log p(X \mid \Psi, \nu) = -\tfrac{1}{2} \left[\mathrm{tr}(\Psi^{-1} X) + (q+1-\nu)\log |X| + \nu \log |\Psi|  + \nu q \log(2) + 2 \log \Gamma_q(\tfrac \nu 2)\right],
+\]
+where  $\Gamma_n(x)$ is the multivariate Gamma function defined as
+\[
+\Gamma_n(x) = \pi^{n(n-1)/4} \prod_{j=1}^n \Gamma\big(x + \tfrac 1 2 (1-j)\big).
+\]
+
+The Inverse-Wishart distribution $X \sim \mathrm{InvWish}(\Psi, \nu)$ is defined as $X^{-1} \sim \mathrm{Wish}(\Psi^{-1}, \nu)$.  Its log-density is given by
+\[
+\log p(X \mid \Psi, \nu) = -\tfrac 1 2 \left[\mathrm{tr}(\Psi X^{-1}) + (\nu+q+1) \log |X| - \nu \log |\Psi| + \nu q \log(2) + 2 \log \Gamma_q(\tfrac \nu 2)\right].
+\]
