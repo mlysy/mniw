@@ -1,4 +1,7 @@
+^Meta$
+^doc$
 ^README.md$
 ^setup.R$
 ^TODO.md$
 ^LICENSE$
+^tests/dontrun$

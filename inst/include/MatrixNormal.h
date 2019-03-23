@@ -1,7 +1,6 @@
 /// @file MatrixNormal.h
-/// @author Martin Lysy (mlysy@uwaterloo.ca)
 ///
-/// Density evaluation and random number generation for the Matrix Normal distribution
+/// Density evaluation and random number generation for the Matrix Normal distribution.
 
 #ifndef MatrixNormal_h
 #define MatrixNormal_h 1
@@ -11,7 +10,7 @@
 using namespace Eigen;
 #include "TriUtils.h"
 
-/// The Matrix Normal distribution
+/// The Matrix Normal distribution.
 class MatrixNormal {
  private:
   // storage
@@ -23,27 +22,27 @@ class MatrixNormal {
   LLT<MatrixXd> cholColV_;
   // double ldColV;
  public:
-  /// Constructor
+  /// Constructor.
   MatrixNormal(int p, int q);
-  /// Log-density evaluation
+  /// Log-density evaluation.
   double LogDens(const Ref<const MatrixXd>& X, const Ref<const MatrixXd>& Mu,
 		 const Ref<const MatrixXd>& RowV, const Ref<const MatrixXd>& ColV);
-  /// Log-density evaluation with precomputations
+  /// Log-density evaluation with precomputations.
   double LogDens(const Ref<const MatrixXd>& X,
 		 const Ref<const MatrixXd>& Mu,
 		 LLT<MatrixXd>& cholRowV, double ldRowV, 
 		 LLT<MatrixXd>& cholColV, double ldColV);
-  /// Random draw with RowV/ColV on the variance/variance scale
+  /// Random draw with RowV/ColV on the variance/variance scale.
   void GenerateRowSColS(Ref<MatrixXd> X,
 			const Ref<const MatrixXd>& Lambda,
 			const Ref<const MatrixXd>& RowSigmaL,
 			const Ref<const MatrixXd>& ColSigmaU);
-  /// Random number generation with RowV/ColV on the variance/precision scale
+  /// Random number generation with RowV/ColV on the variance/precision scale.
   void GenerateRowSColO(Ref<MatrixXd> X,
 			const Ref<const MatrixXd>& Lambda,
 			const Ref<const MatrixXd>& RowSigmaL,
 			const Ref<const MatrixXd>& ColOmegaL);
-  /// Random number generation with RowV/ColV on the precision/precision scale
+  /// Random number generation with RowV/ColV on the precision/precision scale.
   void GenerateRowOColO(Ref<MatrixXd> X,
 			const Ref<const MatrixXd>& Lambda,
 			const Ref<const MatrixXd>& RowOmegaU,
@@ -79,7 +78,7 @@ inline double MatrixNormal::LogDens(const Ref<const MatrixXd>& X,
 		 cholColV_, logDetCholV(cholColV_));
 }
 
-/// Identical to MatrixNormal::LogDens(const Ref<const MatrixXd>&,const Ref<const MatrixXd>&,const Ref<const MatrixXd>&,const Ref<const MatrixXd>&), except with pre-computed Cholesky factors and log-determinants for `RowV` and `ColV` (faster in a for-loop where one of these is held fixed).
+/// Identical to the shorter `LogDens`, except with pre-computed Cholesky factors and log-determinants for `RowV` and `ColV` (faster in a for-loop where one of these is held fixed).
 ///
 /// @param [in] X Observation matrix of size `p x q`.
 /// @param [in] Mu Mean matrix of size `p x q`.
@@ -170,7 +169,7 @@ inline void MatrixNormal::GenerateRowSColO(Ref<MatrixXd> X,
 /// @param [out] X Matrix of size `p x q` in which to store the random draw.
 /// @param [in] Lambda Mean matrix of size `p x q`.
 /// @param [in] RowOmegaU Upper Cholesky factor of the row-precision matrix `RowV^{-1}` (a matrix of size `p x p`).
-/// @param [in] ColSigmaL Lower Cholesky factor of the column-precision matrix `ColV^{-1}` (a matrix of size `q x q`).
+/// @param [in] ColOmegaL Lower Cholesky factor of the column-precision matrix `ColV^{-1}` (a matrix of size `q x q`).
 inline void MatrixNormal::GenerateRowOColO(Ref<MatrixXd> X,
 					   const Ref<const MatrixXd>& Lambda,
 					   const Ref<const MatrixXd>& RowOmegaU,

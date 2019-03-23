@@ -1,7 +1,6 @@
 /// @file RandomEffects.h
-/// @author Martin Lysy (mlysy@uwaterloo.ca)
 ///
-/// Multivariate Random-Effects Normal distribution
+/// Multivariate Random-Effects Normal distribution.
 
 #ifndef RandomEffects_h
 #define RandomEffects_h 1
@@ -12,7 +11,7 @@ using namespace Eigen;
 #include "TriUtils.h"
 // #include <iostream>
 
-/// The Multivariate Random-Effects Normal distribution
+/// The Multivariate Random-Effects Normal distribution.
 class RanfxNormal {
  private: // storage
   int q_;
@@ -20,13 +19,13 @@ class RanfxNormal {
   MatrixXd Uq_;
   LLT<MatrixXd> lltq_;
  public:
-  /// Constructor
+  /// Constructor.
   RanfxNormal(int q);
-  /// Random number generation with prior precision matrix on the Cholesky scale
+  /// Random number generation with prior precision matrix on the Cholesky scale.
   void GenerateOL(Ref<VectorXd> mu, const Ref<const VectorXd>& x,
 		  const Ref<const MatrixXd>& C,
 		  const Ref<const MatrixXd>& OmegaL);
-  /// Random number generation with prior precision matrix on the regular scale
+  /// Random number generation with prior precision matrix on the regular scale.
   void GenerateO(Ref<VectorXd> mu, const Ref<const VectorXd>& x,
 		 const Ref<const MatrixXd>& C,
 		 const Ref<const MatrixXd>& Omega);
@@ -43,7 +42,7 @@ inline RanfxNormal::RanfxNormal(int q) {
 /// @param [out] mu Vector in which to assign the random draw.
 /// @param [in] x Vector of observed data.
 /// @param [in] C Precision matrix of the observed data, `C = V^{-1}`.
-/// @param [in] OmegaL Cholesky factor of the prior precision matrix, `Sigma^{-1} = OmegaL * OmegaL'`.
+/// @param [in] OmegaL Cholesky factor of the prior precision matrix, `Sigma^{-1} = OmegaL * t(OmegaL)`.
 inline void RanfxNormal::GenerateOL(Ref<VectorXd> mu,
 				    const Ref<const VectorXd>& x,
 				    const Ref<const MatrixXd>& C,

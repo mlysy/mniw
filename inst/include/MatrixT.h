@@ -1,7 +1,6 @@
 /// @file MatrixT.h
-/// @author Martin Lysy (mlysy@uwaterloo.ca)
 ///
-/// Density evaluation and random number generation for the Matrix-t distribution
+/// Density evaluation and random number generation for the Matrix-t distribution.
 
 #ifndef MatrixT_h
 #define MatrixT_h 1
@@ -13,7 +12,7 @@ using namespace Eigen;
 #include "Wishart.h"
 #include "MatrixNormal.h"
 
-/// The Matrix-t distribution
+/// The Matrix-t distribution.
 class MatrixT {
  private:
   // storage
@@ -31,29 +30,29 @@ class MatrixT {
   Wishart *wish_;
   MatrixNormal *matnorm_;
  public:
-  /// Constructor
+  /// Constructor.
   MatrixT(int p, int q);
-  /// Destructor
+  /// Destructor.
   ~MatrixT();
-  /// Log-density evaluation
+  /// Log-density evaluation.
   double LogDens(const Ref<const MatrixXd>&  X,
 		 const Ref<const MatrixXd>& Mu,
 		 const Ref<const MatrixXd>& RowV,
 		 const Ref<const MatrixXd>& ColV,
 		 double nu);
-  /// Log-density evaluation with precomputations
+  /// Log-density evaluation with precomputations.
   double LogDens(const Ref<const MatrixXd>& X,
 		 const Ref<const MatrixXd>& Mu,
 		 const Ref<const MatrixXd>& RowV,
 		 LLT<MatrixXd>& cholRowV, double ldRowV,
 		 const Ref<const MatrixXd>& ColV,
 		 LLT<MatrixXd>& cholColV, double ldColV, double nu);
-  /// Random draw with RowV/ColV on the variance/precision scale
+  /// Random draw with RowV/ColV on the variance/precision scale.
   void GenerateRowSColO(Ref<MatrixXd> X,
 			const Ref<const MatrixXd>& Mu,
 			const Ref<const MatrixXd>& RowVL,
 			const Ref<const MatrixXd>& iColVL, double nu);
-  /// Random draw with RowV/ColV on the precision/precision scale
+  /// Random draw with RowV/ColV on the precision/precision scale.
   void GenerateRowOColO(Ref<MatrixXd> X,
 			const Ref<const MatrixXd>& Mu,
 			const Ref<const MatrixXd>& iRowVU,
@@ -114,7 +113,7 @@ inline double MatrixT::LogDens(const Ref<const MatrixXd>&  X,
 		 ColV, cholColV_, logDetCholV(cholColV_), nu);
 }
 
-/// Identical to MatrixT::LogDens(const Ref<const MatrixXd>&,const Ref<const MatrixXd>&,const Ref<const MatrixXd>&,const Ref<const MatrixXd>&,double), except with pre-computed Cholesky factor and log-determinants for `RowV` and `ColV` (faster in a for-loop where one of these is held fixed).
+/// Identical to the shorter `LogDens`, except with pre-computed Cholesky factor and log-determinants for `RowV` and `ColV` (faster in a for-loop where one of these is held fixed).
 ///
 /// @param [in] X Observation matrix of size `p x q`.
 /// @param [in] Mu Mean matrix of size `p x q`.
@@ -161,7 +160,7 @@ inline double MatrixT::LogDens(const Ref<const MatrixXd>& X,
 /// @param [out] X Matrix of size `p x q` in which to store the random draw.
 /// @param [in] Mu Mean matrix of size `p x q`.
 /// @param [in] RowVL Lower Cholesky factor of the row-variance matrix `RowV` (a matrix of size `p x p`).
-/// @param [in] iColVL Lower Cholesky factor of the column-precision matrix: `ColV^{-1} = iColVL * iColVL'` (a matrix of size `q x q`).
+/// @param [in] iColVL Lower Cholesky factor of the column-precision matrix: `ColV^{-1} = iColVL * t(iColVL)` (a matrix of size `q x q`).
 /// @param [in] nu Shape parameter.
 inline void MatrixT::GenerateRowSColO(Ref<MatrixXd> X,
 				      const Ref<const MatrixXd>& Mu,
@@ -175,8 +174,8 @@ inline void MatrixT::GenerateRowSColO(Ref<MatrixXd> X,
 
 /// @param [out] X Matrix of size `p x q` in which to store the random draw.
 /// @param [in] Mu Mean matrix of size `p x q`.
-/// @param [in] iRowVU Upper Cholesky factor of the row-precision matrix: `RowV^{-1} = iRowVU' * iRowVU` (a matrix of size `p x p`).
-/// @param [in] iColVL Lower Cholesky factor of the column-precision matrix: `ColV^{-1} = iColVL * iColVL'` (a matrix of size `q x q`).
+/// @param [in] iRowVU Upper Cholesky factor of the row-precision matrix: `RowV^{-1} = t(iRowVU) * iRowVU` (a matrix of size `p x p`).
+/// @param [in] iColVL Lower Cholesky factor of the column-precision matrix: `ColV^{-1} = iColVL * t(iColVL)` (a matrix of size `q x q`).
 /// @param [in] nu Shape parameter.
 inline void MatrixT::GenerateRowOColO(Ref<MatrixXd> X,
 				      const Ref<const MatrixXd>& Mu,

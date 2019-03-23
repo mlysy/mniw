@@ -1,7 +1,6 @@
 /// @file TriUtils.h
-/// @author Martin Lysy (mlysy@uwaterloo.ca)
 ///
-/// Utility functions for triangular matrices
+/// Utility functions for triangular matrices.
 ///
 /// Various types of products, solvers, and decompositions involving lower and upper triangular matrices.  Almost all arguments to these functions can be subsets of larger matrices; see "Writing Functions Taking Eigen Types as Parameters" in the Eigen documentation.
 ///

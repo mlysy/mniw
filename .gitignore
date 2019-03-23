@@ -1,3 +1,5 @@
+Meta
+doc
 # R
 *.Rhistory
 *.Rapp.history
@@ -10,7 +12,3 @@ vignettes/.build.timestamp
 *.dll
 # osx
 *.DS_Store
-# unignore Doxyfile
-!/inst/doc
-inst/doc/*
-!inst/doc/doxygen/Doxyfile

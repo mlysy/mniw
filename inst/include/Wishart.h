@@ -1,7 +1,6 @@
 /// @file Wishart.h
-/// @author Martin Lysy (mlysy@uwaterloo.ca)
 ///
-/// Density evaluation and random number generation for the (Inverse) Wishart distribution
+/// Density evaluation and random number generation for the (Inverse) Wishart distribution.
 
 #ifndef Wishart_h
 #define Wishart_h 1

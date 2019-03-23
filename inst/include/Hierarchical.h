@@ -1,7 +1,6 @@
 /// @file Hierarchical.h
-/// @author Martin Lysy (mlysy@uwaterloo.ca)
 ///
-/// Gibbs sampler for posterior distribution of Hierarchical Normal model with unequal variances
+/// Gibbs sampler for posterior distribution of Hierarchical Normal model with unequal variances.
 
 #ifndef Hierarchical_h
 #define Hierarchical_h 1
@@ -14,7 +13,7 @@ using namespace Eigen;
 #include "MatrixNormal.h"
 #include "RandomEffects.h"
 
-/// Gibbs sampler for posterior distribution of Hierarchical Normal model with unequal variances
+/// Gibbs sampler for posterior distribution of Hierarchical Normal model with unequal variances.
 class HierNormal {
  private:
   // dimensions of problem
@@ -53,36 +52,36 @@ class HierNormal {
   MatrixNormal *matnorm_;
   RanfxNormal *renorm_;
  public:
-  /// Constructor
+  /// Constructor.
   HierNormal(const Ref<const MatrixXd>& Y,
 	     const Ref<const MatrixXd>& X,
 	     const Ref<const MatrixXd>& V,
 	     const Ref<const MatrixXd>& Lambda,
 	     const Ref<const MatrixXd>& iOmega,
 	     const Ref<const MatrixXd>& Psi, double nu);
-  /// Destructor
+  /// Destructor.
   ~HierNormal();
-  /// Set random effects
+  /// Set random effects.
   void setMu(const Ref<const MatrixXd>& Mu);
-  /// Set lower Cholesky factor of random effects precision matrix
+  /// Set lower Cholesky factor of random effects precision matrix.
   void setISigmaL(const Ref<const MatrixXd>& iSigmaL);
-  /// Set random effects precision matrix
+  /// Set random effects precision matrix.
   void setISigma(const Ref<const MatrixXd>& iSigma);
-  /// Set random effects regression coefficients
+  /// Set random effects regression coefficients.
   void setBeta(const Ref<const MatrixXd>& Beta);
-  /// Get random-effects matrix
+  /// Get random-effects matrix.
   void getMu(Ref<MatrixXd> Mu);
-  /// Get transpose of random-effects matrix
+  /// Get transpose of random-effects matrix.
   void getMut(Ref<MatrixXd> Mut);
-  /// Get lower Cholesky factor of random effects precision matrix
+  /// Get lower Cholesky factor of random effects precision matrix.
   void getISigmaL(Ref<MatrixXd> iSigmaL);
-  /// Get random effects variance matrix
+  /// Get random effects variance matrix.
   void getSigma(Ref<MatrixXd> Sigma);
-  /// Get random effects regression coefficients
+  /// Get random effects regression coefficients.
   void getBeta(Ref<MatrixXd> Beta);
-  /// Update `Beta` and `Sigma`
+  /// Update `Beta` and `Sigma`.
   void UpdateBetaSigma();
-  /// Update `Mu`
+  /// Update `Mu`.
   void UpdateMu();
 };
 
