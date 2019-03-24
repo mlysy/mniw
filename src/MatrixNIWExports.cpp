@@ -1,29 +1,35 @@
-///////////////////////////////////////////////////////////////////
-
-// Exported Matrix Normal Inverse Wishart functions
-
-//////////////////////////////////////////////////////////////////
+/// @file MatrixNIWExports.cpp
+///
+/// Exported Rcpp functions for the Matrix-Normal Inverse-Wishart distribution.
 
 // #include <Rcpp.h>
 // using namespace Rcpp;
 // [[Rcpp::depends(RcppEigen)]]
 #include <RcppEigen.h>
-using namespace Rcpp;
 using namespace Eigen;
+using namespace Rcpp;
 //#include <iostream>
 #include "TriUtils.h"
 #include "Wishart.h"
 #include "MatrixNormal.h"
+using namespace mniw;
 // #include "mniwWishart.h"
 // #include "mniwMatNorm.h"
 
 //////////////////////////////////////////////////////////////////
 
-// Generate Matrix Normal-Inverse-Wishart
-// V ~ iWish(Psi, nu)
-// X | V ~ MNorm(Lambda, Sigma, V)
-// allow for multiple instances of each parameter
-// also, inverse = TRUE means that the inverses of Sigma are provided instead
+
+/// Generate a random sample from the Matrix-Normal Inverse-Wishart distribution.
+///
+/// Generate `N` independent draws from a `p x q`/`q x q` dimensional Matrix-Normal Inverse-Wishart distribution.  Each argument can be vectorized, meaning that it can have length either `N` or `1`, denoted here as `n`.
+///
+/// @param [in] N Integer number of random draws
+/// @param [in] Lambda Matrix of `p x nq` mean matrices.
+/// @param [in] Sigma Matrix of `p x np` row-wise variance or precision matrices.
+/// @param [in] Psi Matrix of `q x nq` scale matrices.
+/// @param [in] nu Vector of `n` degrees-of-freedom parameters.
+/// @param [in] inverse Boolean; `true/false` indicates that `Sigma` is on the precision/variance scale.
+/// @return List with elements `X` and `V`, consisting of matrices of size `p x Nq` and `q x Nq` random draws respectively.
 //[[Rcpp::export]]
 List GenerateMatrixNIW(int N,
 		       Eigen::MatrixXd Lambda, Eigen::MatrixXd Sigma,

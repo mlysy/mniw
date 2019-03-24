@@ -1,11 +1,11 @@
 ## require(testthat)
 library(mniw)
 source("mniw-testfunctions.R")
-context("Matrix-t Distribution")
+context("Matrix-T Distribution")
 
 tol <- 1e-6
 
-test_that("Matrix-t density is same in C++ as R", {
+test_that("Matrix-T density is same in C++ as R", {
   calc.diff <- FALSE
   case.par <- expand.grid(p = c(1,2,4), q = c(1,2,3),
                           X = c("single", "multi"),
@@ -76,7 +76,7 @@ test_that("Matrix-t density is same in C++ as R", {
   }
 })
 
-test_that("Matrix-t sampling is same in C++ as R", {
+test_that("Matrix-T sampling is same in C++ as R", {
   calc.diff <- FALSE
   case.par <- expand.grid(p = c(1,2,4), q = c(1,2,3),
                           Mu = c("none", "single", "multi"),

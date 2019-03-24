@@ -1,14 +1,24 @@
-///////////////////////////////////////////////////////////////////
-
-// Exported Matrix-T functions
-
-//////////////////////////////////////////////////////////////////
+/// @file MatrixTExports.cpp
+///
+/// Exported Rcpp functions for the Matrix-T distribution.
 
 // [[Rcpp::depends(RcppEigen)]]
 #include <RcppEigen.h>
-#include "MatrixT.h"
 using namespace Eigen;
+#include "MatrixT.h"
+using namespace mniw;
 
+/// Log-density of the Matrix-T distribution.
+///
+/// Evaluate the log-density of `N` observations of a `p x q` dimensional Matrix-T distribution.  Each argument can be vectorized, meaning that it can have length either `N` or `1`, denoted here as `n`.
+///
+/// @param [in] X Matrix of `p x nq` random matrix observations.
+/// @param [in] Mu Matrix of `p x nq` mean matrices.
+/// @param [in] RowV Matrix of `p x np` row-wise variance matrices.
+/// @param [in] ColV Matrix of `q x nq` column-wise variance matrices.
+/// @param [in] nu Vector of `n` degrees-of-freedom parameters.
+///
+/// @return Vector of `N` log-density evaluations.
 //[[Rcpp::export]]
 Eigen::VectorXd LogDensityMatrixT(Eigen::MatrixXd X,
 				  Eigen::MatrixXd Mu,
@@ -67,6 +77,17 @@ Eigen::VectorXd LogDensityMatrixT(Eigen::MatrixXd X,
   return logDens;
 }
 
+/// Generate a random sample from the Matrix-T distribution.
+///
+/// Generate `N` independent draws from a `p x q` dimensional Matrix-T distribution.  Each argument can be vectorized, meaning that it can have length either `N` or `1`, denoted here as `n`.
+///
+/// @param [in] N Integer number of random draws
+/// @param [in] Lambda Matrix of `p x nq` mean matrices.
+/// @param [in] RowSigma Matrix of `p x np` row-wise variance or precision matrices.
+/// @param [in] ColSigma Matrix of `q x nq` column-wise variance matrices.
+/// @param [in] nu Vector of `n` degrees-of-freedom parameters.
+/// @param [in] inverse Boolean; `true/false` indicates that `RowSigma` is on the precision/variance scale.
+/// @return Matrix of `p x Nq` random draws.
 // [[Rcpp::export]]
 Eigen::MatrixXd GenerateMatrixT(int N, Eigen::MatrixXd Lambda,
 				Eigen::MatrixXd RowSigma,

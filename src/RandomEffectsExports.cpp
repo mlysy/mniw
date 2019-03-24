@@ -1,8 +1,6 @@
-///////////////////////////////////////////////////////////////////
-
-// Exported Random Effects functions
-
-//////////////////////////////////////////////////////////////////
+/// @file RandomEffectsExports.cpp
+///
+/// Exported Rcpp functions for the Multivariate Random-Effects Normal distribution.
 
 // #include <Rcpp.h>
 // using namespace Rcpp;
@@ -15,13 +13,28 @@ using namespace Eigen;
 // #include "mniwRandomEffects.h"
 #include "TriUtils.h"
 #include "RandomEffects.h"
+using namespace mniw;
 
 //////////////////////////////////////////////////////////////////
 
-// Generate Random-Effects Normal distribution
-// p(mu | y), where
-// y | mu ~ N(mu, V) and  mu ~ N(lambda, A)
-// supports multiple instances of each parameter (including y)
+/// Generate a random sample from the Random-Effects Normal distribution.
+///
+/// Generate `N` independent draws from \f$p(\boldsymbol{mu} \mid \boldsymbol{y})\f$, where
+/// \f[
+/// \begin{aligned}
+/// \boldsymbol{\mu} & \sim \mathcal N(\boldsymbol{\lambda}, \boldsymbol{A}) \\
+/// \boldsymbol{y} \mid \boldsymbol{\mu} & \sim \mathcal N(\boldsymbol{\mu}, \boldsymbol{V}).
+/// \end{aligned}
+/// \f]
+/// Each argument can be vectorized, meaning that it can have length either `N` or `1`, denoted here as `n`.
+///
+/// @param [in] N Integer number of random draws.
+/// @param [in] lambda Matrix of size `q x n` of prior means.
+/// @param [in] y Matrix of size `q x n` of observations.
+/// @param [in] V Matrix of size `q x nq` of observation variances.
+/// @param [in] A Matrix of size `q x nq` of prior variances.
+///
+/// @return Matrix of size `q x Nq` of random draws of observation means `mu`.
 //[[Rcpp::export]]
 Eigen::MatrixXd GenerateRandomEffectsNormal(int N,
 					    Eigen::MatrixXd lambda,

@@ -1,22 +1,27 @@
-///////////////////////////////////////////////////////////////////
-
-// Exported Multivariate Normal functions
-
-//////////////////////////////////////////////////////////////////
+/// @file MultiNormalExports.cpp
+///
+/// Exported Rcpp functions for the Multivariate Normal distribution.
 
 // [[Rcpp::depends(RcppEigen)]]
 #include <RcppEigen.h>
+using namespace Eigen;
 //#include <iostream>
 #include "MultiNormal.h"
 // #include "mniwMatNorm.h"
+using namespace mniw;
 
 
 //////////////////////////////////////////////////////////////////
 
-// log-density of multivariate normal
-// X ~ N(Mu, V)
-// note that Mu and V can be different for each X
-// an R version of this wrapper will do transpositions automatically
+/// Log-density of the Multivariate Normal distribution.
+///
+/// Evaluate the log-density of `N` observations of a `q` dimensional Multivariate Normal distribution.  Each argument can be vectorized, meaning that it can have length either `N` or `1`, denoted here as `n`.
+///
+/// @param [in] X Matrix of `q x n` random variable observations.
+/// @param [in] Mu Matrix of `q x n` mean vectors.
+/// @param [in] V Matrix of `q x nq` variance matrices.
+///
+/// @return Vector of `N` log-density evaluations.
 //[[Rcpp::export]]
 Eigen::VectorXd LogDensityMultivariateNormal(Eigen::MatrixXd X,
 					     Eigen::MatrixXd Mu,
@@ -58,8 +63,15 @@ Eigen::VectorXd LogDensityMultivariateNormal(Eigen::MatrixXd X,
   return logDens;
 }
 
-// Generate Multivariate Normal
-// supports multple instance sof each parameter
+/// Generate a random sample from the Multivariate Normal distribution.
+///
+/// Generate `N` independent draws from a `q` dimensional Multivariate Normal distribution.  Each argument can be vectorized, meaning that it can have length either `N` or `1`, denoted here as `n`.
+///
+/// @param [in] N Integer number of random draws.
+/// @param [in] Lambda Matrix of size `q x n` of mean vectors.
+/// @param [in] Sigma Matrix of size `q x nq` of variance matrices.
+///
+/// @return Matrix of size `q x N` of random draws.
 //[[Rcpp::export]]
 Eigen::MatrixXd GenerateMultivariateNormal(int N, Eigen::MatrixXd Lambda,
 					   Eigen::MatrixXd Sigma) {

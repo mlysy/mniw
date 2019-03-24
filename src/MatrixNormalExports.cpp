@@ -1,24 +1,31 @@
-///////////////////////////////////////////////////////////////////
-
-// Exported Matrix Normal functions
-
-//////////////////////////////////////////////////////////////////
+/// @file MatrixNormalExports.cpp
+///
+/// Exported Rcpp functions for the Matrix-Normal distribution.
 
 // #include <Rcpp.h>
 // using namespace Rcpp;
 // [[Rcpp::depends(RcppEigen)]]
 #include <RcppEigen.h>
+using namespace Eigen;
 //#include <iostream>
 #include "MatrixNormal.h"
+using namespace mniw;
 // #include "mniwMatNorm.h"
 
-// log-density of matrix normal
-// X ~ N(Mu, RowV, ColV)
-// note that Mu, RowV, ColV can be different for each X
-// an R version of this wrapper will do transpositions automatically
+/// Log-density of the Matrix-Normal distribution.
+///
+/// Evaluate the log-density of `N` observations of a `p x q` dimensional Matrix-Normal distribution.  Each argument can be vectorized, meaning that it can have length either `N` or `1`, denoted here as `n`.
+///
+/// @param [in] X Matrix of `p x nq` random matrix observations.
+/// @param [in] Mu Matrix of `p x nq` mean matrices.
+/// @param [in] RowV Matrix of `p x np` row-wise variance matrices.
+/// @param [in] ColV Matrix of `q x nq` column-wise variance matrices.
+///
+/// @return Vector of `N` log-density evaluations.
 //[[Rcpp::export]]
 Eigen::VectorXd LogDensityMatrixNormal(Eigen::MatrixXd X, Eigen::MatrixXd Mu,
-				       Eigen::MatrixXd RowV, Eigen::MatrixXd ColV) {
+				       Eigen::MatrixXd RowV,
+				       Eigen::MatrixXd ColV) {
   // dimensions of the problem
   int q = ColV.rows();
   int p = RowV.rows();
@@ -76,9 +83,15 @@ Eigen::VectorXd LogDensityMatrixNormal(Eigen::MatrixXd X, Eigen::MatrixXd Mu,
   return logDens;
 }
 
-// Generate Matrix Normal
-// X ~ MNorm(Lambda, RowSigma, ColSigma)
-// supports multiple instances of each parameter
+/// Generate a random sample from the Matrix-Normal distribution.
+///
+/// Generate `N` independent draws from a `p x q` dimensional Matrix-Normal distribution.  Each argument can be vectorized, meaning that it can have length either `N` or `1`, denoted here as `n`.
+///
+/// @param [in] N Integer number of random draws
+/// @param [in] Lambda Matrix of `p x nq` mean matrices.
+/// @param [in] RowSigma Matrix of `p x np` row-wise variance matrices.
+/// @param [in] ColSigma Matrix of `q x nq` column-wise variance matrices.
+/// @return Matrix of `p x Nq` random draws.
 //[[Rcpp::export]]
 Eigen::MatrixXd GenerateMatrixNormal(int N, Eigen::MatrixXd Lambda,
 				     Eigen::MatrixXd RowSigma,

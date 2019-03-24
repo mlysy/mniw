@@ -1,20 +1,18 @@
 Package: mniw
 Type: Package
-Title: Density and Simulation for the Matrix-Normal Inverse-Wishart (MNIW) Distribution
-Version: 0.0.0.9013
-Date: 2016-06-03
+Title: The Matrix-Normal Inverse-Wishart Distribution
+Version: 0.0.1.9000
+Date: 2019-03-23
 Authors@R: c(person("Martin", "Lysy", role = c("aut", "cre"),
                     email = "mlysy@uwaterloo.ca"),
              person("Bryan", "Yates", role = "aut"))
-Description: C++ implementations of Matrix-Normal Inverse-Wishart (MNIW) distributions and their constituent components using the Eigen linear algebra library.  All functions arguments accept scalar, vector, matrix, and array inputs whenever possible.  Also provides a Gibbs sampler for the posterior distribution of a matrix-valued random-effects model.
+Description: Density evaluation and random number generation for the Matrix-Normal Inverse-Wishart (MNIW) distribution, as well as the the Matrix-Normal, Matrix-T, Wishart, and Inverse-Wishart distributions.  Core calculations are implemented in a portable (header-only) C++ library, with matrix manipulations using the 'Eigen' library for linear algebra.  Also provided is a Gibbs sampler for Bayesian inference with a random-effects model with Matrix-Normal observations.
 License: GPL-3
 Depends: R (>= 2.10)
 Imports: Rcpp (>= 0.11.6)
 LinkingTo: Rcpp, RcppEigen
 LazyData: true
-Suggests: testthat,
-    knitr,
-    rmarkdown
+Suggests: testthat, knitr, rmarkdown
 Encoding: UTF-8
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr

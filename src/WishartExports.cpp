@@ -1,8 +1,6 @@
-///////////////////////////////////////////////////////////////////
-
-// Exported Wishart functions
-
-//////////////////////////////////////////////////////////////////
+/// @file WishartExports.cpp
+///
+/// Exported Rcpp functions for the Wishart distribution.
 
 #include <Rcpp.h>
 using namespace Rcpp;
@@ -13,13 +11,20 @@ using namespace Eigen;
 // #include "mniwUtils.h"
 // #include "mniwWishart.h"
 #include "Wishart.h"
+using namespace mniw;
 
-//////////////////////////////////////////////////////////////////
+// -----------------------------------------------------------------------------
 
-// log-density of Wishart or inverse-Wishart:
-// X ~ Wish(Psi, nu) or X ~ iWish(Psi, nu)
-// can specify multiple Psi and nu
-// in an R version the transposition will be done automatically
+/// Log-density of the Wishart and Inverse-Wishart distributions.
+///
+/// Evaluate the log-density of `N` observations of a `q x q` Wishart or Inverse-Wishart distribution.  Each argument except `inverse` can be vectorized, meaning that it can have length either `N` or `1`, denoted here as `n`.
+///
+/// @param [in] X Matrix of size `q x nq` of random variable observations.
+/// @param [in] Psi Matrix of size `q x nq` of scale matrices.
+/// @param [in] nu Vector of `n` degrees-of-freedom parameters.
+/// @param [in] inverse Whether to evaluate the log-density of the Wishart or Inverse-Wishart distribution.
+///
+/// @return A vector of `N` log-density evaluations.
 //[[Rcpp::export]]
 Eigen::VectorXd LogDensityWishart(Eigen::MatrixXd X, Eigen::MatrixXd Psi,
 				  Eigen::VectorXd nu, bool inverse = false) {
@@ -76,10 +81,16 @@ Eigen::VectorXd LogDensityWishart(Eigen::MatrixXd X, Eigen::MatrixXd Psi,
 }
 
 
-
-// generate wishart or inverse wishart
-// V ~ Wish(Psi, nu) or V ~ iWish(Psi, nu).
-// supports multiple parameter arguments
+/// Generate a random sample from the Wishart or Inverse-Wishart distribution.
+///
+/// Generate `N` independent draws from a `q x q` Wishart or Inverse-Wishart.  Each argument except `inverse` can be vectorized, meaning that it can have length either `N` or `1`, denoted here as `n`.
+///
+/// @param [in] N Integer number of random draws to produce
+/// @param [in] Psi Matrix of size `q x nq` of scale matrices.
+/// @param [in] nu Vector of `n` degrees-of-freedom parameters.
+/// @param [in] inverse Whether to evaluate the log-density of the Wishart or Inverse-Wishart distribution.
+///
+/// @return A `q x Nq` matrix of `N` random draws.
 //[[Rcpp::export]]
 Eigen::MatrixXd GenerateWishart(int N, Eigen::MatrixXd Psi, Eigen::VectorXd nu,
 				bool inverse = false) {
