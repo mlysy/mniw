@@ -1,6 +1,6 @@
 Package: mniw
 Type: Package
-Title: The Matrix-Normal Inverse-Wishart Distribution
+Title: Tools for the Matrix-Normal Inverse-Wishart Distribution
 Version: 0.0.1.9000
 Date: 2019-03-23
 Authors@R: c(person("Martin", "Lysy", role = c("aut", "cre"),

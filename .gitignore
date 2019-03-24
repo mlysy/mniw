@@ -12,3 +12,6 @@ vignettes/.build.timestamp
 *.dll
 # osx
 *.DS_Store
+
+# unignore html files in doc
+!doc
