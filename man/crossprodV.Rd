@@ -2,16 +2,16 @@
 % Please edit documentation in R/crossprodV.R
 \name{crossprodV}
 \alias{crossprodV}
-\title{Matrix Cross-Product}
+\title{Matrix cross-product.}
 \usage{
 crossprodV(X, Y = NULL, V, inverse = FALSE)
 }
 \arguments{
-\item{X}{Either a matrix of size \code{p x q}, or an array of size \code{p x q x n}.}
+\item{X}{A matrix of size \code{p x q}, or an array of size \code{p x q x n}.}
 
-\item{Y}{Optionally, either a matriz of size \code{p x r} or an array of size \code{p x r x n}.  If missing uses \code{Y = X}.}
+\item{Y}{A matrix of size \code{p x r}, or an array of size \code{p x r x n}.  If missing defaults to \code{Y = X}.}
 
-\item{V}{Either a matrix of size \code{p x p}, or an array of size \code{p x p x n}.}
+\item{V}{A matrix of size \code{p x p}, or an array of size \code{p x p x n}.}
 
 \item{inverse}{Logical; whether or not the inner product should be calculated with \code{V} or \code{V^{-1}}.}
 }
@@ -19,5 +19,18 @@ crossprodV(X, Y = NULL, V, inverse = FALSE)
 An array of size \code{q x r x n}.
 }
 \description{
-Vectorized matrix cross-products \code{X' V Y} or \code{X' V^{-1} Y}.
+Vectorized matrix cross-products \code{t(X) V Y} or \code{t(X) V^{-1} Y}.
+}
+\examples{
+# problem dimensions
+p <- 4
+q <- 2
+r <- 3
+n <- 5
+X <- array(rnorm(p*q*n), dim = c(p, q, n)) # vectorized
+Y <- array(rnorm(p*r*n), dim = c(p, r, n)) # vectorized
+V <- crossprod(matrix(rnorm(p*p), p, p)) # not vectorized (but positive definite)
+crossprodV(X = X, V = V) # self cross-product
+# cross-product with inverse matrix weight
+crossprodV(X = X, V = V, Y = Y, inverse = TRUE)
 }

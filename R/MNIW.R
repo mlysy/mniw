@@ -1,21 +1,27 @@
 #--- MNIW distribution -----------------------------------------------------
 
-#' @title Generate Samples from the Matrix-Normal Inverse-Wishart Distribution.
-#' @param n Number of samples.
-#' @param Lambda \code{p x q} mean matrix of \code{X} (see details).
-#' @param Sigma \code{p x p} conditional row variance matrix of \code{X}.
-#' @param Psi \code{q x q} scale matrix of \code{V}.
-#' @param nu Scalar degrees of freedom of \code{V}.
-#' @param prec Logical, whether or not to return \code{V} or \code{C = V^{-1}}.
-#' @details the Matrix-Normal Inverse-Wishart (MNIW) distribution on \code{p x q} matrix \code{X} and \code{q x q} matrix \code{V} is:
-#' \deqn{X | V \sim MN(Lambda, Sigma, V), \qquad V \sim iWish(Psi, nu).}
+#' Generate samples from the Matrix-Normal Inverse-Wishart distribution.
+#'
+#' @param n number of samples.
+#' @param Lambda A mean matrix of size \code{p x q} or an array of size \code{p x q x n}.  Defaults to matrix of zeros when missing.
+#' @param Sigma A row-wise variance or precision matrix of size \code{p x p}, or an array of size \code{p x p x n}.  Defaults to identity matrix when missing.
+#' @param Psi A scale matrix of size \code{q x q}, or an array of size \code{q x q x n}.  Defaults to identity matrix when missing.
+#' @param nu Scalar degrees-of-freedom parameter.
+#' @param prec Logical; whether or not \code{Sigma} is on the variance or precision scale.
+#'
+#' @return A list with elements:
+#' \describe{
+#' \item{\code{X}}{Array of size \code{p x q x n} random samples from the Matrix-Normal component (see \strong{Details}).}
+#' \item{\code{V}}{Array of size \code{q x q x n} of random samples from the Inverse-Wishart component.}
+#' }
+#' @template details-mniw
+#' @example examples/MNIW.R
 #' @export
-rMNIW <- function(n, Lambda, Sigma, Psi, nu, prec = FALSE, debug = FALSE) {
+rMNIW <- function(n, Lambda, Sigma, Psi, nu, prec = FALSE) {
   # get dimensions
   PQ <- .getPQ(Lambda = Lambda, Sigma = Sigma, Psi = Psi)
   p <- PQ[1]
   q <- PQ[2]
-  if(debug) browser()
   if(anyNA(PQ)) {
     stop("Problem dimensions are undetermined (too many missing inputs).")
   }

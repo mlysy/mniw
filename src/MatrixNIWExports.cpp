@@ -1,60 +1,65 @@
-///////////////////////////////////////////////////////////////////
+/// @file MatrixNIWExports.cpp
+///
+/// Exported Rcpp functions for the Matrix-Normal Inverse-Wishart distribution.
 
-// Exported Wishart functions
-
-//////////////////////////////////////////////////////////////////
-
-#include "mniwSetLib.h"
-
-#ifdef R_FUNCTION_LIBRARY
-#include <Rcpp.h>
-using namespace Rcpp;
-#include <RcppEigen.h>
+// #include <Rcpp.h>
+// using namespace Rcpp;
 // [[Rcpp::depends(RcppEigen)]]
-#endif
-
-#ifdef MATLAB_FUNCTION_LIBRARY
-#include <math.h>
-#include <matrix.h>
-#include <mex.h>
-#include <Eigen/Dense>
-#include "RmathUtils.h"
-#endif
-
-//#include <iostream>
+#include <RcppEigen.h>
 using namespace Eigen;
+using namespace Rcpp;
+//#include <iostream>
 #include "TriUtils.h"
-#include "mniwWishart.h"
-#include "mniwMatNorm.h"
+#include "Wishart.h"
+#include "MatrixNormal.h"
+using namespace mniw;
+// #include "mniwWishart.h"
+// #include "mniwMatNorm.h"
 
 //////////////////////////////////////////////////////////////////
 
-// Generate Matrix Normal-Inverse-Wishart
-// V ~ iWish(Psi, nu)
-// X | V ~ MNorm(Lambda, Sigma, V)
-// allow for multiple instances of each parameter
-// also, inverse = TRUE means that the inverses of Sigma are provided instead
+
+/// Generate a random sample from the Matrix-Normal Inverse-Wishart distribution.
+///
+/// Generate `N` independent draws from a `p x q`/`q x q` dimensional Matrix-Normal Inverse-Wishart distribution.  Each argument can be vectorized, meaning that it can have length either `N` or `1`, denoted here as `n`.
+///
+/// @param [in] N Integer number of random draws
+/// @param [in] Lambda Matrix of `p x nq` mean matrices.
+/// @param [in] Sigma Matrix of `p x np` row-wise variance or precision matrices.
+/// @param [in] Psi Matrix of `q x nq` scale matrices.
+/// @param [in] nu Vector of `n` degrees-of-freedom parameters.
+/// @param [in] inverse Boolean; `true/false` indicates that `Sigma` is on the precision/variance scale.
+/// @return List with elements `X` and `V`, consisting of matrices of size `p x Nq` and `q x Nq` random draws respectively.
 //[[Rcpp::export]]
 List GenerateMatrixNIW(int N,
 		       Eigen::MatrixXd Lambda, Eigen::MatrixXd Sigma,
 		       Eigen::MatrixXd Psi, Eigen::VectorXd nu,
 		       bool inverse = false) {
+  // problem dimensions
   int p = Lambda.rows();
   int q = Psi.rows();
   bool singleLambda = (Lambda.cols() == q);
   bool singleSigma = (Sigma.cols() == p);
   bool singlePsi = (Psi.cols() == q);
   bool singleNu = (nu.size() == 1);
-  int ii;
   // internal variables
-  TempPQ *tmp = new TempPQ(p,q);
+  LLT<MatrixXd> lltq(q);
+  MatrixXd Lq = MatrixXd::Zero(q,q);
+  MatrixXd Uq = MatrixXd::Zero(q,q);
+  MatrixXd Iq = MatrixXd::Identity(q,q);
   MatrixXd CL = MatrixXd::Zero(q,q);
   MatrixXd SigmaL = MatrixXd::Zero(p,p);
   MatrixXd OmegaU = MatrixXd::Zero(p,p);
   MatrixXd XiL = MatrixXd::Zero(q,q);
   LLT<MatrixXd> lltp(p);
+  Wishart wish(q);
+  MatrixNormal matnorm(p,q);
+  // output variables
+  MatrixXd X(p,N*q);
+  MatrixXd V(q,N*q);
+  // precomputations
   if(singlePsi) {
-    ReverseCholesky(XiL, Psi, tmp);
+    ReverseCholesky(XiL, Psi, lltq);
   }
   if(singleSigma) {
     lltp.compute(Sigma);
@@ -65,14 +70,12 @@ List GenerateMatrixNIW(int N,
       OmegaU = lltp.matrixU();
     }
   }
-  // output variables
-  MatrixXd X(p,N*q);
-  MatrixXd V(q,N*q);
-  for(ii=0; ii<N; ii++) {
+  // main loop
+  for(int ii=0; ii<N; ii++) {
     if(!singlePsi) {
-      ReverseCholesky(XiL, Psi.block(0,ii*q,q,q), tmp);
+      ReverseCholesky(XiL, Psi.block(0,ii*q,q,q), lltq);
     }
-    GenerateWishartLowerTriXi(CL, XiL, nu(ii*(!singleNu)));
+    wish.GenerateLowerTriXi(CL, XiL, nu(ii*(!singleNu)));
     if(!singleSigma) {
       lltp.compute(Sigma.block(0,ii*p,p,p));
     }
@@ -80,21 +83,20 @@ List GenerateMatrixNIW(int N,
       if(!singleSigma) {
 	SigmaL = lltp.matrixL();
       }
-      GenerateMatrixNormalRowSColO(X.block(0,ii*q,p,q),
-				   Lambda.block(0,ii*q*(!singleLambda),p,q),
-				   SigmaL, CL, tmp->Xpq);
+      matnorm.GenerateRowSColO(X.block(0,ii*q,p,q),
+			       Lambda.block(0,ii*q*(!singleLambda),p,q),
+			       SigmaL, CL);
     }
     else {
       if(!singleSigma) {
 	OmegaU = lltp.matrixU();
       }
-      GenerateMatrixNormalRowOColO(X.block(0,ii*q,p,q),
-				   Lambda.block(0,ii*q*(!singleLambda),p,q),
-				   OmegaU, CL, tmp->Xpq);
+      matnorm.GenerateRowOColO(X.block(0,ii*q,p,q),
+			       Lambda.block(0,ii*q*(!singleLambda),p,q),
+			       OmegaU, CL);
     }
-    InverseLLt(V.block(0,ii*q,q,q), CL, tmp->Lq, tmp->Uq, tmp->Iq);
+    InverseLLt(V.block(0,ii*q,q,q), CL, Lq, Uq, Iq);
   }
-  delete tmp;
   return List::create(_["X"] = wrap(X),
 		      _["V"] = wrap(V));
 }

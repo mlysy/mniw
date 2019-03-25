@@ -31,7 +31,7 @@
   if(!.minu(Psi)) {
     if(is.na(q)) q <- ifelse(is.vector(Psi), 1, dim(Psi)[1])
   }
-  c(p = p, q = q)
+  setNames(c(p, q), NULL)
 }
 
 # missing or NULL
@@ -78,13 +78,13 @@
 }
 
 # convert a vector or matrix to MN format,
-# i.e., promote to 2- or 3-d array with (first dimension) p = 1
+# i.e., promote to 2- or 3-d array with (second dimension) q = 1
 .vec2mn <- function(x) {
   if(is.vector(x)) {
-    x <- matrix(x, nrow = 1)
+    x <- matrix(x, ncol = 1)
   } else {
     x <- t(x)
-    x <- array(x, dim = c(1, dim(x)))
+    x <- array(x, dim = c(dim(x)[1], 1, dim(x)[2]))
   }
   x
 }

@@ -4,37 +4,54 @@
 \alias{MatrixNormal}
 \alias{dMNorm}
 \alias{rMNorm}
-\alias{rMNorm}
-\title{Matrix-Normal Distribution.}
+\title{The Matrix-Normal distribution.}
 \usage{
-dMNorm(X, Mu, RowV, ColV, log = FALSE, debug = FALSE)
+dMNorm(X, Mu, RowV, ColV, log = FALSE)
 
-rMNorm(n, Mu, RowV, ColV, debug = FALSE)
+rMNorm(n, Mu, RowV, ColV)
 }
 \arguments{
-\item{X}{Argument to the density function.  Either a \code{p x q} matrix or a \code{p x q x n} array.}
+\item{X}{argument to the density function.  Either a \code{p x q} matrix or a \code{p x q x n} array.}
 
-\item{Mu}{Mean matrix or matrices.  Either a \code{p x q} matrix or a \code{p x q x n} array.}
+\item{Mu}{mean matrix or matrices.  Either a \code{p x q} matrix or a \code{p x q x n} array.}
 
-\item{RowV}{Between-Row covariance matrix or matrices.  Either a \code{p x p} matrix or a \code{p x p x n} array.}
+\item{RowV}{between-row covariance matrix or matrices.  Either a \code{p x p} matrix or a \code{p x p x n} array.}
 
-\item{ColV}{Between-Column covariance matrix or matrices.  Either a \code{q x q} matrix or a \code{q x q x n} array.}
+\item{ColV}{between-column covariance matrix or matrices.  Either a \code{q x q} matrix or a \code{q x q x n} array.}
 
-\item{log}{Whether or not to compute the log-density.}
+\item{log}{logical. Whether or not to compute the log-density.}
 
-\item{n}{Number of random matrices to generate.}
+\item{n}{number of random matrices to generate.}
 }
 \value{
-A vector for densities, or a \code{p x q x n} array for random sampling.
+A vector length \code{n} for density evaluation, or a \code{p x q x n} array for random sampling.
 }
 \description{
-Density and Random sampling for the Matrix-Normal Distribution.
+Density and random sampling for the Matrix-Normal distribution.
 }
 \details{
-\code{dMNorm} and \code{rMNorm} both accept single or multiple values for each argument.
+The Matrix-Normal distribution \eqn{\boldsymbol{X} \sim \textrm{Matrix-Normal}(\boldsymbol{\Lambda}, \boldsymbol{\Sigma}_R, \boldsymbol{\Sigma}_C)}{X ~ Matrix-Normal(\Lambda, \Sigma_R, \Sigma_C)} on the random matrix \eqn{\boldsymbol{X}_{p \times q}}{X_(p x q)} is defined as
+\deqn{
+\textrm{vec}(\boldsymbol{X}) \sim \mathcal{N}(\textrm{vec}(\boldsymbol{\Lambda}), \boldsymbol{\Sigma}_C \otimes \boldsymbol{\Sigma}_R),
+}{
+vec(X) ~ N(vec(\Lambda), \Sigma_C \%x\% \Sigma_R),
+}
+where \eqn{\textrm{vec}(\boldsymbol{X})}{vec(X)} is a vector stacking the columns of \eqn{\boldsymbol{X}}{X}, and \eqn{\boldsymbol{\Sigma}_C \otimes \boldsymbol{\Sigma}_R}{\Sigma_C \%x\% \Sigma_R} denotes the Kronecker product.
+}
+\examples{
+# problem dimensions
+p <- 4
+q <- 2
+n <- 10 # number of observations
+# parameter values
+Mu <- matrix(rnorm(p*q),p,q) # mean matrix
+# row-wise variance matrix (positive definite)
+RowV <- crossprod(matrix(rnorm(p*p), p, p))
+ColV <- rwish(n, Psi = diag(q), nu = q + 1) # column-wise variance (vectorized)
 
-The distribution of a \code{p x q} Matrix-Normal random matrix is
-\deqn{f(X) = const * \exp{-0.5 Tr( ColV^{-1}(X-Mu)''RowV^{-1}(X-Mu) )}.}
-Linear combinations of Matrix-Normals are normal.  That is, for fixed \code{a} and \code{b} and \code{X ~ MNorm(Mu, RowV, ColV)}, then
-\deqn{a' X b \sim N( a' Mu b, (a' RowV a) * (b' ColV b) ).}
+# random sample
+X <- rMNorm(n, Mu = Mu, RowV = RowV, ColV = ColV)
+
+# log-density at each sampled value
+dMNorm(X, Mu = Mu, RowV = RowV, ColV = ColV, log = TRUE)
 }
