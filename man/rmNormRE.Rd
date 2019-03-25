@@ -2,27 +2,51 @@
 % Please edit documentation in R/RandomEffects.R
 \name{rmNormRE}
 \alias{rmNormRE}
-\title{Conditional Sampling for Multivariate Normal Random-Effects Model.}
+\title{Conditional sampling for Multivariate-Normal Random-Effects model.}
 \usage{
 rmNormRE(n, y, V, lambda, A)
 }
 \arguments{
 \item{n}{The number of random samples to generate.}
 
-\item{y}{Vector of length \code{q} or \code{n x q} matrix of observations.  In the latter case each row is a different vector (see details).}
+\item{y}{Data observations.  Either a vector of length \code{q} or a \code{n x q} matrix.  In the latter case each row is a different vector.}
 
-\item{V}{Matrix of size \code{q x q} or \code{q x q x n} array of observation variances.}
+\item{V}{Observation variances.  Either a matrix of size \code{q x q} or a \code{q x q x n} array.}
 
-\item{lambda}{Vector of length \code{q} or \code{n x q} matrix of prior means.  In the latter case each row is a different mean.  Defaults to zeros.}
+\item{lambda}{Prior means.  Either a vector of length \code{q} or an \code{n x q} matrix.  In the latter case each row is a different mean.  Defaults to zeros.}
 
-\item{A}{Matrix of size \code{q x q} or \code{q x q x n} array of prior variances.  Defaults to identity matrix.}
+\item{A}{Prior variances.  Either a matrix of size \code{q x q} or a \code{q x q x n} array.  Defaults to identity matrix.}
 }
 \description{
-Sample from the conditional parameter distribution given the data and hyperparameters of the Multivariate Normal Random Effects (mNormRE) model.
+Sample from the conditional parameter distribution given the data and hyperparameters of the Multivariate-Normal Random-Effects (mNormRE) model (see \strong{Details}).
 }
 \details{
-The normal-normal random effects model is:
-\deqn{y | mu \sim N(mu, V), \qquad mu \sim \N(lambda, A).}
-The posterior distribution for the random effects \code{mu} is
-\deqn{mu | y \sim N(,).}
+Consider the hierarchical multivariate normal model
+\deqn{
+\arraycolsep=1.4pt
+\begin{array}{rcl}
+\boldsymbol{\mu} & \sim & \mathcal{N}(\boldsymbol{\lambda}, \boldsymbol{A}) \\
+\boldsymbol{y} \mid \boldsymbol{\mu} & \sim & \mathcal{N}(\boldsymbol{\mu}, \boldsymbol{V}).
+\end{array}
+}{
+\mu ~ N(\lambda, A)
+}
+\deqn{
+\vspace{-2em}
+}{
+y | \mu ~ N(\mu, V).
+}
+The Multivariate-Normal Random-Effects model \eqn{\boldsymbol{\mu} \sim \textrm{NormRX}(\boldsymbol{y}, \boldsymbol{V}, \boldsymbol{\lambda}, \boldsymbol{A})}{\mu ~ NormRX(y, V, \lambda, A)} on the random vector \eqn{\boldsymbol{\mu}_q}{\mu_q} is defined as the posterior distribution \eqn{p(\boldsymbol{\mu} \mid \boldsymbol{y}, \boldsymbol{\lambda}, \boldsymbol{A})}{p(\mu | y, \lambda, A)}.  This distribution is multivariate normal; for the mathematical specification of its parameters please see \code{vignette("mniw-distributions", package = "mniw")}.
+}
+\examples{
+# data specification
+q <- 5
+y <- rnorm(q)
+V <- rwish(1, diag(q), q+1)
+# prior specification
+lambda <- rep(0,q)
+A <- diag(q)
+n <- 10
+# random sampling
+rmNormRE(n, y, V, lambda, A)
 }

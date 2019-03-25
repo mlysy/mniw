@@ -1,11 +1,14 @@
-#' @title Matrix Cross-Product
-#' @description Vectorized matrix cross-products \code{X' V Y} or \code{X' V^{-1} Y}.
+#' Matrix cross-product.
 #'
-#' @param X Either a matrix of size \code{p x q}, or an array of size \code{p x q x n}.
-#' @param Y Optionally, either a matriz of size \code{p x r} or an array of size \code{p x r x n}.  If missing uses \code{Y = X}.
-#' @param V Either a matrix of size \code{p x p}, or an array of size \code{p x p x n}.
+#' Vectorized matrix cross-products \code{t(X) V Y} or \code{t(X) V^{-1} Y}.
+#'
+#' @param X A matrix of size \code{p x q}, or an array of size \code{p x q x n}.
+#' @param Y A matrix of size \code{p x r}, or an array of size \code{p x r x n}.  If missing defaults to \code{Y = X}.
+#' @param V A matrix of size \code{p x p}, or an array of size \code{p x p x n}.
 #' @param inverse Logical; whether or not the inner product should be calculated with \code{V} or \code{V^{-1}}.
 #' @return An array of size \code{q x r x n}.
+#'
+#' @example examples/crossprodV.R
 #' @export
 crossprodV <- function(X, Y = NULL, V, inverse = FALSE) {
   # dimensions of X and V

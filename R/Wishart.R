@@ -4,31 +4,30 @@
 #
 #---------------------------------------------------------------------------
 
+#' Wishart and Inverse-Wishart distributions.
+#'
+#' Densities and random sampling for the Wishart and Inverse-Wishart distributions.
+#'
 #' @name Wishart
-#' @title Wishart and Inverse-Wishart Distributions.
-#' @description Densities and Random Sampling for the Wishart and Inverse-Wishart distributions.
 #' @aliases dwish rwish diwish riwish dwishart rwishart
 #' @param X Argument to the density function.  Either a \code{q x q} matrix or a \code{q x q x n} array.
-#' @param n Number of random matrices to generate.
+#' @template param-n
 #' @param Psi Scale parameter.  Either a \code{q x q} matrix or a \code{q x q x n} array.
 #' @param nu Degrees-of-freedom parameter.  A scalar or vector.
-#' @param inverse Whether or not to use the Inverse-Wishart distribution.
-#' @param log Whether or not to compute the log-density.
+#' @param inverse Logical; whether or not to use the Inverse-Wishart distribution.
+#' @template param-log
+#' @template details-wishart
 #' @details \code{dwish} and \code{diwish} are convenience wrappers for \code{dwishart}, and similarly \code{rwish} and \code{riwish} are wrappers for \code{rwishart}.
 #'
-#' The distribution of a \code{q x q} Wishart random matrix is
-#' \deqn{\code{f(X) = const |X|^{(\nu-q-1)/2} * \exp{-0.5 * Tr(\Psi^{-1} X)}},}
-#' where \code{Psi} is a symmetric positive-definite matrix and \code{nu > q-1}.
-#'
-#' The distribution of an Inverse-Wishart random matrix is
-#' \deqn{\code{f(X) \propto |X|^{-(\nu+q+1)/2} * \exp{-0.5 * Tr(\Psi X^{-1})}}.}
-#' If \code{X ~ Wish(Psi, nu)}, then \code{X^{-1} ~ iWish(Psi^{-1}, nu)}.
-#'
-#' Quadratic forms involving a nonrandom vector \code{a} and a Wishart random matrix \code{X} have a chi-square distribution.  That is, for fixed \code{a} and \code{X ~ Wish(Psi, nu)},
-#' \deqn{\code{(a' X a) / (a' Psi a) ~ chisq(df = nu)}.}
+#' @example examples/Wishart.R
 #' @return A vector for densities, or a \code{q x q x n} array for random sampling.
 
 #--- convenience wrappers --------------------------------------------------
+
+# \deqn{
+# f(\boldsymbol{X} \mid \boldsymbol{\Psi}, \nu) = \frac{|\boldsymbol{X}|^{(\nu-q+1)/2}\exp\big\{-\frac 1 2 \textrm{trace}(\boldsymbol{\Psi}^{-1}\boldsymbol{X})\big\}}{2^{\nu q/2}|\boldsymbol{\Psi}|^{\nu/2} \Gamma_q(\frac \nu 2)}
+# }
+
 
 # wishart density
 #' @rdname Wishart
@@ -64,8 +63,7 @@ riwish <- function(n, Psi, nu) {
 
 #' @rdname Wishart
 #' @export
-dwishart <- function(X, Psi, nu, inverse = FALSE, log = FALSE, debug = FALSE) {
-  if(debug) browser()
+dwishart <- function(X, Psi, nu, inverse = FALSE, log = FALSE) {
   # get dimensions
   PQ <- .getPQ(X = X, Psi = Psi)
   if(is.na(PQ[2])) stop("Undetermined problem dimensions.")

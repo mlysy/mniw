@@ -31,7 +31,7 @@
   if(!.minu(Psi)) {
     if(is.na(q)) q <- ifelse(is.vector(Psi), 1, dim(Psi)[1])
   }
-  c(p = p, q = q)
+  as.numeric(c(p, q))
 }
 
 # missing or NULL

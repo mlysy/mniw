@@ -1,6 +1,17 @@
-*.DS_Store
-*.Rapp.history
+Meta
+doc
+# R
 *.Rhistory
+*.Rapp.history
+inst/doc
+vignettes/.build.timestamp
+
+# C++
 *.o
 *.so
 *.dll
+# osx
+*.DS_Store
+
+# unignore html files in doc
+!doc
