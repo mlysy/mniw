@@ -1,5 +1,5 @@
 #require(testthat)
-library(mniw)
+## library(mniw)
 source("mniw-testfunctions.R")
 context("Wishart and Inverse Wishart Distributions")
 
@@ -12,47 +12,33 @@ test_that("Wishart density is same in C++ as R", {
                           Psi = c("none", "single", "multi"),
                           nu = c("single", "multi"),
                           inverse = c(TRUE, FALSE),
-                          drop = c(TRUE, FALSE))
+                          drop = c(TRUE, FALSE), stringsAsFactors = FALSE)
   ncases <- nrow(case.par)
   if(calc.diff) MaxDiff <- rep(NA, ncases)
-  n <- 12 # tests per case
+  n <- 5 # tests per case
   for(ii in 1:ncases) {
     cp <- case.par[ii,]
     q <- cp$q
-    sX <- cp$X != "multi"
-    noX <- cp$X == "none"
-    sPsi <- cp$Psi != "multi"
-    noPsi <- cp$Psi == "none"
-    snu <- cp$nu != "multi"
-    arr.drop <- cp$drop
-    X <- rMM(n = n, q = q, noArg = noX)
-    Psi <- rMM(n = n, q = q, noArg = noPsi)
-    nu <- sapply(runif(n, q, 2*q),c,simplify = FALSE)
+    args <- list(X = list(q = q, rtype = cp$X, vtype = "matrix"),
+                 Psi = list(q = q, rtype = cp$Psi, vtype = "matrix"),
+                 nu = list(q = q, rtype = cp$nu, vtype = "scalar"))
+    args <- get_args(n = n, args = args, drop = cp$drop)
     # R test
     llR <- rep(NA, n)
     for(jj in 1:n) {
-      llR[jj] <- dwishR(X = X[[ifelse(sX, 1, jj)]],
-                        Psi = Psi[[ifelse(sPsi, 1, jj)]],
-                        nu = nu[[ifelse(snu, 1, jj)]],
+      llR[jj] <- dwishR(X = args$R$X[[jj]],
+                        Psi = args$R$Psi[[jj]],
+                        nu = args$R$nu[[jj]],
                         inverse = cp$inverse, log = TRUE)
     }
     # C++ test
-    X <- unlistM(X, sX, arr.drop)
-    Psi <- unlistM(Psi, sPsi, arr.drop)
-    nu <- unlist(nu)
-    if(snu) nu <- nu[1]
-    arg.list <- list(X = X, Psi = Psi)
-    arg.list <- arg.list[!c(noX, noPsi)]
-    arg.list <- c(arg.list, list(inverse = cp$inverse, nu = nu, log = TRUE))
-    llcpp <- do.call(dwishart, args = arg.list)
+    llcpp <- do.call(dwishart,
+                     args = c(args$cpp,
+                              list(inverse = cp$inverse, log = TRUE)))
     # C++ produces single output if all inputs are single
-    if(all(c(sX, sPsi, snu))) {
-      llcpp <- rep(llcpp, n)
-    }
+    if(all_single(cp)) llcpp <- rep(llcpp, n)
     mx <- abs(llR - llcpp)
     mx <- min(max(mx), max(mx/abs(llR)))
-    ## cp <- case.par[ii,]
-    ## mx <- Rcpp_dwishart(cp)
     if(calc.diff) {
       MaxDiff[ii] <- mx
     } else {
@@ -68,7 +54,7 @@ test_that("Wishart sampling is same in C++ as R", {
                           Psi = c("single", "multi"),
                           nu = c("single", "multi"),
                           inverse = c(TRUE, FALSE),
-                          drop = c(TRUE, FALSE))
+                          drop = c(TRUE, FALSE), stringsAsFactors = FALSE)
   ncases <- nrow(case.par)
   n <- 10
   if(calc.diff) {
@@ -77,39 +63,22 @@ test_that("Wishart sampling is same in C++ as R", {
   for(ii in 1:ncases) {
     cp <- case.par[ii,]
     q <- cp$q
-    sPsi <- cp$Psi != "multi"
-    noPsi <- cp$Psi == "none"
-    snu <- cp$nu != "multi"
-    arr.drop <- cp$drop
-    Psi <- rMM(n = n, q = q, noArg = noPsi)
-    nu <- sapply(runif(n, q, 2*q),c,simplify = FALSE)
-    #Psi <- replicate(n, crossprod(rMnorm(q)), simplify = FALSE)
-    #nu <- sapply(runif(n, q, 2*q), c, simplify = FALSE)
-    #sPsi <- cp$single.Psi
-    #snu <- cp$single.nu
-    #arr.drop <- cp$drop
+    args <- list(Psi = list(q = q, rtype = cp$Psi, vtype = "matrix"),
+                 nu = list(q = q, rtype = cp$nu, vtype = "scalar"))
+    args <- get_args(n = n, args = args, drop = cp$drop)
     # R test
     test.seed <- sample(1e6, 1)
     set.seed(test.seed)
     llR <- array(NA, dim = c(q,q,n))
     for(jj in 1:n) {
-      llR[,,jj] <- rwishR(Psi = Psi[[ifelse(sPsi, 1, jj)]],
-                          nu = nu[[ifelse(snu, 1, jj)]],
+      llR[,,jj] <- rwishR(Psi = args$R$Psi[[jj]],
+                          nu = args$R$nu[[jj]],
                           inverse = cp$inverse)
     }
     # C++ test
-    Psi <- unlistM(Psi, sPsi, arr.drop)
-    nu <- unlist(nu)
-    if(snu) nu <- nu[1]
     set.seed(test.seed)
-    #Psi <- array(unlist(Psi), dim = c(q,q,n))
-    #Psi <- Psi[,,single.ind(sPsi),drop=FALSE]
-    #nu <- unlist(nu)[single.ind(snu)]
-    #if(arr.drop) {
-    #  Psi <- dropN(Psi)
-    #}
-    llcpp <- rwishart(n = n, Psi = Psi, nu = nu,
-                      inverse = cp$inverse)
+    llcpp <- do.call(rwishart,
+                     args = c(args$cpp, list(n = n, inverse = cp$inverse)))
     mx <- abs(llR - llcpp)
     mx <- min(max(mx), max(mx/abs(llR)))
     if(calc.diff) {

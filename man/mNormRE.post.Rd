@@ -2,7 +2,7 @@
 % Please edit documentation in R/Hierarchical.R
 \name{mNormRE.post}
 \alias{mNormRE.post}
-\title{Bayesian Inference for Multivariate Normal Random-Effects Model}
+\title{Bayesian inference for Multivariate-Normal Random-Effects model.}
 \usage{
 mNormRE.post(nsamples, Y, V, X, prior = NULL, init, burn,
   updateHyp = TRUE, storeHyp = TRUE, updateRE = TRUE,
@@ -54,7 +54,7 @@ where \eqn{y_i} and \eqn{\mu_i} are response and random-effects vectors of lengt
 The MNIW prior distribution is given by a list with elements \code{Lambda}, \code{Omega}, \code{Psi}, and \code{nu}.  If any of these is \code{NULL} or missing, the default value is 0.  Note that \code{Omega == 0} gives a Lebesgue prior to \eqn{\beta}.
 }
 \examples{
-## Input Specifications
+# Input Specifications
 nsamples <- 10
 N <- 20
 p <- 1
@@ -66,18 +66,17 @@ nu0 <- rexp(1) + (q+1)                                # prior specification
 X <- rMNorm(1, matrix(0, N, p))
 V <- array(rwish(N, diag(q), q+1),dim=c(q,q,N))
 
-## Simulate data from True Model
-Sigma00 = rwish(1, Psi0, nu0)
-Beta00 = rMNorm(1, Lambda0, Omega0, Sigma00)
-Mu00 = rmNorm(N, X \%*\% Beta00, Sigma00) # random effects
-Y00 = rmNorm(N, Mu00, V) # Data
+# Simulate data from True Model
+Sigma00 <- rwish(1, Psi0, nu0)
+Beta00 <- rMNorm(1, Lambda0, Omega0, Sigma00)
+Mu00 <- rmNorm(N, X \%*\% Beta00, Sigma00) # random effects
+Y00 <- rmNorm(N, Mu00, V) # Data
 prior_list <- list(Psi=Psi0, Lambda=Lambda0, Omega=solve(Omega0), nu=nu0) # Prior
 init_list <- list(Beta=Beta00,Sigma=Sigma00,Mu=Mu00) # Initialize MCMC
 
-## Gibbs sampling to get posterior
+# Gibbs sampling to get posterior
 r_fit <- mNormRE.post(nsamples, Y=Y00, V=V, X=X,
                       prior = prior_list,
                       init = init_list,
                       burn = ceiling(nsamples/2))
-
 }

@@ -24,32 +24,34 @@ rMNorm(n, Mu, RowV, ColV)
 \item{n}{number of random matrices to generate.}
 }
 \value{
-A vector for densities, or a \code{p x q x n} array for random sampling.
+A vector length \code{n} for density evaluation, or a \code{p x q x n} array for random sampling.
 }
 \description{
 Density and random sampling for the Matrix-Normal distribution.
 }
 \details{
-\code{dMNorm} and \code{rMNorm} both accept single or multiple values for each argument.
-
-The distribution of a \code{p x q} Matrix-Normal random matrix is
-\deqn{f(X) = const * \exp{-0.5 Tr( ColV^{-1}(X-Mu)''RowV^{-1}(X-Mu) )}.}
-Linear combinations of Matrix-Normals are normal.  That is, for fixed \code{a} and \code{b} and \code{X ~ MNorm(Mu, RowV, ColV)}, then
-\deqn{a' X b \sim N( a' Mu b, (a' RowV a) * (b' ColV b) ).}
+The Matrix-Normal distribution \eqn{\boldsymbol{X} \sim \textrm{Matrix-Normal}(\boldsymbol{\Lambda}, \boldsymbol{\Sigma}_R, \boldsymbol{\Sigma}_C)}{X ~ Matrix-Normal(\Lambda, \Sigma_R, \Sigma_C)} on the random matrix \eqn{\boldsymbol{X}_{p \times q}}{X_(p x q)} is defined as
+\deqn{
+\textrm{vec}(\boldsymbol{X}) \sim \mathcal{N}(\textrm{vec}(\boldsymbol{\Lambda}), \boldsymbol{\Sigma}_C \otimes \boldsymbol{\Sigma}_R),
+}{
+vec(X) ~ N(vec(\Lambda), \Sigma_C \%x\% \Sigma_R),
+}
+where \eqn{\textrm{vec}(\boldsymbol{X})}{vec(X)} is a vector stacking the columns of \eqn{\boldsymbol{X}}{X}, and \eqn{\boldsymbol{\Sigma}_C \otimes \boldsymbol{\Sigma}_R}{\Sigma_C \%x\% \Sigma_R} denotes the Kronecker product.
 }
 \examples{
-## Matrix-Normal random sample and subsequent density calculation
-n = 100
-p = 4
-q = 2
-Mu = matrix(1,p,q)
-RowV = toeplitz(exp(-seq(1:p)))
-ColV = diag(q)
+# problem dimensions
+p <- 4
+q <- 2
+n <- 10 # number of observations
+# parameter values
+Mu <- matrix(rnorm(p*q),p,q) # mean matrix
+# row-wise variance matrix (positive definite)
+RowV <- crossprod(matrix(rnorm(p*p), p, p))
+ColV <- rwish(n, Psi = diag(q), nu = q + 1) # column-wise variance (vectorized)
 
-# Random sample from Matrix-Normal distribution
-mnData = rMNorm(n, Mu, RowV, ColV)
+# random sample
+X <- rMNorm(n, Mu = Mu, RowV = RowV, ColV = ColV)
 
-# Calculate log-density for each sampled matrix
-dMNorm(mnData, Mu, RowV, ColV, log=TRUE)
-
+# log-density at each sampled value
+dMNorm(X, Mu = Mu, RowV = RowV, ColV = ColV, log = TRUE)
 }

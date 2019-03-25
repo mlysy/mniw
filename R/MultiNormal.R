@@ -6,59 +6,27 @@
 #'
 #' @name MultiNormal
 #' @aliases dmNorm rmNorm
-#' @param x argument to the density function.  A vector of length \code{q} or an \code{n x q} matrix.
-#' @param n number of random vectors to generate.
-#' @param mu mean vector(s).  Either a vector of length \code{q} or an \code{n x q} matrix.
-#' @param V covariance matrix or matrices.  Either a \code{q x q} matrix or a \code{q x q x n} array.
-#' @param log logical. Whether or not to compute the log-density.
-#' @details  \code{dmNorm} and \code{rmNorm} both accept single or multiple values for each argument.
-#' @return A vector for densities, or a \code{n x q} array for random sampling.
-#' @examples
-#' ## Multivariate Normal random sample and subsequent density calculation
-#' n = 100
-#' q = 2
-#' mu = c(1,2)
-#' V = toeplitz(exp(-seq(1:q)))
-#'
-#' # Random sample from Multivariate Normal distribution
-#' mnormData = rmNorm(n, mu, V)
-#'
-#' # Calculate log density for each sampled vector
-#' dmNorm(mnormData, mu, V, log=TRUE)
+#' @param x Argument to the density function.  A vector of length \code{q} or an \code{n x q} matrix.
+#' @template param-n
+#' @param mu Mean vector(s).  Either a vector of length \code{q} or an \code{n x q} matrix.  If missing defaults to a vector of zeros.
+#' @param V Covariance matrix or matrices.  Either a \code{q x q} matrix or a \code{q x q x n} array.  If missing defaults to the identity matrix.
+#' @template param-log
+#' @return A vector for densities, or a \code{n x q} matrix for random sampling.
+#' @example examples/MultiNormal.R
 #' @rdname MultiNormal
 #' @export
 dmNorm <- function(x, mu, V, log = FALSE) {
-  ## debug <- FALSE
-  ## if(FALSE) {
-  ##   .getPQ <- mniw:::.getPQ
-  ##   .getN <- mniw:::.getN
-  ##   .setDims <- mniw:::.setDims
-  ## }
   # get dimensions
   # first convert to appropriate MN format
   x <- .vec2mn(x)
   if(!missing(mu)) mu <- .vec2mn(mu)
-  ## if(is.vector(x)) {
-  ##   x <- matrix(x, nrow = 1)
-  ## } else {
-  ##   x <- t(x)
-  ##   x <- array(x, dim = c(1, dim(x)))
-  ## }
-  ## if(!missing(mu)) {
-  ##   if(is.vector(mu)) {
-  ##     mu <- matrix(mu, nrow = 1)
-  ##   } else {
-  ##     mu <- t(mu)
-  ##     mu <- array(mu, dim = c(1,dim(mu)))
-  ##   }
-  ## }
   PQ <- .getPQ(X = x, Lambda = mu, Sigma = V)
   p <- PQ[1]
   q <- PQ[2]
-  if(q != 1) stop("x and mu must be vectors or matrices.")
   if(anyNA(PQ)) {
     stop("Problem dimensions are undetermined (too many missing inputs).")
   }
+  if(q != 1) stop("x and mu must be vectors or matrices.")
   # format arguments
   x <- .setDims(x, p = p, q = q)
   if(anyNA(x)) stop("Something went wrong.  Please report bug.")
@@ -69,8 +37,8 @@ dmNorm <- function(x, mu, V, log = FALSE) {
   # check lengths
   N <- .getN(p = p, q = q, X = x, Lambda = mu, Sigma = V)
   if(length(N) > 2) stop("Arguments have different lengths.")
-  x <- matrix(x, nrow = q) # format for mN
-  mu <- matrix(mu, nrow = q) # format for mN
+  x <- matrix(x, nrow = p) # format for mN
+  mu <- matrix(mu, nrow = p) # format for mN
   ans <- LogDensityMultivariateNormal(x, mu, V)
   if(!log) ans <- exp(ans)
   ans
@@ -81,23 +49,20 @@ dmNorm <- function(x, mu, V, log = FALSE) {
 rmNorm <- function(n, mu, V) {
   # get dimensions
   # first convert to appropriate MN format
-  if(!missing(mu)) mu <- .vec2mn(mu)
-  ## if(!missing(mu)) {
-  ##   if(is.vector(mu)) {
-  ##     mu <- matrix(mu, nrow = 1)
-  ##   } else {
-  ##     mu <- t(mu)
-  ##     mu <- array(mu, dim = c(1,dim(mu)))
-  ##   }
+  ## if(missing(mu) && !missing(V)) {
+  ##   mu <- rep(0, )
   ## }
+  if(!missing(mu)) {
+    mu <- .vec2mn(mu)
+  }
   PQ <- .getPQ(Lambda = mu, Sigma = V)
-  #if(is.na(PQ[1])) PQ[1] <- 1 # what is this for???
+  if(is.na(PQ[2])) PQ[2] <- 1 # if mu is missing, still know that q = 1
   p <- PQ[1]
   q <- PQ[2]
-  if(q != 1) stop("mu must be a vector or matrix.")
   if(anyNA(PQ)) {
     stop("Problem dimensions are undetermined: must provide mu or V.")
   }
+  if(q != 1) stop("mu must be a vector or matrix.")
   # format arguments
   mu <- .setDims(mu, p = p, q = q)
   if(anyNA(mu)) stop("mu and V have incompatible dimensions.")

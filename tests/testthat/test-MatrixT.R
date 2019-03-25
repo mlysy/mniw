@@ -1,5 +1,5 @@
 ## require(testthat)
-library(mniw)
+## library(mniw)
 source("mniw-testfunctions.R")
 context("Matrix-T Distribution")
 
@@ -13,9 +13,9 @@ test_that("Matrix-T density is same in C++ as R", {
                           RowV = c("none", "single", "multi"),
                           ColV = c("none", "single", "multi"),
                           nu = c("single", "multi"),
-                          drop = c(TRUE, FALSE))
+                          drop = c(TRUE, FALSE), stringsAsFactors = FALSE)
   ncases <- nrow(case.par)
-  n <- 10
+  n <- 5
   if(calc.diff) {
     MaxDiff <- rep(NA, ncases)
   }
@@ -23,46 +23,25 @@ test_that("Matrix-T density is same in C++ as R", {
     cp <- case.par[ii,]
     p <- cp$p
     q <- cp$q
-    sX <- cp$X != "multi"
-    noX <- cp$X == "none"
-    sMu <- cp$Mu != "multi"
-    noMu <- cp$Mu == "none"
-    sRowV <- cp$RowV != "multi"
-    noRowV <- cp$RowV == "none"
-    sColV <- cp$ColV != "multi"
-    noColV <- cp$ColV == "none"
-    snu <- cp$nu != "multi"
-    arr.drop <- cp$drop
-    X <- rMM(n, p = p, q = q, noArg = noX)
-    Mu <- rMM(n, p = p, q = q, noArg = noMu)
-    RowV <- rMM(n, p = p, noArg = noRowV)
-    ColV <- rMM(n, q = q, noArg = noColV)
-    nu <- sapply(runif(n, 2*q, 3*q),c,simplify = FALSE)
+    args <- list(X = list(p = p, q = q, rtype = cp$X, vtype = "matrix"),
+                 Mu = list(p = p, q = q, rtype = cp$Mu, vtype = "matrix"),
+                 RowV = list(p = p, rtype = cp$RowV, vtype = "matrix"),
+                 ColV = list(q = q, rtype = cp$ColV, vtype = "matrix"),
+                 nu = list(q = q, rtype = cp$nu, vtype = "scalar"))
+    args <- get_args(n = n, args = args, drop = cp$drop)
     # R test
     llR <- rep(NA, n)
     for(jj in 1:n) {
-      X_R <- X[[ifelse(sX, 1, jj)]]
-      Mu_R <- Mu[[ifelse(sMu, 1, jj)]]
-      RowV_R <- RowV[[ifelse(sRowV, 1, jj)]]
-      ColV_R <- ColV[[ifelse(sColV, 1, jj)]]
-      nu_R <- nu[[ifelse(snu, 1, jj)]]
-      llR[jj] <- dMTR(X = X_R, Lambda = Mu_R, SigmaU = RowV_R,
-                      SigmaV = ColV_R, nu = nu_R, log = TRUE)
+      llR[jj] <- dMTR(X = args$R$X[[jj]],
+                      Lambda = args$R$Mu[[jj]],
+                      SigmaU = args$R$RowV[[jj]],
+                      SigmaV = args$R$ColV[[jj]],
+                      nu = args$R$nu[[jj]], log = TRUE)
     }
     # C++ test
-    X_cpp <- unlistM(X, sX, arr.drop)
-    Mu_cpp <- unlistM(Mu, sMu, arr.drop)
-    RowV_cpp <- unlistM(RowV, sRowV, arr.drop)
-    ColV_cpp <- unlistM(ColV, sColV, arr.drop)
-    nu_cpp <- unlist(nu)
-    if(snu) nu_cpp <- nu_cpp[1]
-    arg.list <- list(X = X_cpp, Mu = Mu_cpp,
-                     RowV = RowV_cpp, ColV = ColV_cpp)
-    arg.list <- arg.list[!c(noX, noMu, noRowV, noColV)]
-    arg.list <- c(arg.list, list(nu = nu_cpp, log = TRUE))
-    llcpp <- do.call(dMT, args = arg.list)
+    llcpp <- do.call(dMT, args = c(args$cpp, list(log = TRUE)))
     # if all inputs to c++ are single it returns only one value
-    if(all(c(sX, sMu, sRowV, sColV))) {
+    if(all_single(cp)) {
       llcpp <- rep(llcpp, n)
     }
     mx <- abs(llR-llcpp)
@@ -83,13 +62,13 @@ test_that("Matrix-T sampling is same in C++ as R", {
                           RowV = c("none", "single", "multi"),
                           ColV = c("none", "single", "multi"),
                           nu = c("single", "multi"),
-                          drop = c(TRUE, FALSE))
+                          drop = c(TRUE, FALSE), stringsAsFactors = FALSE)
   case.par <- case.par[with(case.par, {
     !(Mu == "none" & ((RowV == "none") | (ColV == "none")))
   }),]
   ncases <- nrow(case.par)
   rownames(case.par) <- 1:ncases
-  n <- 10
+  n <- 5
   if(calc.diff) {
     MaxDiff <- rep(NA, ncases)
   }
@@ -98,41 +77,24 @@ test_that("Matrix-T sampling is same in C++ as R", {
     cp <- case.par[ii,]
     p <- cp$p
     q <- cp$q
-    sMu <- cp$Mu != "multi"
-    noMu <- cp$Mu == "none"
-    sRowV <- cp$RowV != "multi"
-    noRowV <- cp$RowV == "none"
-    sColV <- cp$ColV != "multi"
-    noColV <- cp$ColV == "none"
-    snu <- cp$nu != "multi"
-    arr.drop <- cp$drop
-    Mu <- rMM(n, p = p, q = q, noArg = noMu)
-    RowV <- rMM(n, p = p, noArg = noRowV)
-    ColV <- rMM(n, q = q, noArg = noColV)
-    nu <- sapply(runif(n, 2*q, 3*q),c,simplify = FALSE)
+    args <- list(Mu = list(p = p, q = q, rtype = cp$Mu, vtype = "matrix"),
+                 RowV = list(p = p, rtype = cp$RowV, vtype = "matrix"),
+                 ColV = list(q = q, rtype = cp$ColV, vtype = "matrix"),
+                 nu = list(q = q, rtype = cp$nu, vtype = "scalar"))
+    args <- get_args(n = n, args = args, drop = cp$drop)
     # R test
     XR <- array(NA, dim = c(p,q,n))
     set.seed(TestSeed[ii]) # seed
     for(jj in 1:n) {
-      Mu_R <- Mu[[ifelse(sMu, 1, jj)]]
-      RowV_R <- RowV[[ifelse(sRowV, 1, jj)]]
-      ColV_R <- ColV[[ifelse(sColV, 1, jj)]]
-      nu_R <- nu[[ifelse(snu, 1, jj)]]
-      XR[,,jj] <- rMTR(Lambda = Mu_R, SigmaU = RowV_R,
-                       SigmaV = ColV_R, nu = nu_R, prec = FALSE)
+      XR[,,jj] <- rMTR(Lambda = args$R$Mu[[jj]],
+                       SigmaU = args$R$RowV[[jj]],
+                       SigmaV = args$R$ColV[[jj]],
+                       nu = args$R$nu[[jj]], prec = FALSE)
     }
     # C++ test
-    Mu_cpp <- unlistM(Mu, sMu, arr.drop)
-    RowV_cpp <- unlistM(RowV, sRowV, arr.drop)
-    ColV_cpp <- unlistM(ColV, sColV, arr.drop)
-    nu_cpp <- unlist(nu)
-    if(snu) nu_cpp <- nu_cpp[1]
-    arg.list <- list(Mu = Mu_cpp,
-                     RowV = RowV_cpp, ColV = ColV_cpp)
-    arg.list <- arg.list[!c(noMu, noRowV, noColV)]
-    arg.list <- c(arg.list, list(n = n, nu = nu_cpp))
     set.seed(TestSeed[ii]) # seed
-    Xcpp <- do.call(rMT, args = arg.list)
+    ## Xcpp <- do.call(rMT, args = arg.list)
+    Xcpp <- do.call(rMT, args = c(args$cpp, list(n = n)))
     mx <- arDiff(XR, Xcpp)
     mx <- min(max(mx), max(mx/abs(XR)))
     if(calc.diff) {

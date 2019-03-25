@@ -1,5 +1,5 @@
 #require(testthat)
-library(mniw)
+## library(mniw)
 source("mniw-testfunctions.R")
 context("Matrix Normal Distribution")
 
@@ -12,7 +12,7 @@ test_that("Matrix Normal density is same in C++ as R", {
                           Mu = c("none", "single", "multi"),
                           RowV = c("none", "single", "multi"),
                           ColV = c("none", "single", "multi"),
-                          drop = c(TRUE, FALSE))
+                          drop = c(TRUE, FALSE), stringsAsFactors = FALSE)
   ncases <- nrow(case.par)
   n <- 10
   if(calc.diff) {
@@ -22,39 +22,24 @@ test_that("Matrix Normal density is same in C++ as R", {
     cp <- case.par[ii,]
     p <- cp$p
     q <- cp$q
-    sX <- cp$X != "multi"
-    noX <- cp$X == "none"
-    sMu <- cp$Mu != "multi"
-    noMu <- cp$Mu == "none"
-    sRowV <- cp$RowV != "multi"
-    noRowV <- cp$RowV == "none"
-    sColV <- cp$ColV != "multi"
-    noColV <- cp$ColV == "none"
-    arr.drop <- cp$drop
-    X <- rMM(n, p = p, q = q, noArg = noX)
-    Mu <- rMM(n, p = p, q = q, noArg = noMu)
-    RowV <- rMM(n, p = p, noArg = noRowV)
-    ColV <- rMM(n, q = q, noArg = noColV)
+    args <- list(X = list(p = p, q = q, rtype = cp$X, vtype = "matrix"),
+                 Mu = list(p = p, q = q, rtype = cp$Mu, vtype = "matrix"),
+                 RowV = list(p = p, rtype = cp$RowV, vtype = "matrix"),
+                 ColV = list(q = q, rtype = cp$ColV, vtype = "matrix"))
+    args <- get_args(n = n, args = args, drop = cp$drop)
     # R test
     llR <- rep(NA, n)
     for(jj in 1:n) {
-      llR[jj] <- dMNormR(X = X[[ifelse(sX, 1, jj)]],
-                         Lambda = Mu[[ifelse(sMu, 1, jj)]],
-                         SigmaU = RowV[[ifelse(sRowV, 1, jj)]],
-                         SigmaV = ColV[[ifelse(sColV, 1, jj)]],
+      llR[jj] <- dMNormR(X = args$R$X[[jj]],
+                         Lambda = args$R$Mu[[jj]],
+                         SigmaU = args$R$RowV[[jj]],
+                         SigmaV = args$R$ColV[[jj]],
                          log = TRUE)
     }
     # C++ test
-    X <- unlistM(X, sX, arr.drop)
-    Mu <- unlistM(Mu, sMu, arr.drop)
-    RowV <- unlistM(RowV, sRowV, arr.drop)
-    ColV <- unlistM(ColV, sColV, arr.drop)
-    arg.list <- list(X = X, Mu = Mu, RowV = RowV, ColV = ColV)
-    arg.list <- arg.list[!c(noX, noMu, noRowV, noColV)]
-    arg.list <- c(arg.list, list(log = TRUE))
-    llcpp <- do.call(dMNorm, args = arg.list)
+    llcpp <- do.call(dMNorm, args = c(args$cpp, list(log = TRUE)))
     # if all inputs to c++ are single it returns only one value
-    if(all(c(sX, sMu, sRowV, sColV))) {
+    if(all_single(cp)) {
       llcpp <- rep(llcpp, n)
     }
     mx <- abs(llR-llcpp)
@@ -74,7 +59,7 @@ test_that("Matrix Normal simulation is same in C++ as R", {
                           Mu = c("none", "single", "multi"),
                           RowV = c("none", "single", "multi"),
                           ColV = c("none", "single", "multi"),
-                          drop = c(TRUE, FALSE))
+                          drop = c(TRUE, FALSE), stringsAsFactors = FALSE)
   # remove cases where dimensions can't be identified
   case.par <- case.par[!with(case.par, {
     Mu == "none" & ((RowV == "none") | (ColV == "none"))}),]
@@ -90,36 +75,23 @@ test_that("Matrix Normal simulation is same in C++ as R", {
     cp <- case.par[ii,]
     p <- cp$p
     q <- cp$q
-    sMu <- cp$Mu != "multi"
-    noMu <- cp$Mu == "none"
-    sRowV <- cp$RowV != "multi"
-    noRowV <- cp$RowV == "none"
-    sColV <- cp$ColV != "multi"
-    noColV <- cp$ColV == "none"
-    arr.drop <- cp$drop
-    Mu <- rMM(n, p = p, q = q, noArg = noMu)
-    RowV <- rMM(n, p = p, noArg = noRowV)
-    ColV <- rMM(n, q = q, noArg = noColV)
+    args <- list(Mu = list(p = p, q = q, rtype = cp$Mu, vtype = "matrix"),
+                 RowV = list(p = p, rtype = cp$RowV, vtype = "matrix"),
+                 ColV = list(q = q, rtype = cp$ColV, vtype = "matrix"))
+    args <- get_args(n = n, args = args, drop = cp$drop)
     # R test
     set.seed(TestSeed[ii]) # seed
-    llR <- array(NA, dim = c(p,q,n))
+    XR <- array(NA, dim = c(p,q,n))
     for(jj in 1:n) {
-      llR[,,jj] <- rMNormR(Lambda = Mu[[ifelse(sMu, 1, jj)]],
-                           SigmaU = RowV[[ifelse(sRowV, 1, jj)]],
-                           SigmaV = ColV[[ifelse(sColV, 1, jj)]])
+      XR[,,jj] <- rMNormR(Lambda = args$R$Mu[[jj]],
+                          SigmaU = args$R$RowV[[jj]],
+                          SigmaV = args$R$ColV[[jj]])
     }
     # C++ test
-    Mu <- unlistM(Mu, sMu, arr.drop)
-    RowV <- unlistM(RowV, sRowV, arr.drop)
-    ColV <- unlistM(ColV, sColV, arr.drop)
-    arg.list <- list(Mu = Mu, RowV = RowV, ColV = ColV)
-    arg.list <- arg.list[!c(noMu, noRowV, noColV)]
-    arg.list <- c(arg.list, list(n = n))
     set.seed(TestSeed[ii]) # seed
-    llcpp <- do.call(rMNorm, args = arg.list)
-    #llcpp <- rMNorm(n = n, Mu = Mu, RowV = RowV, ColV = ColV)
-    mx <- abs(range(llR - llcpp))
-    mx <- min(max(mx), max(mx/abs(llR)))
+    Xcpp <- do.call(rMNorm, args = c(args$cpp, list(n = n)))
+    mx <- abs(range(XR - Xcpp))
+    mx <- min(max(mx), max(mx/abs(XR)))
     if(calc.diff) {
       MaxDiff[ii] <- mx
     } else {

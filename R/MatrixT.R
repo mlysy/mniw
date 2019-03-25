@@ -6,16 +6,17 @@
 #'
 #' @name MatrixT
 #' @aliases dMT
-#' @param X argument to the density function.  Either a \code{p x q} matrix or a \code{p x q x n} array.
-#' @param n number of random matrices to generate.
-#' @param Mu mean matrix or matrices.  Either a \code{p x q} matrix or a \code{p x q x n} array.
-#' @param RowV between-row covariance matrix or matrices.  Either a \code{p x p} matrix or a \code{p x p x n} array.
-#' @param ColV between-column covariance matrix or matrices.  Either a \code{q x q} matrix or a \code{q x q x n} array.
-#' @param nu degrees-of-freedom parameter.  A scalar or vector.
-#' @param log logical. Whether or not to compute the log-density.
-#' @return A vector for densities, or a \code{p x q x n} array for random sampling.
-#' @details  \code{dMT} and \code{rMT} both accept single or multiple values for each argument.
-
+#' @param X Argument to the density function.  Either a \code{p x q} matrix or a \code{p x q x n} array.
+#' @param n Number of random matrices to generate.
+#' @param Mu Mean parameter  Either a \code{p x q} matrix or a \code{p x q x n} array.
+#' @param RowV Between-row covariance matrix.  Either a \code{p x p} matrix or a \code{p x p x n} array.
+#' @param ColV Between-column covariance matrix  Either a \code{q x q} matrix or a \code{q x q x n} array.
+#' @param nu Degrees-of-freedom parameter.  A scalar or vector.
+#' @param log Logical; whether or not to compute the log-density.
+#'
+#' @return A vector of length \code{n} for density evaluation, or a \code{p x q x n} array for random sampling.
+#'
+#' @template details-matrixt
 
 #--- lower-level functions ------------------------------------------------
 

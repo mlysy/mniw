@@ -7,13 +7,13 @@
 crossprodV(X, Y = NULL, V, inverse = FALSE)
 }
 \arguments{
-\item{X}{either: a matrix of size \code{p x q}, or an array of size \code{p x q x n}.}
+\item{X}{A matrix of size \code{p x q}, or an array of size \code{p x q x n}.}
 
-\item{Y}{(optional), either: a matrix of size \code{p x r}, or an array of size \code{p x r x n}.  If missing uses \code{Y = X}.}
+\item{Y}{A matrix of size \code{p x r}, or an array of size \code{p x r x n}.  If missing defaults to \code{Y = X}.}
 
-\item{V}{either: a matrix of size \code{p x p}, or an array of size \code{p x p x n}.}
+\item{V}{A matrix of size \code{p x p}, or an array of size \code{p x p x n}.}
 
-\item{inverse}{logical. Indicates whether or not the inner product should be calculated with \code{V} or \code{V^{-1}}.}
+\item{inverse}{Logical; whether or not the inner product should be calculated with \code{V} or \code{V^{-1}}.}
 }
 \value{
 An array of size \code{q x r x n}.
@@ -22,11 +22,15 @@ An array of size \code{q x r x n}.
 Vectorized matrix cross-products \code{t(X) V Y} or \code{t(X) V^{-1} Y}.
 }
 \examples{
-## Basic vectorized cross-product
-p = 4
-q = 2
-X = matrix(rnorm(p*q),p,q)
-V = diag(p)
-crossprodV(X=X,V=V)
-
+# problem dimensions
+p <- 4
+q <- 2
+r <- 3
+n <- 5
+X <- array(rnorm(p*q*n), dim = c(p, q, n)) # vectorized
+Y <- array(rnorm(p*r*n), dim = c(p, r, n)) # vectorized
+V <- crossprod(matrix(rnorm(p*p), p, p)) # not vectorized (but positive definite)
+crossprodV(X = X, V = V) # self cross-product
+# cross-product with inverse matrix weight
+crossprodV(X = X, V = V, Y = Y, inverse = TRUE)
 }

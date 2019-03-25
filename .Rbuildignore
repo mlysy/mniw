@@ -5,3 +5,5 @@
 ^TODO.md$
 ^LICENSE$
 ^tests/dontrun$
+^man-roxygen$
+^examples$

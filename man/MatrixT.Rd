@@ -11,26 +11,26 @@ dMT(X, Mu, RowV, ColV, nu, log = FALSE)
 rMT(n, Mu, RowV, ColV, nu)
 }
 \arguments{
-\item{X}{argument to the density function.  Either a \code{p x q} matrix or a \code{p x q x n} array.}
+\item{X}{Argument to the density function.  Either a \code{p x q} matrix or a \code{p x q x n} array.}
 
-\item{Mu}{mean matrix or matrices.  Either a \code{p x q} matrix or a \code{p x q x n} array.}
+\item{Mu}{Mean parameter  Either a \code{p x q} matrix or a \code{p x q x n} array.}
 
-\item{RowV}{between-row covariance matrix or matrices.  Either a \code{p x p} matrix or a \code{p x p x n} array.}
+\item{RowV}{Between-row covariance matrix.  Either a \code{p x p} matrix or a \code{p x p x n} array.}
 
-\item{ColV}{between-column covariance matrix or matrices.  Either a \code{q x q} matrix or a \code{q x q x n} array.}
+\item{ColV}{Between-column covariance matrix  Either a \code{q x q} matrix or a \code{q x q x n} array.}
 
-\item{nu}{degrees-of-freedom parameter.  A scalar or vector.}
+\item{nu}{Degrees-of-freedom parameter.  A scalar or vector.}
 
-\item{log}{logical. Whether or not to compute the log-density.}
+\item{log}{Logical; whether or not to compute the log-density.}
 
-\item{n}{number of random matrices to generate.}
+\item{n}{Number of random matrices to generate.}
 }
 \value{
-A vector for densities, or a \code{p x q x n} array for random sampling.
+A vector of length \code{n} for density evaluation, or a \code{p x q x n} array for random sampling.
 }
 \description{
 Density and sampling for the Matrix-t distribution.
 }
 \details{
-\code{dMT} and \code{rMT} both accept single or multiple values for each argument.
+The Matrix-T distribution \eqn{\boldsymbol{X} \sim \textrm{Matrix-T}(\boldsymbol{\Lambda}, \boldsymbol{\Sigma}, \boldsymbol{\Psi}, \nu)}{X ~ Matrix-T(\Lambda, \Sigma, \Psi, \nu)} on a random matrix \eqn{\boldsymbol{X}_{p \times q}}{X_(p x q)} is the marginal distribution of \eqn{\boldsymbol{X}}{X} in \eqn{(\boldsymbol{X}, \boldsymbol{V}) \sim \textrm{MNIW}(\boldsymbol{\Lambda}, \boldsymbol{\Sigma}, \boldsymbol{\Psi}, \nu)}{(X, V) ~ MNIW(\Lambda, \Sigma, \Psi, \nu)}, where the Matrix-Normal Inverse-Wishart (MNIW) distribution is defined in \code{\link{MNIW}}.
 }

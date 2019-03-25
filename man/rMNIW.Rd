@@ -9,40 +9,60 @@ rMNIW(n, Lambda, Sigma, Psi, nu, prec = FALSE)
 \arguments{
 \item{n}{number of samples.}
 
-\item{Lambda}{\code{p x q} mean matrix of \code{X} (see details).}
+\item{Lambda}{A mean matrix of size \code{p x q} or an array of size \code{p x q x n}.  Defaults to matrix of zeros when missing.}
 
-\item{Sigma}{\code{p x p} conditional row variance matrix of \code{X}.}
+\item{Sigma}{A row-wise variance or precision matrix of size \code{p x p}, or an array of size \code{p x p x n}.  Defaults to identity matrix when missing.}
 
-\item{Psi}{\code{q x q} scale matrix of \code{V}.}
+\item{Psi}{A scale matrix of size \code{q x q}, or an array of size \code{q x q x n}.  Defaults to identity matrix when missing.}
 
-\item{nu}{scalar degrees of freedom of \code{V}.}
+\item{nu}{Scalar degrees-of-freedom parameter.}
 
-\item{prec}{logical. Whether or not to return \code{V} or \code{C = V^{-1}}.}
+\item{prec}{Logical; whether or not \code{Sigma} is on the variance or precision scale.}
 }
 \value{
-A list with the folllwing elements:
+A list with elements:
 \describe{
-\item{X}{Random samples for X ~ MN(Lambda, Sigma, V).}
-\item{V}{Random samples for V ~ iWish(Psi, nu).}
+\item{\code{X}}{Array of size \code{p x q x n} random samples from the Matrix-Normal component (see \strong{Details}).}
+\item{\code{V}}{Array of size \code{q x q x n} of random samples from the Inverse-Wishart component.}
 }
 }
 \description{
 Generate samples from the Matrix-Normal Inverse-Wishart distribution.
 }
 \details{
-The Matrix-Normal Inverse-Wishart (MNIW) distribution on \code{p x q} matrix \code{X} and \code{q x q} matrix \code{V} is:
-\deqn{X | V ~ MN(Lambda, Sigma, V),}
-\deqn{V ~ iWish(Psi, nu).}
+The Matrix-Normal Inverse-Wishart (MNIW) distribution \eqn{(\boldsymbol{X}, \boldsymbol{V}) \sim \textrm{MNIW}(\boldsymbol{\Lambda}, \boldsymbol{\Sigma}, \boldsymbol{\Psi}, \nu)}{(X, V) ~ MNIW(\Lambda, \Sigma, \Psi, \nu)} on random matrices \eqn{\boldsymbol{X}_{p \times q}}{X_(p x q)} and symmetric positive-definite \eqn{\boldsymbol{V}_{q\times q}}{V_(q x q)} is defined as
+\deqn{
+\arraycolsep=1.4pt
+\begin{array}{rcl}
+\boldsymbol{V} & \sim & \textrm{Inverse-Wishart}(\boldsymbol{\Psi}, \nu) \\
+\boldsymbol{X} \mid \boldsymbol{V} & \sim & \textrm{Matrix-Normal}(\boldsymbol{\Lambda}, \boldsymbol{\Sigma}, \boldsymbol{V}),
+\end{array}
+}{
+V ~ Inverse-Wishart(\Psi, \nu)
+}
+\deqn{
+\vspace{-1em}
+}{
+X | V ~ Matrix-Normal(\Lambda, \Sigma, V),
+}
+where the Matrix-Normal distribution is defined as the multivariate normal
+\deqn{
+\textrm{vec}(\boldsymbol{X}) \sim \mathcal{N}(\textrm{vec}(\boldsymbol{\Lambda}), \boldsymbol{V} \otimes \boldsymbol{\Sigma}),
+}{
+vec(X) ~ N(vec(\Lambda), V \%x\% \Sigma),
+}
+where \eqn{\textrm{vec}(\boldsymbol{X})}{vec(X)} is a vector stacking the columns of \eqn{\boldsymbol{X}}{X}, and \eqn{\boldsymbol{V} \otimes \boldsymbol{\Sigma}}{V \%x\% \Sigma} denotes the Kronecker product.
 }
 \examples{
-## Sample from MNIW distribution
-n = 100
-p = 2
-q = 2
-Lambda = matrix(c(1,-0.5,-1,1),p,q)
-Sigma = matrix(c(1,0.5,0.5,1),p,p)
-Psi = matrix(c(1,0.1,0.1,1),p,q)
-nu = q + 1
-rMNIW(n, Lambda, Sigma, Psi, nu)
-
+# problem dimensions
+p <- 2
+q <- 3
+n <- 10 # number of samples
+# parameter specification
+Lambda <- matrix(rnorm(p*q),p,q) # single argument
+Sigma <- rwish(n, Psi = diag(p), nu = p + rexp(1)) # vectorized argument
+Psi <- rwish(n = 1, Psi = diag(q), nu = q + rexp(1)) # single argument
+nu <- q + rexp(1)
+# simulate n draws
+rMNIW(n, Lambda = Lambda, Sigma = Sigma, Psi = Psi, nu = nu)
 }

@@ -10,43 +10,24 @@
 #'
 #' @name Wishart
 #' @aliases dwish rwish diwish riwish dwishart rwishart
-#' @param X argument to the density function.  Either a \code{q x q} matrix or a \code{q x q x n} array.
-#' @param n number of random matrices to generate.
-#' @param Psi scale parameter.  Either a \code{q x q} matrix or a \code{q x q x n} array.
-#' @param nu degrees-of-freedom parameter.  A scalar or vector.
-#' @param inverse logical. Whether or not to use the Inverse-Wishart distribution.
-#' @param log logical. Whether or not to compute the log-density.
+#' @param X Argument to the density function.  Either a \code{q x q} matrix or a \code{q x q x n} array.
+#' @template param-n
+#' @param Psi Scale parameter.  Either a \code{q x q} matrix or a \code{q x q x n} array.
+#' @param nu Degrees-of-freedom parameter.  A scalar or vector.
+#' @param inverse Logical; whether or not to use the Inverse-Wishart distribution.
+#' @template param-log
+#' @template details-wishart
 #' @details \code{dwish} and \code{diwish} are convenience wrappers for \code{dwishart}, and similarly \code{rwish} and \code{riwish} are wrappers for \code{rwishart}.
 #'
-#' The distribution of a \code{q x q} Wishart random matrix is
-#' \deqn{f(X) = const |X|^{(\nu-q-1)/2} * \exp{-0.5 * Tr(\Psi^{-1} X)},}
-#' where \code{Psi} is a symmetric positive-definite matrix and \code{nu > q-1}.
-#'
-#' The distribution of an Inverse-Wishart random matrix is
-#' \deqn{f(X) \propto |X|^{-(\nu+q+1)/2} * \exp{-0.5 * Tr(\Psi X^{-1})}.}
-#' If \code{X ~ Wish(Psi, nu)}, then \code{X^{-1} ~ iWish(Psi^{-1}, nu)}.
-#'
-#' Quadratic forms involving a nonrandom vector \code{a} and a Wishart random matrix \code{X} have a chi-square distribution.  That is, for fixed \code{a} and \code{X ~ Wish(Psi, nu)},
-#' \deqn{(a' X a) / (a' Psi a) ~ chisq(df = nu).}
-#'
-#' @examples
-#' ## Random sampling
-#' n = 100
-#' q = 2
-#' Psi1 = matrix(c(1,0.1,0.1,1),q,q)
-#' Psi2 = solve(Psi1)
-#' nu = q+1
-#'
-#' X1 = rwish(n,Psi1,nu) # Wishart
-#' X2 = riwish(n, Psi2, nu) # Inverse-Wishart
-#'
-#' ## log-density calculation for sampled values
-#' dwish(X1, Psi1, nu, log = TRUE) # Wishart
-#' diwish(X2, Psi2, nu, log = TRUE) # Inverse Wishart
-#'
+#' @example examples/Wishart.R
 #' @return A vector for densities, or a \code{q x q x n} array for random sampling.
 
 #--- convenience wrappers --------------------------------------------------
+
+# \deqn{
+# f(\boldsymbol{X} \mid \boldsymbol{\Psi}, \nu) = \frac{|\boldsymbol{X}|^{(\nu-q+1)/2}\exp\big\{-\frac 1 2 \textrm{trace}(\boldsymbol{\Psi}^{-1}\boldsymbol{X})\big\}}{2^{\nu q/2}|\boldsymbol{\Psi}|^{\nu/2} \Gamma_q(\frac \nu 2)}
+# }
+
 
 # wishart density
 #' @rdname Wishart

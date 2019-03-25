@@ -1,4 +1,4 @@
-library(mniw)
+## library(mniw)
 source("mniw-testfunctions.R")
 context("Random-Effects Normal Distribution")
 
@@ -8,50 +8,37 @@ test_that("Random-Effects Normal sampling is same in C++ as R", {
   calc.diff <- FALSE
   case.par <- expand.grid(q = c(1,2,4),
                           y = c("single", "multi"),
-                          V = c("single", "multi"),
-                          lambda = c("single", "multi"),
-                          A = c("single", "multi"),
-                          drop = c(TRUE, FALSE))
+                          V = c("none", "single", "multi"),
+                          lambda = c("none", "single", "multi"),
+                          A = c("none", "single", "multi"),
+                          drop = c(TRUE, FALSE), stringsAsFactors = FALSE)
   ncases <- nrow(case.par)
-  n <- 12 # number of random draws
+  n <- 5 # number of random draws
   test.seed <- sample(1e6, ncases)
   if(calc.diff) {
     MaxDiff <- rep(NA, ncases)
   }
   for(ii in 1:ncases) {
     cp <- case.par[ii,]
+    p <- cp$p
     q <- cp$q
-    sy <- cp$y == "single"
-    sV <- cp$V == "single"
-    slambda <- cp$lambda == "single"
-    sA <- cp$A == "single"
-    arr.drop <- cp$drop
-    y <- rMM(n = n, p = 1, q = q, noArg = FALSE)
-    y <- lapply(y, drop)
-    V <- rMM(n = n, q = q, noArg = FALSE)
-    lambda <- rMM(n = n, p = 1, q = q, noArg = FALSE)
-    lambda <- lapply(lambda, drop)
-    A <- rMM(n = n, q = q, noArg = FALSE)
+    args <- list(y = list(p = 1, q = q, rtype = cp$y, vtype = "vector"),
+                 V = list(q = q, rtype = cp$V, vtype = "matrix"),
+                 lambda = list(p = 1, q = q, rtype = cp$lambda, vtype = "vector"),
+                 A = list(q = q, rtype = cp$A, vtype = "matrix"))
+    args <- get_args(n = n, args = args, drop = cp$drop)
     # R test
     muR <- matrix(NA, n, q)
     set.seed(test.seed[ii])
     for(jj in 1:n) {
-      muR[jj,] <- rmNormRER(y = y[[ifelse(sy, 1, jj)]],
-                            V = V[[ifelse(sV, 1, jj)]],
-                            lambda = lambda[[ifelse(slambda, 1, jj)]],
-                            A = A[[ifelse(sA, 1, jj)]])
+      muR[jj,] <- rmNormRER(y = args$R$y[[jj]],
+                            V = args$R$V[[jj]],
+                            lambda = args$R$lambda[[jj]],
+                            A = args$R$A[[jj]])
     }
     # C++ test
-    y <- unlistV(y, sy)
-    ## y <- drop(unlistM(y, sy, arr.drop))
-    ## if(!sy) y <- t(y)
-    V <- unlistM(V, sV, arr.drop)
-    lambda <- unlistV(lambda, slambda)
-    ## lambda <- drop(unlistM(lambda, sy, arr.drop))
-    ## if(!slambda) lambda <- t(lambda)
-    A <- unlistM(A, sA, arr.drop)
     set.seed(test.seed[ii])
-    mucpp <- rmNormRE(n = n, y = y, V = V, lambda = lambda, A = A)
+    mucpp <- do.call(rmNormRE, args = c(args$cpp, list(n = n)))
     mx <- arDiff(muR, mucpp)
     if(calc.diff) {
       MaxDiff[ii] <- mx

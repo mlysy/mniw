@@ -10,44 +10,13 @@ rMnorm <- function(p, q) {
   matrix(rnorm(p*q), p, q)
 }
 
-# lower and upper triangular elements of a matrix
-triL <- function(M) {
-  M[upper.tri(M)] <- 0
-  M
-}
-triU <- function(M) {
-  M[lower.tri(M)] <- 0
-  M
-}
-
 # log-determinant
 ldet <- function(V) {
-  determinant(V, log = TRUE)$mod[1]
+  determinant(V, log = TRUE)$modulus[1]
 }
-
-# inner product t(X) %*% {V, V^{-1}} %*% X
-# written in C++ now.
-#innerprod <- function(X, V, inv = TRUE) {
-#  if(inv) return(crossprod(X, solve(V, X)))
-#  else return(crossprod(X, V %*% X))
-#}
 
 # log multi-gamma function
 lmgamma <- function(x, p) p*(p-1)/4 * log(pi) + sum(lgamma(x + (1-1:p)/2))
-
-## density of inverse wishart
-#diwish <- function(V, Psi, nu, log = FALSE) {
-#  d <- nrow(V)
-#  ans <- (nu+d+1) * determinant(V, logarithm = TRUE)$modulus[1]
-#  if(!all(Psi == 0)) {
-#    ans <- ans + sum(diag(solve(V, Psi)))
-#    ans <- ans - nu * determinant(Psi, logarithm = TRUE)$modulus[1]
-#    ans <- ans + nu*d * log(2) + 2*lmgamma(nu/2, d)
-#  }
-#  ans <- -0.5 * ans
-#  if(!log) ans <- exp(ans)
-#  ans
-#}
 
 # density of wishart and inverse wishart
 dwishR <- function(X, Psi, nu, inverse = FALSE, log = FALSE) {
@@ -105,7 +74,7 @@ dMNormR <- function(X, Lambda, SigmaU, SigmaV, log = FALSE) {
   n <- nrow(X)
   p <- ncol(X)
   ans <- n*p*log(2*pi) + sum(diag(solve(SigmaV, t(X-Lambda)) %*% solve(SigmaU, X-Lambda)))
-  ans <- ans + n*determinant(SigmaV, log = TRUE)$mod[1] + p*determinant(SigmaU, log = TRUE)$mod[1]
+  ans <- ans + n*ldet(SigmaV) + p*ldet(SigmaU)
   ans <- -ans/2
   if(!log) ans <- exp(ans)
   ans
@@ -157,7 +126,6 @@ rMTR <- function(Lambda, SigmaU, SigmaV, nu, prec = FALSE) {
   X
 }
 
-
 # density of mniw distribution
 dmniwR <- function(X, V, Lambda, Sigma, Psi, nu, log = FALSE) {
   ans <- diwish(V = V, Psi = Psi, nu = nu, log = TRUE)
@@ -166,7 +134,8 @@ dmniwR <- function(X, V, Lambda, Sigma, Psi, nu, log = FALSE) {
   ans
 }
 
-# simulation of mniw. row variance can be on precision scale by seting Omega.
+# simulation of mniw.
+# row variance can be on precision scale by seting prec = TRUE.
 rmniwR <- function(Lambda, Sigma, Psi, nu, prec = FALSE) {
   p <- nrow(Lambda)
   q <- ncol(Lambda)
@@ -204,59 +173,68 @@ rmNormRER <- function(y, V, lambda, A) {
   drop(backsolve(r = GU, x = z + mu) + y)
 }
 
-# reverse cholesky decomposition x = L'L
-revchol <- function(x) solve(t(chol(solve(x)))) # L
-
-# convert a list of matrices into an array.
-# optionally keep only first element (sArg = TRUE)
-# optionally drop the last dimension if it is == 1.
-unlistM <- function(X, sArg, dropLast) {
-  n <- length(X)
-  PQ <- dim(X[[1]])
-  X <- array(unlist(X), dim = c(PQ, length(X)))
-  if(sArg) X <- X[,,1,drop=FALSE]
-  if(dropLast) {
-    if(dim(X)[3] == 1) X <- array(X, dim = PQ)
-  }
-  X
+# multivariate normal simulation in R
+rmNormR <- function(mu, V) {
+  z <- rnorm(length(mu))
+  c(t(chol(V)) %*% z) + mu
 }
 
-# convert a list of vectors into a matrix.
-# optionally keep only first element (sArg = TRUE)
-unlistV <- function(X, sArg) {
-  X <- do.call(rbind, X)
-  if(sArg) X <- X[1,]
-  X
+# multivariate normal density in R
+dmNormR <- function(x, mu, V, log = FALSE) {
+  p <- length(x)
+  ans <- p*log(2*pi) + ldet(V)
+  ans <- ans + crossprod((x-mu), solve(V, x-mu))[1]
+  ans <- -ans/2
+  if(!log) ans <- exp(ans)
+  ans
 }
 
-# drop the last dimension of an array if it is == 1.
-dropN <- function(X) {
-  dd <- dim(X)
-  nd <- length(dd)
-  if(dd[nd] == 1) X <- array(X, dim = dd[1:(nd-1)])
+# unlist to matrices/vectors/scalars to array/matrix/vector.
+# dropLast indicates that the last dimension = 1 should be dropped.
+unlistMV <- function(X, vtype, dropLast) {
+  vtype <- match.arg(vtype, c("matrix", "vector", "scalar"))
+  if(vtype == "matrix") {
+    PQ <- dim(X[[1]])
+    X <- array(unlist(X), dim = c(PQ, length(X)))
+    if(dropLast && dim(X)[3] == 1) X <- array(X, dim = PQ)
+  } else if(vtype == "vector") {
+    X <- do.call(rbind, X)
+  } else X <- unlist(X)
   X
 }
 
 # create n random p x q matrices.
 # If only one of p or q provided the random matrix is a variance.
-# if noArg defaults to a matrix of zeros or identity.
-rMM <- function(n, p, q, noArg) {
-  var.X <- missing(p) || missing(q)
+# rtype is one of "none", "single", "multi".
+# if "none", defaults to a matrix of zeros or identity.
+# if "single", keep only first entry
+# vtype is one of "matrix", "vector", "scalar"
+rMM <- function(n, p, q, rtype, vtype) {
+  rtype <- match.arg(rtype, c("none", "single", "multi"))
+  vtype <- match.arg(vtype, c("matrix", "vector", "scalar"))
+  varX <- missing(p) || missing(q) # is X a variance matrix?
+  if(rtype != "multi") n <- 1
   if(missing(p)) p <- q
   if(missing(q)) q <- p
-  if(noArg) {
-    if(!var.X) {
-      X <- replicate(n, matrix(0,p,q), simplify = FALSE)
-    } else {
-      X <- replicate(n, diag(p), simplify = FALSE)
-    }
+  if(vtype == "scalar") {
+    X <- lapply(runif(n, 2*q, 3*q),c)
   } else {
-    if(!var.X) {
-      X <- replicate(n, rMnorm(p,q), simplify = FALSE)
+    if(rtype == "none") {
+      if(!varX) {
+        X <- replicate(n, matrix(0,p,q), simplify = FALSE)
+      } else {
+        X <- replicate(n, diag(p), simplify = FALSE)
+      }
     } else {
-      X <- replicate(n, crossprod(rMnorm(p)), simplify = FALSE)
+      if(!varX) {
+        X <- replicate(n, rMnorm(p,q), simplify = FALSE)
+      } else {
+        X <- replicate(n, crossprod(rMnorm(p)), simplify = FALSE)
+      }
     }
+    if(vtype == "vector") X <- lapply(X, drop)
   }
+  ## if(type != "multi") X <- X[1]
   X
 }
 
@@ -280,4 +258,47 @@ expect_Rcpp_equal <- function(fun, icase, mx, ...) {
     expect_equal(object = Rcpp_comp(.(fun), .(icase)),
                  expected = .(rep(0, length(mx))), ...)
   }))
+}
+
+# automatically deduce R-style and cpp-style function arguments from
+# case.par specification
+# p,q, and drop are common to all the remaining arguments,
+# the names of which can be deduced.
+# R arguments consist of lists of single arguments, repeated if necessary.
+# cpp arguments have appropriate dimensions, and are dropped if necessary.
+# args is a named list with named elements p, q, and
+# type %in% c("none", "single", "multi")
+# drop same as in case.par
+get_args <- function(n, args, drop) {
+  anames <- names(args)
+  # simulate argument values
+  sargs <- sapply(args, function(vargs) {
+    do.call(rMM, c(list(n = n), vargs))
+  }, simplify = FALSE)
+  # R format
+  rargs <- sapply(anames, function(nm) {
+    if(args[[nm]]$rtype != "multi") {
+      rep(sargs[[nm]], n)
+    } else sargs[[nm]]
+  }, simplify = FALSE)
+  # cpp format
+  cargs <- sapply(anames, function(nm) {
+    unlistMV(sargs[[nm]],
+             vtype = args[[nm]]$vtype, drop = drop)
+  }, simplify = FALSE)
+  cargs <- cargs[sapply(args, function(aa) aa$rtype != "none")]
+  list(R = rargs, cpp = cargs)
+}
+
+# determine if all arguments are single
+all_single <- function(cp) {
+  nignore <- c("drop", "inverse", "prec", "p", "q", "r")
+  single <- sapply(cp[!names(cp) %in% nignore],
+                   function(x) {
+                     if(!x %in% c("none", "single", "multi")) {
+                       stop("wrong input to all_single.")
+                     }
+                     x != "multi"
+                   })
+  all(single)
 }

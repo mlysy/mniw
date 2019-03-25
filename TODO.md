@@ -4,7 +4,18 @@
 
 - [x]  *Convert **C++** code as Header-only library*.  To do this, put everything into header files *except* files ending in `Export.cpp`.  Those are the interface functions between **C++** and **R**.  Don't edit `RcppExports.cpp` since that's created by the **`Rcpp`** package, which itself facilitates the interface process.
 
-- [ ]  Standardize and coordinate argument names in R and C++.
+- [ ]  Standardize and coordinate argument names in R and C++, including unit tests.
 
 - [ ]  Create package vignette illustrating package functionality.  Might also be worth comparing to [**mvnfast**](https://mfasiolo.github.io/mvnfast/articles/mvnfast.html).
 
+- [x] Convenience function `.get_PQ` names dimensions.  To fix this change its output to unamed arguments, but then must make sure they are never referred to by name.
+
+- [ ] Clean up really old commented code.
+
+- [ ] Remove default values for distribution parameters.  This probably does more harm than good, e.g., if users define but forget to pass in a particular input...
+
+- [ ] Add example for `MatrixT`.
+
+- [ ] Add multivariate-t distribution for good measure.
+
+- [ ] Finish documentation and example for Gibbs sampler.

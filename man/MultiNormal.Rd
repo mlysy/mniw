@@ -11,35 +11,32 @@ dmNorm(x, mu, V, log = FALSE)
 rmNorm(n, mu, V)
 }
 \arguments{
-\item{x}{argument to the density function.  A vector of length \code{q} or an \code{n x q} matrix.}
+\item{x}{Argument to the density function.  A vector of length \code{q} or an \code{n x q} matrix.}
 
-\item{mu}{mean vector(s).  Either a vector of length \code{q} or an \code{n x q} matrix.}
+\item{mu}{Mean vector(s).  Either a vector of length \code{q} or an \code{n x q} matrix.  If missing defaults to a vector of zeros.}
 
-\item{V}{covariance matrix or matrices.  Either a \code{q x q} matrix or a \code{q x q x n} array.}
+\item{V}{Covariance matrix or matrices.  Either a \code{q x q} matrix or a \code{q x q x n} array.  If missing defaults to the identity matrix.}
 
-\item{log}{logical. Whether or not to compute the log-density.}
+\item{log}{Logical; whether or not to compute the log-density.}
 
-\item{n}{number of random vectors to generate.}
+\item{n}{The number of random samples to generate.}
 }
 \value{
-A vector for densities, or a \code{n x q} array for random sampling.
+A vector for densities, or a \code{n x q} matrix for random sampling.
 }
 \description{
 Density and random sampling for the Multivariate Normal distribution.
 }
-\details{
-\code{dmNorm} and \code{rmNorm} both accept single or multiple values for each argument.
-}
 \examples{
-## Multivariate Normal random sample and subsequent density calculation
-n = 100
-q = 2
-mu = c(1,2)
-V = toeplitz(exp(-seq(1:q)))
+# Parameter specification
+q <- 4 # number of dimensions
+mu <- 1:q # mean vector
+V <- toeplitz(exp(-seq(1:q))) # variance matrix
 
-# Random sample from Multivariate Normal distribution
-mnormData = rmNorm(n, mu, V)
+# Random sample
+n <- 100
+X <- rmNorm(n, mu, V)
 
 # Calculate log density for each sampled vector
-dmNorm(mnormData, mu, V, log=TRUE)
+dmNorm(X, mu, V, log = TRUE)
 }

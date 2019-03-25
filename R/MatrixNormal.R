@@ -12,29 +12,11 @@
 #' @param RowV between-row covariance matrix or matrices.  Either a \code{p x p} matrix or a \code{p x p x n} array.
 #' @param ColV between-column covariance matrix or matrices.  Either a \code{q x q} matrix or a \code{q x q x n} array.
 #' @param log logical. Whether or not to compute the log-density.
-#' @details  \code{dMNorm} and \code{rMNorm} both accept single or multiple values for each argument.
 #'
-#' The distribution of a \code{p x q} Matrix-Normal random matrix is
-#' \deqn{f(X) = const * \exp{-0.5 Tr( ColV^{-1}(X-Mu)''RowV^{-1}(X-Mu) )}.}
-#' Linear combinations of Matrix-Normals are normal.  That is, for fixed \code{a} and \code{b} and \code{X ~ MNorm(Mu, RowV, ColV)}, then
-#' \deqn{a' X b \sim N( a' Mu b, (a' RowV a) * (b' ColV b) ).}
+#' @template details-matnorm
+#' @example examples/MatrixNormal.R
 #'
-#' @examples
-#' ## Matrix-Normal random sample and subsequent density calculation
-#' n = 100
-#' p = 4
-#' q = 2
-#' Mu = matrix(1,p,q)
-#' RowV = toeplitz(exp(-seq(1:p)))
-#' ColV = diag(q)
-#'
-#' # Random sample from Matrix-Normal distribution
-#' mnData = rMNorm(n, Mu, RowV, ColV)
-#'
-#' # Calculate log-density for each sampled matrix
-#' dMNorm(mnData, Mu, RowV, ColV, log=TRUE)
-#'
-#' @return A vector for densities, or a \code{p x q x n} array for random sampling.
+#' @return A vector length \code{n} for density evaluation, or a \code{p x q x n} array for random sampling.
 
 #--- lower-level functions -------------------------------------------------
 

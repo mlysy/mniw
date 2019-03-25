@@ -3,32 +3,19 @@
 #' Generate samples from the Matrix-Normal Inverse-Wishart distribution.
 #'
 #' @param n number of samples.
-#' @param Lambda \code{p x q} mean matrix of \code{X} (see details).
-#' @param Sigma \code{p x p} conditional row variance matrix of \code{X}.
-#' @param Psi \code{q x q} scale matrix of \code{V}.
-#' @param nu scalar degrees of freedom of \code{V}.
-#' @param prec logical. Whether or not to return \code{V} or \code{C = V^{-1}}.
-#' @details The Matrix-Normal Inverse-Wishart (MNIW) distribution on \code{p x q} matrix \code{X} and \code{q x q} matrix \code{V} is:
-#' \deqn{X | V ~ MN(Lambda, Sigma, V),}
-#' \deqn{V ~ iWish(Psi, nu).}
+#' @param Lambda A mean matrix of size \code{p x q} or an array of size \code{p x q x n}.  Defaults to matrix of zeros when missing.
+#' @param Sigma A row-wise variance or precision matrix of size \code{p x p}, or an array of size \code{p x p x n}.  Defaults to identity matrix when missing.
+#' @param Psi A scale matrix of size \code{q x q}, or an array of size \code{q x q x n}.  Defaults to identity matrix when missing.
+#' @param nu Scalar degrees-of-freedom parameter.
+#' @param prec Logical; whether or not \code{Sigma} is on the variance or precision scale.
 #'
-#' @return A list with the folllwing elements:
+#' @return A list with elements:
 #' \describe{
-#' \item{X}{Random samples for X ~ MN(Lambda, Sigma, V).}
-#' \item{V}{Random samples for V ~ iWish(Psi, nu).}
+#' \item{\code{X}}{Array of size \code{p x q x n} random samples from the Matrix-Normal component (see \strong{Details}).}
+#' \item{\code{V}}{Array of size \code{q x q x n} of random samples from the Inverse-Wishart component.}
 #' }
-#'
-#' @examples
-#' ## Sample from MNIW distribution
-#' n = 100
-#' p = 2
-#' q = 2
-#' Lambda = matrix(c(1,-0.5,-1,1),p,q)
-#' Sigma = matrix(c(1,0.5,0.5,1),p,p)
-#' Psi = matrix(c(1,0.1,0.1,1),p,q)
-#' nu = q + 1
-#' rMNIW(n, Lambda, Sigma, Psi, nu)
-#'
+#' @template details-mniw
+#' @example examples/MNIW.R
 #' @export
 rMNIW <- function(n, Lambda, Sigma, Psi, nu, prec = FALSE) {
   # get dimensions
