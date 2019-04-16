@@ -7,4 +7,4 @@ lambda <- rep(0,q)
 A <- diag(q)
 n <- 10
 # random sampling
-rmNormRE(n, y, V, lambda, A)
+rRxNorm(n, y, V, lambda, A)

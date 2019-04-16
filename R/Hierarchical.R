@@ -1,6 +1,6 @@
-#' Bayesian inference for Multivariate-Normal Random-Effects model.
+#' Bayesian inference for a random-effects regression model.
 #'
-#' Gibbs sampler for posterior distribution of parameters and hyperparameters of the Multivariate Normal Random Effects (mNormRE) model.
+#' Gibbs sampler for posterior distribution of parameters and hyperparameters of a multivariate normal random-effects linear regression model called RxNormLM (see \strong{Details}).
 #'
 #' @param nsamples number of posterior samples to draw.
 #' @param Y \code{N x q} matrix of responses.
@@ -10,8 +10,8 @@
 #' @param burn integer number of burn-in samples, or fraction of \code{nsamples} to prepend as burn-in.
 #' @param init (optional) list with elements \code{Beta}, \code{Sigma}, and \code{Mu} providing the initial values for these.  Default values are \code{Beta = matrix(0, p, q)}, \code{Sigma = diag(q)}, and \code{Mu = Y}.
 #' @param updateHyp,storeHyp logical. Whether or not to update/store the hyperparameter draws.
-#' @param updateRE,storeRE logical. Whether or not to update/store the random-effects draws.
-#' @details The mNormRE model is given by
+#' @param updateRX,storeRX logical. Whether or not to update/store the random-effects draws.
+#' @details The RxNormLM model is given by
 #' \deqn{
 #' y_i \mid \mu_i \sim_iid N(\mu_i, V_i)
 #' }
@@ -28,14 +28,14 @@
 #' \describe{
 #'   \item{\code{Beta}}{An \code{p x q x nsamples} array of regression coefficient iterations (if \code{storeHyp == TRUE})}
 #'   \item{\code{Sigma}}{An \code{q x q x nsamples} array of regression variance matrices (if \code{storeHyp == TRUE})}
-#'   \item{\code{Mu}}{An \code{n x q x nsamples} array of random effects (if \code{storeRE == TRUE})}
+#'   \item{\code{Mu}}{An \code{n x q x nsamples} array of random effects (if \code{storeRX == TRUE})}
 #' }
 #'
 #' @example examples/Hierarchical.R
 #' @export
-mNormRE.post <- function(nsamples, Y, V, X, prior = NULL, init, burn,
-                         updateHyp = TRUE, storeHyp = TRUE,
-                         updateRE = TRUE, storeRE = FALSE) {
+RxNormLM <- function(nsamples, Y, V, X, prior = NULL, init, burn,
+                      updateHyp = TRUE, storeHyp = TRUE,
+                      updateRX = TRUE, storeRX = FALSE) {
   # argument check
   q <- ncol(Y)
   n <- nrow(Y)
@@ -76,7 +76,7 @@ mNormRE.post <- function(nsamples, Y, V, X, prior = NULL, init, burn,
   burn <- floor(burn)
   # don't store if don't update
   if(!updateHyp) storeHyp <- FALSE
-  if(!updateRE) storeRE <- FALSE
+  if(!updateRX) storeRX <- FALSE
   # MCMC
   post <- HierUneqVModelGibbs(nSamples = as.integer(nsamples),
                               nBurn = as.integer(burn),
@@ -86,16 +86,16 @@ mNormRE.post <- function(nsamples, Y, V, X, prior = NULL, init, burn,
                               Beta0 = Beta0, iSigma0 = .solveV(Sigma0),
                               Mu0 = Mu0,
                               updateBetaSigma = as.logical(updateHyp),
-                              updateMu = as.logical(updateRE),
+                              updateMu = as.logical(updateRX),
                               storeBetaSigma = as.logical(storeHyp),
-                              storeMu = as.logical(storeRE))
+                              storeMu = as.logical(storeRX))
   # output format
   out <- NULL
   if(storeHyp) {
     out <- list(Beta = array(post$Beta, dim = c(p, q, nsamples)),
                 Sigma = array(post$Sigma, dim = c(q, q, nsamples)))
   }
-  if(storeRE) {
+  if(storeRX) {
     out <- c(out,
              list(Mu = aperm(array(post$Mu, dim = c(q, n, nsamples)),
                              perm = c(2,1,3))))
