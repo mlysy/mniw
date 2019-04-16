@@ -5,7 +5,7 @@ date: "`r Sys.Date()`"
 output:
   rmarkdown::html_vignette:
     toc: true
-    keep_md: true
+    keep_md: false
 vignette: >
   %\VignetteIndexEntry{Distributions provided by mniw}
   %\VignetteEngine{knitr::rmarkdown}
@@ -17,10 +17,11 @@ MathJax.Hub.Config({
     TeX: {
 	Macros: {
 	    bm: ["{\\boldsymbol{#1}}",1],
+		tx: ["{\\textrm{#1}}",1],
 	    tfrac: ["{\\textstyle{\\frac{#1}{#2}}}",2],
 		rv: ["{#2_{#1},\\ldots,#2_{#3}}",3,"1"],
-		iid: ["{\\stackrel{\\mathrm{iid}}{\\sim}}"],
-		ind: ["{\\stackrel{\\mathrm{ind}}{\\sim}}"],
+		iid: ["{\\stackrel{\\tx{iid}}{\\sim}}"],
+		ind: ["{\\stackrel{\\tx{ind}}{\\sim}}"],
 	    XX: ["{\\bm{X}}"],
 	    YY: ["{\\bm{Y}}"],
 	    LL: ["{\\bm{L}}"],
@@ -29,9 +30,11 @@ MathJax.Hub.Config({
 	    N: ["{\\mathcal{N}}"],
 	    LLa: ["{\\bm{\\Lambda}}"],
 	    SSi: ["{\\bm{\\Sigma}}"],
+	    GGa: ["{\\bm{\\Gamma}}"],
 	    UU: ["{\\bm{U}}"],
 	    VV: ["{\\bm{V}}"],
 		aa: ["{\\bm{a}}"],
+		bb: ["{\\bm{b}}"],
 	    xx: ["{\\bm{x}}"],
 		yy: ["{\\bm{y}}"],
 		bbe: ["{\\bm{\\beta}}"],
@@ -41,12 +44,12 @@ MathJax.Hub.Config({
 	    GG: ["{\\bm{G}}"],
 	    OOm: ["{\\bm{\\Omega}}"],
 		bz: ["{\\bm{0}}"],
-		wish: ["{\\mathrm{Wish}}"],
-		iwish: ["{\\mathrm{InvWish}}"],
-		MN: ["{\\mathrm{MatNorm}}"],
-		MT: ["{\\mathrm{MatT}}"],
-		mniw: ["{\\mathrm{MNIW}}"],
-		re: ["{\\mathrm{RfxNorm}}"]
+		wish: ["{\\tx{Wish}}"],
+		iwish: ["{\\tx{InvWish}}"],
+		MN: ["{\\tx{MatNorm}}"],
+		MT: ["{\\tx{MatT}}"],
+		mniw: ["{\\tx{MNIW}}"],
+		re: ["{\\tx{RxNorm}}"]
 	}
     }
 });
@@ -54,19 +57,19 @@ MathJax.Hub.Config({
 
 ## Wishart Distribution
 
-The Wishart distribution on a random positive-definite matrix $\XX_{q\times q}$ is is denoted $\XX \sim \wish(\PPs, \nu)$, and defined as $\XX = (\LL \ZZ)(\LL \ZZ)'$, where 
+The Wishart distribution on a random positive-definite matrix $\XX_{q\times q}$ is is denoted $\XX \sim \wish(\PPs, \nu)$, and defined as $\XX = (\LL \ZZ)(\LL \ZZ)'$, where:
 
 - $\PPs_{q\times q} = \LL\LL'$ is the positive-definite matrix scale parameter,
 - $\nu > q$ is the shape parameter, 
+- $\ZZ_{q\times q}$ is a random lower-triangular matrix with elements
 
-and $\ZZ_{q\times q}$ is a random lower-triangular matrix with elements
-\[
-Z_{ij} \begin{cases} 
-       \iid \N(0,1) & i < j \\ 
-       \ind \chi^2_{(\nu-i+1)} & i = j \\
-       = 0 & i > j.
-       \end{cases}
-\]
+    \[
+    Z_{ij} \begin{cases} 
+           \iid \N(0,1) & i < j \\ 
+           \ind \chi^2_{(\nu-i+1)} & i = j \\
+           = 0 & i > j.
+           \end{cases}
+    \]
 
 The log-density of the Wishart distribution is
 \[
@@ -86,24 +89,30 @@ The Inverse-Wishart distribution $\XX \sim \iwish(\PPs, \nu)$ is defined as $\XX
 
 ### Properties
 
-If $\XX_{q\times q} \sim \wish(\PPs,\nu)$ and $\aa$ is a $a$-dimensional vector, then
+If $\XX_{q\times q} \sim \wish(\PPs,\nu)$, the for a nonzero vector $\aa \in \mathbb R^q$ we have
 \[
 \frac{\aa'\XX\aa}{\aa'\PPs\aa} \sim \chi^2_{(\nu)}.
 \]
 
 ## Matrix-Normal Distribution
 
-The Matrix-Normal distribution on a random matrix $\XX_{p \times q}$ is denoted $\XX \sim \MN(\LLa, \SSi_R, \SSi_C)$, and defined as $\XX = \LL\ZZ \UU + \LLa$, where
+The Matrix-Normal distribution on a random matrix $\XX_{p \times q}$ is denoted $\XX \sim \MN(\LLa, \SSi_R, \SSi_C)$, and defined as $\XX = \LL\ZZ \UU + \LLa$, where:
 
 - $\LLa_{p \times q}$ is the mean matrix parameter,
 - ${\SSi_R}_{p \times p} = \LL\LL'$ is the row-variance matrix parameter,
 - ${\SSi_C}_{q \times q} = \UU'\UU$ is the column-variance matrix parameter,
-
-and $\ZZ_{q\times q}$ is a random matrix with $Z_{ij} \iid \N(0,1)$.
+- $\ZZ_{q\times q}$ is a random matrix with $Z_{ij} \iid \N(0,1)$.
 
 The log-density of the Matrix-Normal distribution is
 \[
 \log p(\XX \mid \LLa, \SSi_R, \SSi_C) = -\tfrac 1 2 \left[\mathrm{tr}\big(\SSi_C^{-1}(\XX-\LLa)'\SSi_R^{-1}(\XX-\LLa)\big) + \nu q \log(2\pi) + \nu \log |\SSi_C| + q \log |\SSi_R|\right].
+\]
+
+### Properties
+
+If $\XX_{p \times q} \sim \MN(\LLa, \SSi_R, \SSi_C)$, then for nonzero vectors $\aa \in \mathbb R^p$ and $\bb \in \mathbb R^q$ we have
+\[
+\aa' \XX \bb \sim \N(\aa' \LLa \bb, \aa'\SSi_R\aa \cdot \bb'\SSi_C\bb).
 \]
 
 ## Matrix-Normal Inverse-Wishart Distribution
@@ -113,6 +122,29 @@ The Matrix-Normal Inverse-Wishart Distribution on a random matrix $\XX_{p \times
 \begin{aligned}
 \XX \mid \VV & \sim \MN(\LLa, \SSi, \VV) \\
 \VV & \sim \iwish(\PPs, \nu).
+\end{aligned}
+\]
+
+### Properties
+
+The MNIX distribution is conjugate prior for the multivariable response regression model
+\[
+\YY_{n \times q} \sim \MN(\XX_{n\times p} \bbe_{p \times q}, \VV, \SSi).
+\]
+That is, if $(\bbe, \SSi) \sim \mniw(\LLa, \OOm^{-1}, \PPs, \nu)$, then
+\[
+\bbe, \SSi \mid \YY \sim \mniw(\hat \LLa, \hat \OOm^{-1}, \hat \PPs, \hat \nu),
+\]
+where
+\[
+\begin{aligned}
+\hat \OOm & = \XX'\VV^{-1}\XX + \OOm 
+&
+\hat \PPs & = \PPs + \YY'\VV^{-1}\YY + \LLa'\OOm\LLa - \hat \LLa'\hat \OOm \hat \LLa
+\\
+\hat \LLa & = \hat \OOm^{-1}(\XX'\VV^{-1}\YY + \OOm\LLa)
+&
+\hat \nu & = \nu + n.
 \end{aligned}
 \]
 
@@ -126,6 +158,17 @@ The Matrix-$t$ distribution on a random matrix $\XX_{p \times q}$ is denoted $\X
 & \phantom{= -\tfrac 1 2 \Big[} + q \log |\SSi_R| + p \log |\SSi_C| \\
 & \phantom{= -\tfrac 1 2 \Big[} + pq \log(\pi) - \log \Gamma_q(\tfrac{\nu+p+q-1}{2}) + \log \Gamma_q(\tfrac{\nu+q-1}{2})\Big].
 \end{aligned}
+\]
+
+### Properties
+
+If $\XX_{p\times q} \sim \MT(\LLa, \SSi_R, \SSi_C, \nu)$, then for nonzero vectors $\aa \in \mathbb R^p$ and $\bb \in \mathbb R^q$ we have
+\[
+\frac{\aa'\XX\bb - \mu}{\sigma} \sim t_{(\nu -q + 1)},
+\]
+where 
+\[
+\mu = \aa'\LLa\bb, \qquad \sigma^2 = \frac{\aa'\SSi_R\aa \cdot \bb'\SSi_C\bb}{\nu - q + 1}.
 \]
 
 ## Random-Effects Normal Distribution
@@ -150,13 +193,23 @@ The hierarchical Normal-Normal model is defined as
 \begin{aligned}
 \yy_i \mid \mmu_i, \bbe, \SSi & \ind \N(\mmu_i, \VV_i) \\
 \mmu_i \mid \bbe, \SSi & \iid \N(\xx_i'\bbe, \SSi) \\
-(\bbe, \SSi) & \sim \mniw(\LLa, \Omega, \PPs, \nu).
+(\bbe, \SSi) & \sim \mniw(\LLa, \Omega^{-1}, \PPs, \nu),
 \end{aligned}
 \]
-Let $\YY = (\rv \yy n)$, $\XX = (\rv \xx n)$, and $\TTh = (\rv \mmu n)$.  If interest lies in the posterior distribution $p(\TTh, \bbe, \SSi \mid \YY, \XX)$, then a Gibbs sampler can be used to cycle through the following conditional distributions:
+where:
+
+- ${\yy_i}_{q\times 1}$ is the response vector for subject $i$,
+- ${\mmu_i}_{q\times 1}$ is the random effect for subject $i$,
+- ${\VV_i}_{q\times q}$ is the error variance for subject $i$,
+- ${\xx_i}_{p\times 1}$ is the covariate vector for subject $i$,
+- $\bbe_{p \times q}$ is the random-effects coefficient matrix,
+- $\SSi_{q \times q}$ is the random-effects error variance.
+
+Let $\YY_{n\times q} = (\rv \yy n)$, $\XX_{n\times p} = (\rv \xx n)$, and $\TTh_{n \times q} = (\rv \mmu n)$.  If interest lies in the posterior distribution $p(\TTh, \bbe, \SSi \mid \YY, \XX)$, then a Gibbs sampler can be used to cycle through the following conditional distributions:
 \[
 \begin{aligned}
-\mmu_i - \xx_i'\bbe \mid \bbe, \SSi, \YY, \XX & \ind \re(\yy_i, \VV_i, \SSi) \\
-\bbe, \SSi \mid \TTh, \YY, \XX & \sim \mniw(\hat \LLa, \hat \OOm, \hat \PPs, \hat \nu).
+\mmu_i - \xx_i'\bbe \mid \bbe, \SSi, \YY, \XX & \ind \re(\yy_i - \xx_i'\bbe, \VV_i, \SSi) \\
+\bbe, \SSi \mid \TTh, \YY, \XX & \sim \mniw(\hat \LLa, \hat \OOm^{-1}, \hat \PPs, \hat \nu),
 \end{aligned}
 \]
+where $\hat \LLa$, $\hat \OOm$, $\hat \PPs$, and $\hat \nu$ are obtained from the MNIW conjugate posterior formula with $\YY \gets \TTh$.
