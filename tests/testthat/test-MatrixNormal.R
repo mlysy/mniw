@@ -9,9 +9,9 @@ test_that("Matrix Normal density is same in C++ as R", {
   calc.diff <- FALSE
   case.par <- expand.grid(p = c(1,2,4), q = c(1,2,3),
                           X = c("single", "multi"),
-                          Mu = c("none", "single", "multi"),
-                          RowV = c("none", "single", "multi"),
-                          ColV = c("none", "single", "multi"),
+                          Lambda = c("none", "single", "multi"),
+                          SigmaR = c("none", "single", "multi"),
+                          SigmaC = c("none", "single", "multi"),
                           drop = c(TRUE, FALSE), stringsAsFactors = FALSE)
   ncases <- nrow(case.par)
   n <- 10
@@ -23,17 +23,17 @@ test_that("Matrix Normal density is same in C++ as R", {
     p <- cp$p
     q <- cp$q
     args <- list(X = list(p = p, q = q, rtype = cp$X, vtype = "matrix"),
-                 Mu = list(p = p, q = q, rtype = cp$Mu, vtype = "matrix"),
-                 RowV = list(p = p, rtype = cp$RowV, vtype = "matrix"),
-                 ColV = list(q = q, rtype = cp$ColV, vtype = "matrix"))
+                 Lambda = list(p = p, q = q, rtype = cp$Lambda, vtype = "matrix"),
+                 SigmaR = list(p = p, rtype = cp$SigmaR, vtype = "matrix"),
+                 SigmaC = list(q = q, rtype = cp$SigmaC, vtype = "matrix"))
     args <- get_args(n = n, args = args, drop = cp$drop)
     # R test
     llR <- rep(NA, n)
     for(jj in 1:n) {
       llR[jj] <- dMNormR(X = args$R$X[[jj]],
-                         Lambda = args$R$Mu[[jj]],
-                         SigmaU = args$R$RowV[[jj]],
-                         SigmaV = args$R$ColV[[jj]],
+                         Lambda = args$R$Lambda[[jj]],
+                         SigmaU = args$R$SigmaR[[jj]],
+                         SigmaV = args$R$SigmaC[[jj]],
                          log = TRUE)
     }
     # C++ test
@@ -56,13 +56,13 @@ test_that("Matrix Normal density is same in C++ as R", {
 test_that("Matrix Normal simulation is same in C++ as R", {
   calc.diff <- FALSE
   case.par <- expand.grid(p = c(1,2,4), q = c(1,2,3),
-                          Mu = c("none", "single", "multi"),
-                          RowV = c("none", "single", "multi"),
-                          ColV = c("none", "single", "multi"),
+                          Lambda = c("none", "single", "multi"),
+                          SigmaR = c("none", "single", "multi"),
+                          SigmaC = c("none", "single", "multi"),
                           drop = c(TRUE, FALSE), stringsAsFactors = FALSE)
   # remove cases where dimensions can't be identified
   case.par <- case.par[!with(case.par, {
-    Mu == "none" & ((RowV == "none") | (ColV == "none"))}),]
+    Lambda == "none" & ((SigmaR == "none") | (SigmaC == "none"))}),]
   ncases <- nrow(case.par)
   rownames(case.par) <- 1:ncases
   n <- 10
@@ -75,17 +75,17 @@ test_that("Matrix Normal simulation is same in C++ as R", {
     cp <- case.par[ii,]
     p <- cp$p
     q <- cp$q
-    args <- list(Mu = list(p = p, q = q, rtype = cp$Mu, vtype = "matrix"),
-                 RowV = list(p = p, rtype = cp$RowV, vtype = "matrix"),
-                 ColV = list(q = q, rtype = cp$ColV, vtype = "matrix"))
+    args <- list(Lambda = list(p = p, q = q, rtype = cp$Lambda, vtype = "matrix"),
+                 SigmaR = list(p = p, rtype = cp$SigmaR, vtype = "matrix"),
+                 SigmaC = list(q = q, rtype = cp$SigmaC, vtype = "matrix"))
     args <- get_args(n = n, args = args, drop = cp$drop)
     # R test
     set.seed(TestSeed[ii]) # seed
     XR <- array(NA, dim = c(p,q,n))
     for(jj in 1:n) {
-      XR[,,jj] <- rMNormR(Lambda = args$R$Mu[[jj]],
-                          SigmaU = args$R$RowV[[jj]],
-                          SigmaV = args$R$ColV[[jj]])
+      XR[,,jj] <- rMNormR(Lambda = args$R$Lambda[[jj]],
+                          SigmaU = args$R$SigmaR[[jj]],
+                          SigmaV = args$R$SigmaC[[jj]])
     }
     # C++ test
     set.seed(TestSeed[ii]) # seed

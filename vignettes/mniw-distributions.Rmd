@@ -20,8 +20,8 @@ MathJax.Hub.Config({
 		tx: ["{\\textrm{#1}}",1],
 	    tfrac: ["{\\textstyle{\\frac{#1}{#2}}}",2],
 		rv: ["{#2_{#1},\\ldots,#2_{#3}}",3,"1"],
-		iid: ["{\\stackrel{\\tx{iid}}{\\sim}}"],
-		ind: ["{\\stackrel{\\tx{ind}}{\\sim}}"],
+		iid: ["{\\overset{\\;\\tx{iid}\\;}{\\sim}}"],
+		ind: ["{\\overset{\\:\\tx{ind}\\:}{\\sim}}"],
 	    XX: ["{\\bm{X}}"],
 	    YY: ["{\\bm{Y}}"],
 	    LL: ["{\\bm{L}}"],
@@ -40,6 +40,7 @@ MathJax.Hub.Config({
 		bbe: ["{\\bm{\\beta}}"],
 	    mmu: ["{\\bm{\\mu}}"],
 		kka: ["{\\bm{\\kappa}}"],
+		lla: ["{\\bm{\\lambda}}"],
 		TTh: ["{\\bm{\\Theta}}"],
 	    GG: ["{\\bm{G}}"],
 	    OOm: ["{\\bm{\\Omega}}"],
@@ -177,14 +178,14 @@ Consider the multivariate normal distribution on $q$-dimensional vectors $\xx$ a
 \[
 \begin{aligned}
 \xx \mid \mmu & \sim \N(\mmu, \VV) \\
-\mmu & \sim \N(\bz, \SSi).
+\mmu & \sim \N(\lla, \SSi).
 \end{aligned}
 \]
 The random-effects normal distribution is defined as the posterior distribution $\mmu \sim p(\mmu \mid \xx)$, which is given by
 \[
-\mmu \mid \xx \sim \N\big(\GG \xx, \GG\VV\big), \qquad \GG = \SSi(\VV + \SSi)^{-1}.
+\mmu \mid \xx \sim \N\big(\GG(\xx-\lla) + \lla, \GG\VV\big), \qquad \GG = \SSi(\VV + \SSi)^{-1}.
 \]
-The notation for this distribution is $\mmu \sim \re(\xx, \VV, \SSi)$.
+The notation for this distribution is $\mmu \sim \re(\xx, \VV, \lla, \SSi)$.
 
 ## Hierarchical Normal-Normal Model
 
@@ -208,7 +209,7 @@ where:
 Let $\YY_{n\times q} = (\rv \yy n)$, $\XX_{n\times p} = (\rv \xx n)$, and $\TTh_{n \times q} = (\rv \mmu n)$.  If interest lies in the posterior distribution $p(\TTh, \bbe, \SSi \mid \YY, \XX)$, then a Gibbs sampler can be used to cycle through the following conditional distributions:
 \[
 \begin{aligned}
-\mmu_i - \xx_i'\bbe \mid \bbe, \SSi, \YY, \XX & \ind \re(\yy_i - \xx_i'\bbe, \VV_i, \SSi) \\
+\mmu_i \mid \bbe, \SSi, \YY, \XX & \ind \re(\yy_i, \VV_i, \xx_i'\bbe, \SSi) \\
 \bbe, \SSi \mid \TTh, \YY, \XX & \sim \mniw(\hat \LLa, \hat \OOm^{-1}, \hat \PPs, \hat \nu),
 \end{aligned}
 \]

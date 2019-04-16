@@ -6,27 +6,27 @@
 \alias{rMT}
 \title{The Matrix-t distribution.}
 \usage{
-dMT(X, Mu, RowV, ColV, nu, log = FALSE)
+dMT(X, Lambda, SigmaR, SigmaC, nu, log = FALSE)
 
-rMT(n, Mu, RowV, ColV, nu)
+rMT(n, Lambda, SigmaR, SigmaC, nu)
 }
 \arguments{
 \item{X}{Argument to the density function.  Either a \code{p x q} matrix or a \code{p x q x n} array.}
 
-\item{Mu}{Mean parameter  Either a \code{p x q} matrix or a \code{p x q x n} array.}
+\item{Lambda}{Mean parameter  Either a \code{p x q} matrix or a \code{p x q x n} array.}
 
-\item{RowV}{Between-row covariance matrix.  Either a \code{p x p} matrix or a \code{p x p x n} array.}
+\item{SigmaR}{Between-row covariance matrix.  Either a \code{p x p} matrix or a \code{p x p x n} array.}
 
-\item{ColV}{Between-column covariance matrix  Either a \code{q x q} matrix or a \code{q x q x n} array.}
+\item{SigmaC}{Between-column covariance matrix  Either a \code{q x q} matrix or a \code{q x q x n} array.}
 
-\item{nu}{Degrees-of-freedom parameter.  A scalar or vector.}
+\item{nu}{Degrees-of-freedom parameter.  A scalar or vector of length \code{n}.}
 
 \item{log}{Logical; whether or not to compute the log-density.}
 
-\item{n}{Number of random matrices to generate.}
+\item{n}{Integer number of random samples to generate.}
 }
 \value{
-A vector of length \code{n} for density evaluation, or a \code{p x q x n} array for random sampling.
+A vector length \code{n} for density evaluation, or an array of size \code{p x q x n} for random sampling.
 }
 \description{
 Density and sampling for the Matrix-t distribution.

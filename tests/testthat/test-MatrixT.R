@@ -9,9 +9,9 @@ test_that("Matrix-T density is same in C++ as R", {
   calc.diff <- FALSE
   case.par <- expand.grid(p = c(1,2,4), q = c(1,2,3),
                           X = c("single", "multi"),
-                          Mu = c("none", "single", "multi"),
-                          RowV = c("none", "single", "multi"),
-                          ColV = c("none", "single", "multi"),
+                          Lambda = c("none", "single", "multi"),
+                          SigmaR = c("none", "single", "multi"),
+                          SigmaC = c("none", "single", "multi"),
                           nu = c("single", "multi"),
                           drop = c(TRUE, FALSE), stringsAsFactors = FALSE)
   ncases <- nrow(case.par)
@@ -24,18 +24,18 @@ test_that("Matrix-T density is same in C++ as R", {
     p <- cp$p
     q <- cp$q
     args <- list(X = list(p = p, q = q, rtype = cp$X, vtype = "matrix"),
-                 Mu = list(p = p, q = q, rtype = cp$Mu, vtype = "matrix"),
-                 RowV = list(p = p, rtype = cp$RowV, vtype = "matrix"),
-                 ColV = list(q = q, rtype = cp$ColV, vtype = "matrix"),
+                 Lambda = list(p = p, q = q, rtype = cp$Lambda, vtype = "matrix"),
+                 SigmaR = list(p = p, rtype = cp$SigmaR, vtype = "matrix"),
+                 SigmaC = list(q = q, rtype = cp$SigmaC, vtype = "matrix"),
                  nu = list(q = q, rtype = cp$nu, vtype = "scalar"))
     args <- get_args(n = n, args = args, drop = cp$drop)
     # R test
     llR <- rep(NA, n)
     for(jj in 1:n) {
       llR[jj] <- dMTR(X = args$R$X[[jj]],
-                      Lambda = args$R$Mu[[jj]],
-                      SigmaU = args$R$RowV[[jj]],
-                      SigmaV = args$R$ColV[[jj]],
+                      Lambda = args$R$Lambda[[jj]],
+                      SigmaU = args$R$SigmaR[[jj]],
+                      SigmaV = args$R$SigmaC[[jj]],
                       nu = args$R$nu[[jj]], log = TRUE)
     }
     # C++ test
@@ -58,13 +58,13 @@ test_that("Matrix-T density is same in C++ as R", {
 test_that("Matrix-T sampling is same in C++ as R", {
   calc.diff <- FALSE
   case.par <- expand.grid(p = c(1,2,4), q = c(1,2,3),
-                          Mu = c("none", "single", "multi"),
-                          RowV = c("none", "single", "multi"),
-                          ColV = c("none", "single", "multi"),
+                          Lambda = c("none", "single", "multi"),
+                          SigmaR = c("none", "single", "multi"),
+                          SigmaC = c("none", "single", "multi"),
                           nu = c("single", "multi"),
                           drop = c(TRUE, FALSE), stringsAsFactors = FALSE)
   case.par <- case.par[with(case.par, {
-    !(Mu == "none" & ((RowV == "none") | (ColV == "none")))
+    !(Lambda == "none" & ((SigmaR == "none") | (SigmaC == "none")))
   }),]
   ncases <- nrow(case.par)
   rownames(case.par) <- 1:ncases
@@ -77,18 +77,18 @@ test_that("Matrix-T sampling is same in C++ as R", {
     cp <- case.par[ii,]
     p <- cp$p
     q <- cp$q
-    args <- list(Mu = list(p = p, q = q, rtype = cp$Mu, vtype = "matrix"),
-                 RowV = list(p = p, rtype = cp$RowV, vtype = "matrix"),
-                 ColV = list(q = q, rtype = cp$ColV, vtype = "matrix"),
+    args <- list(Lambda = list(p = p, q = q, rtype = cp$Lambda, vtype = "matrix"),
+                 SigmaR = list(p = p, rtype = cp$SigmaR, vtype = "matrix"),
+                 SigmaC = list(q = q, rtype = cp$SigmaC, vtype = "matrix"),
                  nu = list(q = q, rtype = cp$nu, vtype = "scalar"))
     args <- get_args(n = n, args = args, drop = cp$drop)
     # R test
     XR <- array(NA, dim = c(p,q,n))
     set.seed(TestSeed[ii]) # seed
     for(jj in 1:n) {
-      XR[,,jj] <- rMTR(Lambda = args$R$Mu[[jj]],
-                       SigmaU = args$R$RowV[[jj]],
-                       SigmaV = args$R$ColV[[jj]],
+      XR[,,jj] <- rMTR(Lambda = args$R$Lambda[[jj]],
+                       SigmaU = args$R$SigmaR[[jj]],
+                       SigmaV = args$R$SigmaC[[jj]],
                        nu = args$R$nu[[jj]], prec = FALSE)
     }
     # C++ test
@@ -112,9 +112,9 @@ test_that("Matrix-T sampling is same in C++ as R", {
 ## q <- 4
 
 ## Z <- rMM(n = 1, p = p, q = q, noArg = FALSE)[[1]]
-## RowV <- rMM(n = 1, p = p, noArg = FALSE)[[1]]
-## ColV <- rMM(n = 1, q = q, noArg = FALSE)[[1]]
+## SigmaR <- rMM(n = 1, p = p, noArg = FALSE)[[1]]
+## SigmaC <- rMM(n = 1, q = q, noArg = FALSE)[[1]]
 
-## ldet(diag(p) + solve(RowV, Z) %*% solve(ColV, t(Z)))
-## ldet(ColV + crossprod(Z, solve(RowV, Z))) - ldet(ColV)
-## ldet(RowV + Z %*% solve(ColV, t(Z))) - ldet(RowV)
+## ldet(diag(p) + solve(SigmaR, Z) %*% solve(SigmaC, t(Z)))
+## ldet(SigmaC + crossprod(Z, solve(SigmaR, Z))) - ldet(SigmaC)
+## ldet(SigmaR + Z %*% solve(SigmaC, t(Z))) - ldet(SigmaR)

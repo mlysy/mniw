@@ -6,20 +6,20 @@
 \alias{rmNorm}
 \title{The Multivariate Normal distribution.}
 \usage{
-dmNorm(x, mu, V, log = FALSE)
+dmNorm(x, mu, Sigma, log = FALSE)
 
-rmNorm(n, mu, V)
+rmNorm(n, mu, Sigma)
 }
 \arguments{
 \item{x}{Argument to the density function.  A vector of length \code{q} or an \code{n x q} matrix.}
 
 \item{mu}{Mean vector(s).  Either a vector of length \code{q} or an \code{n x q} matrix.  If missing defaults to a vector of zeros.}
 
-\item{V}{Covariance matrix or matrices.  Either a \code{q x q} matrix or a \code{q x q x n} array.  If missing defaults to the identity matrix.}
+\item{Sigma}{Covariance matrix or matrices.  Either a \code{q x q} matrix or a \code{q x q x n} array.  If missing defaults to the identity matrix.}
 
 \item{log}{Logical; whether or not to compute the log-density.}
 
-\item{n}{The number of random samples to generate.}
+\item{n}{Integer number of random samples to generate.}
 }
 \value{
 A vector for densities, or a \code{n x q} matrix for random sampling.

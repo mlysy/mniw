@@ -6,15 +6,15 @@
 #'
 #' @name MatrixT
 #' @aliases dMT
-#' @param X Argument to the density function.  Either a \code{p x q} matrix or a \code{p x q x n} array.
-#' @param n Number of random matrices to generate.
-#' @param Mu Mean parameter  Either a \code{p x q} matrix or a \code{p x q x n} array.
-#' @param RowV Between-row covariance matrix.  Either a \code{p x p} matrix or a \code{p x p x n} array.
-#' @param ColV Between-column covariance matrix  Either a \code{q x q} matrix or a \code{q x q x n} array.
-#' @param nu Degrees-of-freedom parameter.  A scalar or vector.
-#' @param log Logical; whether or not to compute the log-density.
+#' @template param-n
+#' @template param-Xpq
+#' @template param-Lambda
+#' @template param-SigmaR
+#' @template param-SigmaC
+#' @template param-nu
+#' @template param-log
 #'
-#' @return A vector of length \code{n} for density evaluation, or a \code{p x q x n} array for random sampling.
+#' @template return-rdpq
 #'
 #' @template details-matrixt
 
@@ -22,9 +22,9 @@
 
 #' @rdname MatrixT
 #' @export
-dMT <- function(X, Mu, RowV, ColV, nu, log = FALSE) {
+dMT <- function(X, Lambda, SigmaR, SigmaC, nu, log = FALSE) {
   # get dimensions
-  PQ <- .getPQ(X = X, Lambda = Mu, Sigma = RowV, Psi = ColV)
+  PQ <- .getPQ(X = X, Lambda = Lambda, Sigma = SigmaR, Psi = SigmaC)
   p <- PQ[1]
   q <- PQ[2]
   if(anyNA(PQ)) {
@@ -33,46 +33,46 @@ dMT <- function(X, Mu, RowV, ColV, nu, log = FALSE) {
   # format arguments
   X <- .setDims(X, p = p, q = q)
   if(anyNA(X)) stop("Something went wrong.  Please report bug.")
-  Mu <- .setDims(Mu, p = p, q = q)
-  if(anyNA(Mu)) stop("Mu and X have incompatible dimensions.")
-  RowV <- .setDims(RowV, p = p)
-  if(anyNA(RowV)) stop("RowV and X have incompatible dimensions.")
-  ColV <- .setDims(ColV, q = q)
-  if(anyNA(ColV)) stop("ColV and X have incompatible dimensions.")
+  Lambda <- .setDims(Lambda, p = p, q = q)
+  if(anyNA(Lambda)) stop("Lambda and X have incompatible dimensions.")
+  SigmaR <- .setDims(SigmaR, p = p)
+  if(anyNA(SigmaR)) stop("SigmaR and X have incompatible dimensions.")
+  SigmaC <- .setDims(SigmaC, q = q)
+  if(anyNA(SigmaC)) stop("SigmaC and X have incompatible dimensions.")
   nu <- c(nu)
   # check lengths
-  N <- .getN(p = p, q = q, X = X, Lambda = Mu, Sigma = RowV,
-             Psi = ColV, nu = nu)
+  N <- .getN(p = p, q = q, X = X, Lambda = Lambda, Sigma = SigmaR,
+             Psi = SigmaC, nu = nu)
   if(length(N) > 2) stop("Arguments have different lengths.")
-  ans <- LogDensityMatrixT(X, Mu, RowV, ColV, nu)
+  ans <- LogDensityMatrixT(X, Lambda, SigmaR, SigmaC, nu)
   if(!log) ans <- exp(ans)
   ans
 }
 
 #' @rdname MatrixT
 #' @export
-rMT <- function(n, Mu, RowV, ColV, nu) {
+rMT <- function(n, Lambda, SigmaR, SigmaC, nu) {
   # get dimensions
-  PQ <- .getPQ(Lambda = Mu, Sigma = RowV, Psi = ColV)
+  PQ <- .getPQ(Lambda = Lambda, Sigma = SigmaR, Psi = SigmaC)
   p <- PQ[1]
   q <- PQ[2]
   if(anyNA(PQ)) {
     stop("Problem dimensions are undetermined (too many missing inputs).")
   }
-  Mu <- .setDims(Mu, p = p, q = q)
-  if(anyNA(Mu)) stop("Something went wrong.  Please report bug.")
-  RowV <- .setDims(RowV, p = p)
-  if(anyNA(RowV)) stop("RowV and Mu have incompatible dimensions.")
-  ColV <- .setDims(ColV, q = q)
-  if(anyNA(ColV)) stop("ColV and Mu have incompatible dimensions.")
+  Lambda <- .setDims(Lambda, p = p, q = q)
+  if(anyNA(Lambda)) stop("Something went wrong.  Please report bug.")
+  SigmaR <- .setDims(SigmaR, p = p)
+  if(anyNA(SigmaR)) stop("SigmaR and Lambda have incompatible dimensions.")
+  SigmaC <- .setDims(SigmaC, q = q)
+  if(anyNA(SigmaC)) stop("SigmaC and Lambda have incompatible dimensions.")
   nu <- c(nu)
   # check lengths
-  N <- .getN(p = p, q = q, Lambda = Mu, Sigma = RowV,
-             Psi = ColV, nu = nu)
+  N <- .getN(p = p, q = q, Lambda = Lambda, Sigma = SigmaR,
+             Psi = SigmaC, nu = nu)
   if(length(N) > 2 || (length(N) == 2 && N[2] != n)) {
     stop("Arguments don't all have length n.")
   }
-  X <- GenerateMatrixT(n, Mu, RowV, ColV, nu)
+  X <- GenerateMatrixT(n, Lambda, SigmaR, SigmaC, nu)
   if(n > 1) X <- array(X, dim = c(p,q,n))
   X
 }

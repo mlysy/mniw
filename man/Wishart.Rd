@@ -27,16 +27,16 @@ rwishart(n, Psi, nu, inverse = FALSE)
 
 \item{Psi}{Scale parameter.  Either a \code{q x q} matrix or a \code{q x q x n} array.}
 
-\item{nu}{Degrees-of-freedom parameter.  A scalar or vector.}
+\item{nu}{Degrees-of-freedom parameter.  A scalar or vector of length \code{n}.}
 
 \item{log}{Logical; whether or not to compute the log-density.}
 
-\item{n}{The number of random samples to generate.}
+\item{n}{Integer number of random samples to generate.}
 
 \item{inverse}{Logical; whether or not to use the Inverse-Wishart distribution.}
 }
 \value{
-A vector for densities, or a \code{q x q x n} array for random sampling.
+A vector length \code{n} for density evaluation, or an array of size \code{q x q x n} for random sampling.
 }
 \description{
 Densities and random sampling for the Wishart and Inverse-Wishart distributions.

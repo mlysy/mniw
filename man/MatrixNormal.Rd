@@ -6,25 +6,25 @@
 \alias{rMNorm}
 \title{The Matrix-Normal distribution.}
 \usage{
-dMNorm(X, Mu, RowV, ColV, log = FALSE)
+dMNorm(X, Lambda, SigmaR, SigmaC, log = FALSE)
 
-rMNorm(n, Mu, RowV, ColV)
+rMNorm(n, Lambda, SigmaR, SigmaC)
 }
 \arguments{
-\item{X}{argument to the density function.  Either a \code{p x q} matrix or a \code{p x q x n} array.}
+\item{X}{Argument to the density function.  Either a \code{p x q} matrix or a \code{p x q x n} array.}
 
-\item{Mu}{mean matrix or matrices.  Either a \code{p x q} matrix or a \code{p x q x n} array.}
+\item{Lambda}{Mean parameter  Either a \code{p x q} matrix or a \code{p x q x n} array.}
 
-\item{RowV}{between-row covariance matrix or matrices.  Either a \code{p x p} matrix or a \code{p x p x n} array.}
+\item{SigmaR}{Between-row covariance matrix.  Either a \code{p x p} matrix or a \code{p x p x n} array.}
 
-\item{ColV}{between-column covariance matrix or matrices.  Either a \code{q x q} matrix or a \code{q x q x n} array.}
+\item{SigmaC}{Between-column covariance matrix  Either a \code{q x q} matrix or a \code{q x q x n} array.}
 
-\item{log}{logical. Whether or not to compute the log-density.}
+\item{log}{Logical; whether or not to compute the log-density.}
 
-\item{n}{number of random matrices to generate.}
+\item{n}{Integer number of random samples to generate.}
 }
 \value{
-A vector length \code{n} for density evaluation, or a \code{p x q x n} array for random sampling.
+A vector length \code{n} for density evaluation, or an array of size \code{p x q x n} for random sampling.
 }
 \description{
 Density and random sampling for the Matrix-Normal distribution.
@@ -44,14 +44,14 @@ p <- 4
 q <- 2
 n <- 10 # number of observations
 # parameter values
-Mu <- matrix(rnorm(p*q),p,q) # mean matrix
+Lambda <- matrix(rnorm(p*q),p,q) # mean matrix
 # row-wise variance matrix (positive definite)
-RowV <- crossprod(matrix(rnorm(p*p), p, p))
-ColV <- rwish(n, Psi = diag(q), nu = q + 1) # column-wise variance (vectorized)
+SigmaR <- crossprod(matrix(rnorm(p*p), p, p))
+SigmaC <- rwish(n, Psi = diag(q), nu = q + 1) # column-wise variance (vectorized)
 
 # random sample
-X <- rMNorm(n, Mu = Mu, RowV = RowV, ColV = ColV)
+X <- rMNorm(n, Lambda = Lambda, SigmaR = SigmaR, SigmaC = SigmaC)
 
 # log-density at each sampled value
-dMNorm(X, Mu = Mu, RowV = RowV, ColV = ColV, log = TRUE)
+dMNorm(X, Lambda = Lambda, SigmaR = SigmaR, SigmaC = SigmaC, log = TRUE)
 }

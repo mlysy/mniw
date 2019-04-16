@@ -1,1 +1,1 @@
-#' @param n The number of random samples to generate.
+#' @param n Integer number of random samples to generate.

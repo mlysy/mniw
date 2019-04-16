@@ -10,17 +10,17 @@
 #'
 #' @name Wishart
 #' @aliases dwish rwish diwish riwish dwishart rwishart
-#' @param X Argument to the density function.  Either a \code{q x q} matrix or a \code{q x q x n} array.
+#' @template param-Xqq
 #' @template param-n
-#' @param Psi Scale parameter.  Either a \code{q x q} matrix or a \code{q x q x n} array.
-#' @param nu Degrees-of-freedom parameter.  A scalar or vector.
+#' @template param-Psi
+#' @template param-nu
 #' @param inverse Logical; whether or not to use the Inverse-Wishart distribution.
 #' @template param-log
 #' @template details-wishart
 #' @details \code{dwish} and \code{diwish} are convenience wrappers for \code{dwishart}, and similarly \code{rwish} and \code{riwish} are wrappers for \code{rwishart}.
 #'
 #' @example examples/Wishart.R
-#' @return A vector for densities, or a \code{q x q x n} array for random sampling.
+#' @template return-rdqq
 
 #--- convenience wrappers --------------------------------------------------
 
