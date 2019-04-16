@@ -21,8 +21,8 @@ using namespace mniw;
 /// @param [in] X Covariate matrix of size `N x q`, each row is an observation.
 /// @param [in] V Matrix of size `q x (Nq)` containing the variance of each response about its mean.
 /// @param [in] Lambda Prior mean matrix of size `p x q`.
-/// @param [in] Omega Prior row-variance matrix of size `p x p`.
-/// @param [in] Psi Prior scale precision matrix of size `q x q`.
+/// @param [in] Omega Prior row-wise precision matrix of size `p x p`.
+/// @param [in] Psi Prior column-wise scale matrix of size `q x q`.
 /// @param [in] nu Prior shape parameter.
 /// @param [in] Beta0 Initial random-effects coefficient matrix of size `p x q`.
 /// @param [in] iSigma0 Initial random-effects precision matrix of size `q x q`.

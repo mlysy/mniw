@@ -54,7 +54,7 @@ rRxNorm <- function(n, x, V, lambda, Sigma) {
   if(length(N) > 2 || (length(N) == 2 && N[2] != n)) {
     stop("Arguments don't all have length n.")
   }
-  Mu <- GenerateRandomEffectsNormal(n, lambda, x, V, Sigma)
+  Mu <- GenerateRandomEffectsNormal(n, x, V, lambda, Sigma)
   if(n > 1) {
     Mu <- t(Mu)
   } else {

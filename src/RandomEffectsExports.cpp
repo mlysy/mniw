@@ -19,33 +19,33 @@ using namespace mniw;
 
 /// Generate a random sample from the Random-Effects Normal distribution.
 ///
-/// Generate `N` independent draws from \f$p(\boldsymbol{mu} \mid \boldsymbol{y})\f$, where
+/// Generate `N` independent draws from \f$p(\boldsymbol{mu} \mid \boldsymbol{x})\f$, where
 /// \f[
 /// \begin{aligned}
-/// \boldsymbol{\mu} & \sim \mathcal N(\boldsymbol{\lambda}, \boldsymbol{A}) \\
-/// \boldsymbol{y} \mid \boldsymbol{\mu} & \sim \mathcal N(\boldsymbol{\mu}, \boldsymbol{V}).
+/// \boldsymbol{\mu} & \sim \mathcal N(\boldsymbol{\lambda}, \boldsymbol{\Sigma}) \\
+/// \boldsymbol{x} \mid \boldsymbol{\mu} & \sim \mathcal N(\boldsymbol{\mu}, \boldsymbol{V}).
 /// \end{aligned}
 /// \f]
 /// Each argument can be vectorized, meaning that it can have length either `N` or `1`, denoted here as `n`.
 ///
 /// @param [in] N Integer number of random draws.
-/// @param [in] lambda Matrix of size `q x n` of prior means.
-/// @param [in] y Matrix of size `q x n` of observations.
+/// @param [in] x Matrix of size `q x n` of observations.
 /// @param [in] V Matrix of size `q x nq` of observation variances.
-/// @param [in] A Matrix of size `q x nq` of prior variances.
+/// @param [in] lambda Matrix of size `q x n` of prior means.
+/// @param [in] Sigma Matrix of size `q x nq` of prior variances.
 ///
 /// @return Matrix of size `q x Nq` of random draws of observation means `mu`.
 //[[Rcpp::export]]
 Eigen::MatrixXd GenerateRandomEffectsNormal(int N,
-					    Eigen::MatrixXd lambda,
-					    Eigen::MatrixXd y,
+					    Eigen::MatrixXd x,
 					    Eigen::MatrixXd V,
-					    Eigen::MatrixXd A) {
+					    Eigen::MatrixXd lambda,
+					    Eigen::MatrixXd Sigma) {
   int q = lambda.rows();
   bool singleLambda = (lambda.cols() == 1);
-  bool singleY = (y.cols() == 1);
+  bool singleX = (x.cols() == 1);
   bool singleV = (V.cols() == q);
-  bool singleA = (A.cols() == q);
+  bool singleSigma = (Sigma.cols() == q);
   // output variables
   MatrixXd mu(q,N);
   // internal variables
@@ -54,7 +54,7 @@ Eigen::MatrixXd GenerateRandomEffectsNormal(int N,
   MatrixXd Iq = MatrixXd::Identity(q,q);
   MatrixXd C = MatrixXd::Zero(q,q);
   MatrixXd Omega = MatrixXd::Zero(q,q);
-  VectorXd x = VectorXd::Zero(q);
+  VectorXd z = VectorXd::Zero(q);
   RanfxNormal renorm(q);
   if(singleV) {
     // tmp->lltq.compute(V);
@@ -62,14 +62,14 @@ Eigen::MatrixXd GenerateRandomEffectsNormal(int N,
     lltq.compute(V);
     C = lltq.solve(Iq);
   }
-  if(singleA) {
-    // tmp->lltq.compute(A);
+  if(singleSigma) {
+    // tmp->lltq.compute(Sigma);
     // Omega = tmp->lltq.solve(tmp->Iq);
-    lltq.compute(A);
+    lltq.compute(Sigma);
     Omega = lltq.solve(Iq);
   }
-  if(singleLambda && singleY) {
-    x = lambda - y;
+  if(singleLambda && singleX) {
+    z = lambda - x;
   }
   for(int ii=0; ii<N; ii++) {
     if(!singleV) {
@@ -78,18 +78,18 @@ Eigen::MatrixXd GenerateRandomEffectsNormal(int N,
       lltq.compute(V.block(0,ii*q,q,q));
       C = lltq.solve(Iq);
     }
-    if(!singleA) {
-      // tmp->lltq.compute(A.block(0,ii*q,q,q));
+    if(!singleSigma) {
+      // tmp->lltq.compute(Sigma.block(0,ii*q,q,q));
       // Omega = tmp->lltq.solve(tmp->Iq);
-      lltq.compute(A.block(0,ii*q,q,q));
+      lltq.compute(Sigma.block(0,ii*q,q,q));
       Omega = lltq.solve(Iq);
     }
-    if(!(singleLambda && singleY)) {
-      x = lambda.col(ii*(!singleLambda)) - y.col(ii*(!singleY));
+    if(!(singleLambda && singleX)) {
+      z = lambda.col(ii*(!singleLambda)) - x.col(ii*(!singleX));
     }
-    // GenerateRandomEffectsO(mu.col(ii), x, C, Omega, tmp);
-    renorm.GenerateO(mu.col(ii), x, C, Omega);
-    mu.col(ii) += y.col(ii*(!singleY));
+    // GenerateRandomEffectsO(mu.col(ii), z, C, Omega, tmp);
+    renorm.GenerateO(mu.col(ii), z, C, Omega);
+    mu.col(ii) += x.col(ii*(!singleX));
   }
   // delete tmp;
   return(mu);

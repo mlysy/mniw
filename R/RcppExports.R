@@ -17,32 +17,32 @@ GenerateMatrixNIW <- function(N, Lambda, Sigma, Psi, nu, inverse = FALSE) {
     .Call(`_mniw_GenerateMatrixNIW`, N, Lambda, Sigma, Psi, nu, inverse)
 }
 
-LogDensityMatrixNormal <- function(X, Mu, RowV, ColV) {
-    .Call(`_mniw_LogDensityMatrixNormal`, X, Mu, RowV, ColV)
+LogDensityMatrixNormal <- function(X, Lambda, SigmaR, SigmaC) {
+    .Call(`_mniw_LogDensityMatrixNormal`, X, Lambda, SigmaR, SigmaC)
 }
 
-GenerateMatrixNormal <- function(N, Lambda, RowSigma, ColSigma) {
-    .Call(`_mniw_GenerateMatrixNormal`, N, Lambda, RowSigma, ColSigma)
+GenerateMatrixNormal <- function(N, Lambda, SigmaR, SigmaC) {
+    .Call(`_mniw_GenerateMatrixNormal`, N, Lambda, SigmaR, SigmaC)
 }
 
-LogDensityMatrixT <- function(X, Mu, RowV, ColV, nu) {
-    .Call(`_mniw_LogDensityMatrixT`, X, Mu, RowV, ColV, nu)
+LogDensityMatrixT <- function(X, Lambda, SigmaR, SigmaC, nu) {
+    .Call(`_mniw_LogDensityMatrixT`, X, Lambda, SigmaR, SigmaC, nu)
 }
 
-GenerateMatrixT <- function(N, Lambda, RowSigma, ColSigma, nu, inverse = FALSE) {
-    .Call(`_mniw_GenerateMatrixT`, N, Lambda, RowSigma, ColSigma, nu, inverse)
+GenerateMatrixT <- function(N, Lambda, SigmaR, SigmaC, nu, inverse = FALSE) {
+    .Call(`_mniw_GenerateMatrixT`, N, Lambda, SigmaR, SigmaC, nu, inverse)
 }
 
-LogDensityMultivariateNormal <- function(X, Mu, V) {
-    .Call(`_mniw_LogDensityMultivariateNormal`, X, Mu, V)
+LogDensityMultivariateNormal <- function(X, mu, V) {
+    .Call(`_mniw_LogDensityMultivariateNormal`, X, mu, V)
 }
 
-GenerateMultivariateNormal <- function(N, Lambda, Sigma) {
-    .Call(`_mniw_GenerateMultivariateNormal`, N, Lambda, Sigma)
+GenerateMultivariateNormal <- function(N, mu, Sigma) {
+    .Call(`_mniw_GenerateMultivariateNormal`, N, mu, Sigma)
 }
 
-GenerateRandomEffectsNormal <- function(N, lambda, y, V, A) {
-    .Call(`_mniw_GenerateRandomEffectsNormal`, N, lambda, y, V, A)
+GenerateRandomEffectsNormal <- function(N, x, V, lambda, Sigma) {
+    .Call(`_mniw_GenerateRandomEffectsNormal`, N, x, V, lambda, Sigma)
 }
 
 LogDensityWishart <- function(X, Psi, nu, inverse = FALSE) {

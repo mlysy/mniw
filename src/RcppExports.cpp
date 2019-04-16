@@ -81,102 +81,102 @@ BEGIN_RCPP
 END_RCPP
 }
 // LogDensityMatrixNormal
-Eigen::VectorXd LogDensityMatrixNormal(Eigen::MatrixXd X, Eigen::MatrixXd Mu, Eigen::MatrixXd RowV, Eigen::MatrixXd ColV);
-RcppExport SEXP _mniw_LogDensityMatrixNormal(SEXP XSEXP, SEXP MuSEXP, SEXP RowVSEXP, SEXP ColVSEXP) {
+Eigen::VectorXd LogDensityMatrixNormal(Eigen::MatrixXd X, Eigen::MatrixXd Lambda, Eigen::MatrixXd SigmaR, Eigen::MatrixXd SigmaC);
+RcppExport SEXP _mniw_LogDensityMatrixNormal(SEXP XSEXP, SEXP LambdaSEXP, SEXP SigmaRSEXP, SEXP SigmaCSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Eigen::MatrixXd >::type X(XSEXP);
-    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type Mu(MuSEXP);
-    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type RowV(RowVSEXP);
-    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type ColV(ColVSEXP);
-    rcpp_result_gen = Rcpp::wrap(LogDensityMatrixNormal(X, Mu, RowV, ColV));
+    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type Lambda(LambdaSEXP);
+    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type SigmaR(SigmaRSEXP);
+    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type SigmaC(SigmaCSEXP);
+    rcpp_result_gen = Rcpp::wrap(LogDensityMatrixNormal(X, Lambda, SigmaR, SigmaC));
     return rcpp_result_gen;
 END_RCPP
 }
 // GenerateMatrixNormal
-Eigen::MatrixXd GenerateMatrixNormal(int N, Eigen::MatrixXd Lambda, Eigen::MatrixXd RowSigma, Eigen::MatrixXd ColSigma);
-RcppExport SEXP _mniw_GenerateMatrixNormal(SEXP NSEXP, SEXP LambdaSEXP, SEXP RowSigmaSEXP, SEXP ColSigmaSEXP) {
+Eigen::MatrixXd GenerateMatrixNormal(int N, Eigen::MatrixXd Lambda, Eigen::MatrixXd SigmaR, Eigen::MatrixXd SigmaC);
+RcppExport SEXP _mniw_GenerateMatrixNormal(SEXP NSEXP, SEXP LambdaSEXP, SEXP SigmaRSEXP, SEXP SigmaCSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< int >::type N(NSEXP);
     Rcpp::traits::input_parameter< Eigen::MatrixXd >::type Lambda(LambdaSEXP);
-    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type RowSigma(RowSigmaSEXP);
-    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type ColSigma(ColSigmaSEXP);
-    rcpp_result_gen = Rcpp::wrap(GenerateMatrixNormal(N, Lambda, RowSigma, ColSigma));
+    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type SigmaR(SigmaRSEXP);
+    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type SigmaC(SigmaCSEXP);
+    rcpp_result_gen = Rcpp::wrap(GenerateMatrixNormal(N, Lambda, SigmaR, SigmaC));
     return rcpp_result_gen;
 END_RCPP
 }
 // LogDensityMatrixT
-Eigen::VectorXd LogDensityMatrixT(Eigen::MatrixXd X, Eigen::MatrixXd Mu, Eigen::MatrixXd RowV, Eigen::MatrixXd ColV, Eigen::VectorXd nu);
-RcppExport SEXP _mniw_LogDensityMatrixT(SEXP XSEXP, SEXP MuSEXP, SEXP RowVSEXP, SEXP ColVSEXP, SEXP nuSEXP) {
+Eigen::VectorXd LogDensityMatrixT(Eigen::MatrixXd X, Eigen::MatrixXd Lambda, Eigen::MatrixXd SigmaR, Eigen::MatrixXd SigmaC, Eigen::VectorXd nu);
+RcppExport SEXP _mniw_LogDensityMatrixT(SEXP XSEXP, SEXP LambdaSEXP, SEXP SigmaRSEXP, SEXP SigmaCSEXP, SEXP nuSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Eigen::MatrixXd >::type X(XSEXP);
-    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type Mu(MuSEXP);
-    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type RowV(RowVSEXP);
-    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type ColV(ColVSEXP);
+    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type Lambda(LambdaSEXP);
+    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type SigmaR(SigmaRSEXP);
+    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type SigmaC(SigmaCSEXP);
     Rcpp::traits::input_parameter< Eigen::VectorXd >::type nu(nuSEXP);
-    rcpp_result_gen = Rcpp::wrap(LogDensityMatrixT(X, Mu, RowV, ColV, nu));
+    rcpp_result_gen = Rcpp::wrap(LogDensityMatrixT(X, Lambda, SigmaR, SigmaC, nu));
     return rcpp_result_gen;
 END_RCPP
 }
 // GenerateMatrixT
-Eigen::MatrixXd GenerateMatrixT(int N, Eigen::MatrixXd Lambda, Eigen::MatrixXd RowSigma, Eigen::MatrixXd ColSigma, Eigen::VectorXd nu, bool inverse);
-RcppExport SEXP _mniw_GenerateMatrixT(SEXP NSEXP, SEXP LambdaSEXP, SEXP RowSigmaSEXP, SEXP ColSigmaSEXP, SEXP nuSEXP, SEXP inverseSEXP) {
+Eigen::MatrixXd GenerateMatrixT(int N, Eigen::MatrixXd Lambda, Eigen::MatrixXd SigmaR, Eigen::MatrixXd SigmaC, Eigen::VectorXd nu, bool inverse);
+RcppExport SEXP _mniw_GenerateMatrixT(SEXP NSEXP, SEXP LambdaSEXP, SEXP SigmaRSEXP, SEXP SigmaCSEXP, SEXP nuSEXP, SEXP inverseSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< int >::type N(NSEXP);
     Rcpp::traits::input_parameter< Eigen::MatrixXd >::type Lambda(LambdaSEXP);
-    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type RowSigma(RowSigmaSEXP);
-    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type ColSigma(ColSigmaSEXP);
+    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type SigmaR(SigmaRSEXP);
+    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type SigmaC(SigmaCSEXP);
     Rcpp::traits::input_parameter< Eigen::VectorXd >::type nu(nuSEXP);
     Rcpp::traits::input_parameter< bool >::type inverse(inverseSEXP);
-    rcpp_result_gen = Rcpp::wrap(GenerateMatrixT(N, Lambda, RowSigma, ColSigma, nu, inverse));
+    rcpp_result_gen = Rcpp::wrap(GenerateMatrixT(N, Lambda, SigmaR, SigmaC, nu, inverse));
     return rcpp_result_gen;
 END_RCPP
 }
 // LogDensityMultivariateNormal
-Eigen::VectorXd LogDensityMultivariateNormal(Eigen::MatrixXd X, Eigen::MatrixXd Mu, Eigen::MatrixXd V);
-RcppExport SEXP _mniw_LogDensityMultivariateNormal(SEXP XSEXP, SEXP MuSEXP, SEXP VSEXP) {
+Eigen::VectorXd LogDensityMultivariateNormal(Eigen::MatrixXd X, Eigen::MatrixXd mu, Eigen::MatrixXd V);
+RcppExport SEXP _mniw_LogDensityMultivariateNormal(SEXP XSEXP, SEXP muSEXP, SEXP VSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Eigen::MatrixXd >::type X(XSEXP);
-    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type Mu(MuSEXP);
+    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type mu(muSEXP);
     Rcpp::traits::input_parameter< Eigen::MatrixXd >::type V(VSEXP);
-    rcpp_result_gen = Rcpp::wrap(LogDensityMultivariateNormal(X, Mu, V));
+    rcpp_result_gen = Rcpp::wrap(LogDensityMultivariateNormal(X, mu, V));
     return rcpp_result_gen;
 END_RCPP
 }
 // GenerateMultivariateNormal
-Eigen::MatrixXd GenerateMultivariateNormal(int N, Eigen::MatrixXd Lambda, Eigen::MatrixXd Sigma);
-RcppExport SEXP _mniw_GenerateMultivariateNormal(SEXP NSEXP, SEXP LambdaSEXP, SEXP SigmaSEXP) {
+Eigen::MatrixXd GenerateMultivariateNormal(int N, Eigen::MatrixXd mu, Eigen::MatrixXd Sigma);
+RcppExport SEXP _mniw_GenerateMultivariateNormal(SEXP NSEXP, SEXP muSEXP, SEXP SigmaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< int >::type N(NSEXP);
-    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type Lambda(LambdaSEXP);
+    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type mu(muSEXP);
     Rcpp::traits::input_parameter< Eigen::MatrixXd >::type Sigma(SigmaSEXP);
-    rcpp_result_gen = Rcpp::wrap(GenerateMultivariateNormal(N, Lambda, Sigma));
+    rcpp_result_gen = Rcpp::wrap(GenerateMultivariateNormal(N, mu, Sigma));
     return rcpp_result_gen;
 END_RCPP
 }
 // GenerateRandomEffectsNormal
-Eigen::MatrixXd GenerateRandomEffectsNormal(int N, Eigen::MatrixXd lambda, Eigen::MatrixXd y, Eigen::MatrixXd V, Eigen::MatrixXd A);
-RcppExport SEXP _mniw_GenerateRandomEffectsNormal(SEXP NSEXP, SEXP lambdaSEXP, SEXP ySEXP, SEXP VSEXP, SEXP ASEXP) {
+Eigen::MatrixXd GenerateRandomEffectsNormal(int N, Eigen::MatrixXd x, Eigen::MatrixXd V, Eigen::MatrixXd lambda, Eigen::MatrixXd Sigma);
+RcppExport SEXP _mniw_GenerateRandomEffectsNormal(SEXP NSEXP, SEXP xSEXP, SEXP VSEXP, SEXP lambdaSEXP, SEXP SigmaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< int >::type N(NSEXP);
-    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type lambda(lambdaSEXP);
-    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type y(ySEXP);
+    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type x(xSEXP);
     Rcpp::traits::input_parameter< Eigen::MatrixXd >::type V(VSEXP);
-    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type A(ASEXP);
-    rcpp_result_gen = Rcpp::wrap(GenerateRandomEffectsNormal(N, lambda, y, V, A));
+    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type lambda(lambdaSEXP);
+    Rcpp::traits::input_parameter< Eigen::MatrixXd >::type Sigma(SigmaSEXP);
+    rcpp_result_gen = Rcpp::wrap(GenerateRandomEffectsNormal(N, x, V, lambda, Sigma));
     return rcpp_result_gen;
 END_RCPP
 }

@@ -16,7 +16,7 @@ RxNormLM(nsamples, Y, V, X, prior = NULL, init, burn, updateHyp = TRUE,
 
 \item{X}{\code{N x p} matrix of covariates.}
 
-\item{prior}{parameters of the prior MNIW distribution on the hyperparameters.  See Details.}
+\item{prior}{parameters of the prior MNIW distribution on the hyperparameters (see \strong{Details}).}
 
 \item{init}{(optional) list with elements \code{Beta}, \code{Sigma}, and \code{Mu} providing the initial values for these.  Default values are \code{Beta = matrix(0, p, q)}, \code{Sigma = diag(q)}, and \code{Mu = Y}.}
 

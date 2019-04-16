@@ -6,7 +6,7 @@
 #' @param Y \code{N x q} matrix of responses.
 #' @param V Either a \code{q x q} variance matrix or an \code{q x q x N} array of such matrices.
 #' @param X \code{N x p} matrix of covariates.
-#' @param prior parameters of the prior MNIW distribution on the hyperparameters.  See Details.
+#' @param prior parameters of the prior MNIW distribution on the hyperparameters (see \strong{Details}).
 #' @param burn integer number of burn-in samples, or fraction of \code{nsamples} to prepend as burn-in.
 #' @param init (optional) list with elements \code{Beta}, \code{Sigma}, and \code{Mu} providing the initial values for these.  Default values are \code{Beta = matrix(0, p, q)}, \code{Sigma = diag(q)}, and \code{Mu = Y}.
 #' @param updateHyp,storeHyp logical. Whether or not to update/store the hyperparameter draws.

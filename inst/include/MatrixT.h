@@ -25,8 +25,8 @@ namespace mniw {
     int pq_; // p * q
     bool pMin_; // isTRUE(p < q)
     MatrixXd Z_;
-    LLT<MatrixXd> cholRowV_;
-    LLT<MatrixXd> cholColV_;
+    LLT<MatrixXd> cholSigmaR_;
+    LLT<MatrixXd> cholSigmaC_;
     LLT<MatrixXd> lltd_;
     MatrixXd A_;
     MatrixXd B_;
@@ -41,26 +41,26 @@ namespace mniw {
     /// Log-density evaluation.
     double LogDens(const Ref<const MatrixXd>&  X,
 		   const Ref<const MatrixXd>& Mu,
-		   const Ref<const MatrixXd>& RowV,
-		   const Ref<const MatrixXd>& ColV,
+		   const Ref<const MatrixXd>& SigmaR,
+		   const Ref<const MatrixXd>& SigmaC,
 		   double nu);
     /// Log-density evaluation with precomputations.
     double LogDens(const Ref<const MatrixXd>& X,
 		   const Ref<const MatrixXd>& Mu,
-		   const Ref<const MatrixXd>& RowV,
-		   LLT<MatrixXd>& cholRowV, double ldRowV,
-		   const Ref<const MatrixXd>& ColV,
-		   LLT<MatrixXd>& cholColV, double ldColV, double nu);
+		   const Ref<const MatrixXd>& SigmaR,
+		   LLT<MatrixXd>& cholSigmaR, double ldSigmaR,
+		   const Ref<const MatrixXd>& SigmaC,
+		   LLT<MatrixXd>& cholSigmaC, double ldSigmaC, double nu);
     /// Random draw with RowV/ColV on the variance/precision scale.
     void GenerateRowSColO(Ref<MatrixXd> X,
 			  const Ref<const MatrixXd>& Mu,
-			  const Ref<const MatrixXd>& RowVL,
-			  const Ref<const MatrixXd>& iColVL, double nu);
+			  const Ref<const MatrixXd>& SigmaRL,
+			  const Ref<const MatrixXd>& OmegaCL, double nu);
     /// Random draw with RowV/ColV on the precision/precision scale.
     void GenerateRowOColO(Ref<MatrixXd> X,
 			  const Ref<const MatrixXd>& Mu,
-			  const Ref<const MatrixXd>& iRowVU,
-			  const Ref<const MatrixXd>& iColVL, double nu);
+			  const Ref<const MatrixXd>& OmegaRU,
+			  const Ref<const MatrixXd>& OmegaCL, double nu);
   };
 
   /// @param [in] p Number of rows of Matrix-t distribution.
@@ -74,8 +74,8 @@ namespace mniw {
     pq_ = p_*q_; 
     // storage
     Z_ = MatrixXd::Zero(p_,q_);
-    cholRowV_.compute(MatrixXd::Identity(p_,p_));
-    cholColV_.compute(MatrixXd::Identity(q_,q_));
+    cholSigmaR_.compute(MatrixXd::Identity(p_,p_));
+    cholSigmaC_.compute(MatrixXd::Identity(q_,q_));
     if(pMin_) {
       A_ = MatrixXd::Zero(q_,p_);
       B_ = MatrixXd::Zero(p_,p_);
@@ -100,42 +100,42 @@ namespace mniw {
 
   /// @param [in] X Observation matrix of size `p x q`.
   /// @param [in] Mu Mean matrix of size `p x q`.
-  /// @param [in] RowV Row-variance matrix of size `p x p`.
-  /// @param [in] ColV Column-variance matrix of size `q x q`.
+  /// @param [in] SigmaR Row-variance matrix of size `p x p`.
+  /// @param [in] SigmaC Column-variance matrix of size `q x q`.
   /// @param [in] nu Shape parameter.
   ///
   /// @return The log-density evaluated at `X`.
   inline double MatrixT::LogDens(const Ref<const MatrixXd>&  X,
 				 const Ref<const MatrixXd>& Mu,
-				 const Ref<const MatrixXd>& RowV,
-				 const Ref<const MatrixXd>& ColV,
+				 const Ref<const MatrixXd>& SigmaR,
+				 const Ref<const MatrixXd>& SigmaC,
 				 double nu) {
-    cholRowV_.compute(RowV);
-    cholColV_.compute(ColV);
+    cholSigmaR_.compute(SigmaR);
+    cholSigmaC_.compute(SigmaC);
     return LogDens(X, Mu,
-		   RowV, cholRowV_, logDetCholV(cholRowV_),
-		   ColV, cholColV_, logDetCholV(cholColV_), nu);
+		   SigmaR, cholSigmaR_, logDetCholV(cholSigmaR_),
+		   SigmaC, cholSigmaC_, logDetCholV(cholSigmaC_), nu);
   }
 
-  /// Identical to the shorter `LogDens`, except with pre-computed Cholesky factor and log-determinants for `RowV` and `ColV` (faster in a for-loop where one of these is held fixed).
+  /// Identical to the shorter `LogDens`, except with pre-computed Cholesky factor and log-determinants for `SigmaR` and `SigmaC` (faster in a for-loop where one of these is held fixed).
   ///
   /// @param [in] X Observation matrix of size `p x q`.
   /// @param [in] Mu Mean matrix of size `p x q`.
-  /// @param [in] RowV Row-variance matrix of size `p x p`.
-  /// @param [in] cholRowV Lower Cholesky factor of row-variance matrix, as an `Eigen::LLT` object.
-  /// @param [in] ldRowV Log-determinant of `cholRowV`.
-  /// @param [in] ColV Column-variance matrix of size `q x q`.
-  /// @param [in] cholColV Lower Cholesky factor of column-variance matrix, as an `Eigen::LLT` object.
-  /// @param [in] ldColV Log-determinant of `cholColV`.
+  /// @param [in] SigmaR Row-variance matrix of size `p x p`.
+  /// @param [in] cholSigmaR Lower Cholesky factor of row-variance matrix, as an `Eigen::LLT` object.
+  /// @param [in] ldSigmaR Log-determinant of `cholSigmaR`.
+  /// @param [in] SigmaC Column-variance matrix of size `q x q`.
+  /// @param [in] cholSigmaC Lower Cholesky factor of column-variance matrix, as an `Eigen::LLT` object.
+  /// @param [in] ldSigmaC Log-determinant of `cholSigmaC`.
   /// @param [in] nu Shape parameter.
   ///
   /// @return The log-density evaluated at `X`.
   inline double MatrixT::LogDens(const Ref<const MatrixXd>& X,
 				 const Ref<const MatrixXd>& Mu,
-				 const Ref<const MatrixXd>& RowV,
-				 LLT<MatrixXd>& cholRowV, double ldRowV,
-				 const Ref<const MatrixXd>& ColV,
-				 LLT<MatrixXd>& cholColV, double ldColV,
+				 const Ref<const MatrixXd>& SigmaR,
+				 LLT<MatrixXd>& cholSigmaR, double ldSigmaR,
+				 const Ref<const MatrixXd>& SigmaC,
+				 LLT<MatrixXd>& cholSigmaC, double ldSigmaC,
 				 double nu) {
     double ldens;
     double nuq = nu + q_ - 1.0;
@@ -143,19 +143,19 @@ namespace mniw {
     // calculate log-determinant by Sylvester formula
     Z_.noalias() = X - Mu;
     if(pMin_) {
-      A_ = cholColV.solve(Z_.adjoint());
-      B_.noalias() = RowV + Z_ * A_;
+      A_ = cholSigmaC.solve(Z_.adjoint());
+      B_.noalias() = SigmaR + Z_ * A_;
       lltd_.compute(B_);
-      ldens = logDetCholV(lltd_) - ldRowV;
+      ldens = logDetCholV(lltd_) - ldSigmaR;
     }
     else {
-      A_ = cholRowV.solve(Z_);
-      B_.noalias() = ColV + Z_.adjoint() * A_;
+      A_ = cholSigmaR.solve(Z_);
+      B_.noalias() = SigmaC + Z_.adjoint() * A_;
       lltd_.compute(B_);
-      ldens = logDetCholV(lltd_) - ldColV;
+      ldens = logDetCholV(lltd_) - ldSigmaC;
     }
     // add components
-    ldens = nupq * ldens + q_ * ldRowV + p_ * ldColV + pq_ * M_LN_SQRT_PI;
+    ldens = nupq * ldens + q_ * ldSigmaR + p_ * ldSigmaC + pq_ * M_LN_SQRT_PI;
     return -ldens + logMultiGamma(.5 * nupq, q_) - logMultiGamma(.5 * nuq, q_);
   }
 
@@ -163,31 +163,31 @@ namespace mniw {
 
   /// @param [out] X Matrix of size `p x q` in which to store the random draw.
   /// @param [in] Mu Mean matrix of size `p x q`.
-  /// @param [in] RowVL Lower Cholesky factor of the row-variance matrix `RowV` (a matrix of size `p x p`).
-  /// @param [in] iColVL Lower Cholesky factor of the column-precision matrix: `ColV^{-1} = iColVL * t(iColVL)` (a matrix of size `q x q`).
+  /// @param [in] SigmaRL Lower Cholesky factor of the row-variance matrix `SigmaR` (a matrix of size `p x p`).
+  /// @param [in] OmegaCL Lower Cholesky factor of the column-precision matrix: `SigmaC^{-1} = OmegaCL * t(OmegaCL)` (a matrix of size `q x q`).
   /// @param [in] nu Shape parameter.
   inline void MatrixT::GenerateRowSColO(Ref<MatrixXd> X,
 					const Ref<const MatrixXd>& Mu,
-					const Ref<const MatrixXd>& RowVL,
-					const Ref<const MatrixXd>& iColVL,
+					const Ref<const MatrixXd>& SigmaRL,
+					const Ref<const MatrixXd>& OmegaCL,
 					double nu) {
-    wish_->GenerateLowerTriXi(CL_, iColVL, nu);
-    matnorm_->GenerateRowSColO(X, Mu, RowVL, CL_);
+    wish_->GenerateLowerTriXi(CL_, OmegaCL, nu);
+    matnorm_->GenerateRowSColO(X, Mu, SigmaRL, CL_);
     return;
   }
 
   /// @param [out] X Matrix of size `p x q` in which to store the random draw.
   /// @param [in] Mu Mean matrix of size `p x q`.
-  /// @param [in] iRowVU Upper Cholesky factor of the row-precision matrix: `RowV^{-1} = t(iRowVU) * iRowVU` (a matrix of size `p x p`).
-  /// @param [in] iColVL Lower Cholesky factor of the column-precision matrix: `ColV^{-1} = iColVL * t(iColVL)` (a matrix of size `q x q`).
+  /// @param [in] OmegaRU Upper Cholesky factor of the row-precision matrix: `SigmaR^{-1} = t(OmegaRU) * OmegaRU` (a matrix of size `p x p`).
+  /// @param [in] OmegaCL Lower Cholesky factor of the column-precision matrix: `SigmaC^{-1} = OmegaCL * t(OmegaCL)` (a matrix of size `q x q`).
   /// @param [in] nu Shape parameter.
   inline void MatrixT::GenerateRowOColO(Ref<MatrixXd> X,
 					const Ref<const MatrixXd>& Mu,
-					const Ref<const MatrixXd>& iRowVU,
-					const Ref<const MatrixXd>& iColVL,
+					const Ref<const MatrixXd>& OmegaRU,
+					const Ref<const MatrixXd>& OmegaCL,
 					double nu) {
-    wish_->GenerateLowerTriXi(CL_, iColVL, nu);
-    matnorm_->GenerateRowOColO(X, Mu, iRowVU, CL_);
+    wish_->GenerateLowerTriXi(CL_, OmegaCL, nu);
+    matnorm_->GenerateRowOColO(X, Mu, OmegaRU, CL_);
     return;
   }
 

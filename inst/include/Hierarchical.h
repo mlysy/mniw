@@ -31,18 +31,18 @@ namespace mniw {
     bool flatBeta_; // whether Beta has a flat prior
     MatrixXd Mut_; // transpose of random-effects matrix
     MatrixXd Beta_; // random-effects regression coefficients
-    MatrixXd iSigmaL_; // lower cholesky factor of randome-effects precision matrix
+    MatrixXd iSigmaL_; // lower cholesky factor of randome-effect precision matrix
     // storage variables
     double nuHat_;
     MatrixXd Yt_;
-    MatrixXd iXtXiO_; // (X'X + iO)^{-1}
-    MatrixXd OmegaHatL_; // chol(above)
+    MatrixXd iXtXO_; // (X'X + O)^{-1}
+    MatrixXd iOmegaHatL_; // chol(above)
     MatrixXd IH_; // I - X(X'X)^{-1}X'
-    MatrixXd LtiO_; // Lambda' iO
-    MatrixXd LtiOL_; // Lambda' iO Lambda
+    MatrixXd LtO_; // Lambda' O
+    MatrixXd LtOL_; // Lambda' O Lambda
     MatrixXd PsiHat_; 
     MatrixXd XiHatL_;
-    MatrixXd MutXLtiO_; // Mu' X + Lamdba' iO
+    MatrixXd MutXLtO_; // Mu' X + Lamdba' O
     MatrixXd IHMu_; // IH * Mu
     MatrixXd LambdaHat_; // iXtXO * MuXLtO
     MatrixXd x_;
@@ -61,7 +61,7 @@ namespace mniw {
 	       const Ref<const MatrixXd>& X,
 	       const Ref<const MatrixXd>& V,
 	       const Ref<const MatrixXd>& Lambda,
-	       const Ref<const MatrixXd>& iOmega,
+	       const Ref<const MatrixXd>& Omega,
 	       const Ref<const MatrixXd>& Psi, double nu);
     /// Destructor.
     ~HierNormal();
@@ -93,20 +93,20 @@ namespace mniw {
   /// @param [in] X Covariate matrix of size `N x q`, each row is an observation.
   /// @param [in] V Matrix of size `q x (Nq)` containing the variance of each response about its mean.
   /// @param [in] Lambda Prior mean matrix of size `p x q`.
-  /// @param [in] iOmega Prior row-precision matrix of size `p x p`.
-  /// @param [in] Psi Prior scale precision matrix of size `q x q`.
+  /// @param [in] Omega Prior between-row precision matrix of size `p x p`.
+  /// @param [in] Psi Prior between-column scale matrix of size `q x q`.
   /// @param [in] nu Shape parameter.
   inline HierNormal::HierNormal(const Ref<const MatrixXd>& Y,
 				const Ref<const MatrixXd>& X,
 				const Ref<const MatrixXd>& V,
 				const Ref<const MatrixXd>& Lambda,
-				const Ref<const MatrixXd>& iOmega,
+				const Ref<const MatrixXd>& Omega,
 				const Ref<const MatrixXd>& Psi, double nu) {
     // dimensions of the problem
     N_ = Y.rows();
     p_ = X.cols();
     q_ = Y.cols();
-    flatBeta_ = iOmega.squaredNorm() == 0.0;
+    flatBeta_ = Omega.squaredNorm() == 0.0;
     // data needed for updates
     X_ = X;
     Psi_ = Psi;
@@ -122,14 +122,14 @@ namespace mniw {
     Uq_ = MatrixXd::Zero(q_,q_);
     Iq_ = MatrixXd::Identity(q_,q_);
     lltq_.compute(Iq_);
-    iXtXiO_ = (X.adjoint() * X + iOmega).eval().llt().solve(MatrixXd::Identity(p_,p_));
-    OmegaHatL_ = iXtXiO_.llt().matrixL();
+    iXtXO_ = (X.adjoint() * X + Omega).eval().llt().solve(MatrixXd::Identity(p_,p_));
+    iOmegaHatL_ = iXtXO_.llt().matrixL();
     IH_ = MatrixXd::Identity(N_,N_) - (X * (X.adjoint() * X).llt().solve(X.adjoint())).eval();
-    LtiO_ = Lambda.adjoint() * iOmega;
-    LtiOL_ = LtiO_ * Lambda;
+    LtO_ = Lambda.adjoint() * Omega;
+    LtOL_ = LtO_ * Lambda;
     PsiHat_ = MatrixXd::Zero(q_,q_);
     XiHatL_ = MatrixXd::Zero(q_,q_);
-    MutXLtiO_ = MatrixXd::Zero(q_,p_);
+    MutXLtO_ = MatrixXd::Zero(q_,p_);
     IHMu_ = MatrixXd::Zero(N_,q_);
     LambdaHat_ = MatrixXd::Zero(p_,q_);
     x_ = MatrixXd::Zero(q_,N_);
@@ -207,12 +207,12 @@ namespace mniw {
   /// Performs one draw of \f$(\boldsymbol{\beta}, \boldsymbol{\Sigma}) \sim p(\boldsymbol{\beta}, \boldsymbol{\Sigma} \mid \boldsymbol{\mu}, \boldsymbol{Y}, \boldsymbol{X})\f$ and assigns it to the internal values of `Beta` and `Sigma`.
   inline void HierNormal::UpdateBetaSigma() {
     // new MNIW parameters
-    MutXLtiO_.noalias() = Mut_ * X_ + LtiO_;
-    LambdaHat_.noalias() = iXtXiO_ * MutXLtiO_.adjoint();
+    MutXLtO_.noalias() = Mut_ * X_ + LtO_;
+    LambdaHat_.noalias() = iXtXO_ * MutXLtO_.adjoint();
     if(!flatBeta_) {
       PsiHat_.noalias() = Mut_ * Mut_.adjoint();
-      PsiHat_.noalias() -= MutXLtiO_ * LambdaHat_;
-      PsiHat_ += LtiOL_ + Psi_;
+      PsiHat_.noalias() -= MutXLtO_ * LambdaHat_;
+      PsiHat_ += LtOL_ + Psi_;
     }
     else {
       IHMu_.noalias() = IH_ * Mut_.adjoint();
@@ -223,7 +223,7 @@ namespace mniw {
     ReverseCholesky(XiHatL_, PsiHat_, lltq_);
     // generate Beta and iSigmaL, where Sigma^{-1} = iSigmaL * iSigmaL'
     wish_->GenerateLowerTriXi(iSigmaL_, XiHatL_, nuHat_);
-    matnorm_->GenerateRowSColO(Beta_, LambdaHat_, OmegaHatL_, iSigmaL_);
+    matnorm_->GenerateRowSColO(Beta_, LambdaHat_, iOmegaHatL_, iSigmaL_);
     return;
   }
 

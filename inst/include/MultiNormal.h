@@ -18,8 +18,8 @@ namespace mniw {
   class MultiNormal {
   private:
     int q_;
-    LLT<MatrixXd> cholV_;
-    MatrixXd VL_;
+    LLT<MatrixXd> cholSigma_;
+    MatrixXd SigmaL_;
     VectorXd z_;
     MatrixXd Z_;
   public:
@@ -28,89 +28,89 @@ namespace mniw {
     /// Log-density with precomputations.
     double LogDens(const Ref<const VectorXd>& x,
 		   const Ref<const VectorXd>& mu,
-		   LLT<MatrixXd>& cholV, double ldV);
+		   LLT<MatrixXd>& cholSigma, double ldSigma);
     /// Log-density.
     double LogDens(const Ref<const VectorXd>& x,
 		   const Ref<const VectorXd>& mu,
-		   const Ref<const MatrixXd>& V);
+		   const Ref<const MatrixXd>& Sigma);
     /// Random number generation with pre-computations.
     void Generate(Ref<VectorXd> x, const Ref<const VectorXd>& mu,
-		  LLT<MatrixXd>& cholV, Ref<MatrixXd> VL);
+		  LLT<MatrixXd>& cholSigma, Ref<MatrixXd> SigmaL);
     /// Random number generation.
     void Generate(Ref<VectorXd> x, const Ref<const VectorXd>& mu,
-		  const Ref<const MatrixXd>& V);
+		  const Ref<const MatrixXd>& Sigma);
   };
 
   /// @param [in] q Number of dimensions of the Multivariate Normal.
   inline MultiNormal::MultiNormal(int q) {
     q_ = q;
     z_ = VectorXd::Zero(q_);
-    VL_ = MatrixXd::Zero(q_,q_);
-    cholV_.compute(MatrixXd::Identity(q_,q_));
+    SigmaL_ = MatrixXd::Zero(q_,q_);
+    cholSigma_.compute(MatrixXd::Identity(q_,q_));
   }
 
   /// Identical to the shorter version of `LogDens`, but with the Cholesky decomposition and its log-determinant pre-computed.
   ///
   /// @param [in] x Vector of observations.
   /// @param [in] mu Mean vector.
-  /// @param [in] cholV Cholesky decomposition of the variance matrix, supplied as an `Eigen::LLT` object.
-  /// @param [in] ldV Log-determinant of the Cholesky factor of the variance.
+  /// @param [in] cholSigma Cholesky decomposition of the variance matrix, supplied as an `Eigen::LLT` object.
+  /// @param [in] ldSigma Log-determinant of the Cholesky factor of the variance.
   ///
   /// @return The log-density evaluated at `x`.
   inline double MultiNormal::LogDens(const Ref<const VectorXd>& x,
 				     const Ref<const VectorXd>& mu,
-				     LLT<MatrixXd>& cholV, double ldV) {
+				     LLT<MatrixXd>& cholSigma, double ldSigma) {
     //double ldens;
     // double q = x.size();
     z_ = x-mu;
-    // if(CalcV) {
-    //   cholV.compute(V);
-    //   ldV = 0.0;
+    // if(CalcSigma) {
+    //   cholSigma.compute(Sigma);
+    //   ldSigma = 0.0;
     //   for(int ii=0; ii<q; ii++) {
-    //     ldV += log(cholV.matrixL()(ii,ii));
+    //     ldSigma += log(cholSigma.matrixL()(ii,ii));
     //   }
     // }
-    cholV.matrixL().solveInPlace(z_);
-    return -(.5 * z_.squaredNorm() + ldV + q_ * M_LN_SQRT_2PI);
+    cholSigma.matrixL().solveInPlace(z_);
+    return -(.5 * z_.squaredNorm() + ldSigma + q_ * M_LN_SQRT_2PI);
   }
 
   /// @param [in] x Vector of observations.
   /// @param [in] mu Mean vector.
-  /// @param [in] V Variance matrix.
+  /// @param [in] Sigma Variance matrix.
   ///
   /// @return The log-density evaluated at `x`.
   inline double MultiNormal::LogDens(const Ref<const VectorXd>& x,
 				     const Ref<const VectorXd>& mu,
-				     const Ref<const MatrixXd>& V) {
-    cholV_.compute(V);
-    return LogDens(x, mu, cholV_, logDetCholV(cholV_));
+				     const Ref<const MatrixXd>& Sigma) {
+    cholSigma_.compute(Sigma);
+    return LogDens(x, mu, cholSigma_, logDetCholV(cholSigma_));
   }
 
   /// @param [out] x Vector to which random draw is assigned.
   /// @param [in] mu Mean vector.
-  /// @param [in] cholV Cholesky decomposition of the variance, supplied as an `Eigen::LLT` object.
-  /// @param [in] VL Dense representation of this object.  This is because `TriMultLX` does not accept `Eigen::TriangularView` objects and hopefully can be removed in the future...
+  /// @param [in] cholSigma Cholesky decomposition of the variance, supplied as an `Eigen::LLT` object.
+  /// @param [in] SigmaL Dense representation of this object.  This is because `TriMultLX` does not accept `Eigen::TriangularView` objects and hopefully can be removed in the future...
   inline void MultiNormal::Generate(Ref<VectorXd> x,
 				    const Ref<const VectorXd>& mu,
-				    LLT<MatrixXd>& cholV,
-				    Ref<MatrixXd> VL) {
+				    LLT<MatrixXd>& cholSigma,
+				    Ref<MatrixXd> SigmaL) {
     for(int ii=0; ii<q_; ii++) {
       z_(ii) = norm_rand(); // generate iid standard normals
     }
-    triMultLX(x, VL, z_); // multiply by Sigma^{1/2}
+    triMultLX(x, SigmaL, z_); // multiply by Sigma^{1/2}
     x += mu; // add mu
     return;
   }
 
   /// @param [out] x Vector to which random draw is assigned.
   /// @param [in] mu Mean vector.
-  /// @param [in] V Variance matrix.
+  /// @param [in] Sigma Variance matrix.
   inline void MultiNormal::Generate(Ref<VectorXd> x,
 				    const Ref<const VectorXd>& mu,
-				    const Ref<const MatrixXd>& V) {
-    cholV_.compute(V);
-    VL_ = cholV_.matrixL();
-    Generate(x, mu, cholV_, VL_);
+				    const Ref<const MatrixXd>& Sigma) {
+    cholSigma_.compute(Sigma);
+    SigmaL_ = cholSigma_.matrixL();
+    Generate(x, mu, cholSigma_, SigmaL_);
   }
 
 } // namespace mniw

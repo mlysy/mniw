@@ -92,10 +92,10 @@ namespace mniw {
 		   LLT<MatrixXd>& cholPsi, double ldPsi,
 		   double nu, bool inv);
     /// Random draw with scale matrix input
-    void GenerateLowerTri(Ref<MatrixXd> VL,
+    void GenerateLowerTri(Ref<MatrixXd> XL,
 			  const Ref<const MatrixXd>& PsiL, double nu);
     /// Random draw with precision matrix input
-    void GenerateLowerTriXi(Ref<MatrixXd> VL,
+    void GenerateLowerTriXi(Ref<MatrixXd> XL,
 			    const Ref<const MatrixXd>& XiL, double nu);
   };
 
@@ -163,10 +163,10 @@ namespace mniw {
 
   /// Simulate a random draw from the lower Cholesky factor of a Wishart distribution with given scale matrix and shape parameters.
   ///
-  /// @param [out] VL Matrix of size `q x q` containing the random draw, which lives only on the lower triangular half of the matrix.
+  /// @param [out] XL Matrix of size `q x q` containing the random draw, which lives only on the lower triangular half of the matrix.
   /// @param [in] PsiL Matrix of size `q x q` containing the lower Cholesky factor of the scale matrix parameter `Psi`.
   /// @param [in] nu Shape parameter.
-  inline void Wishart::GenerateLowerTri(Ref<MatrixXd> VL,
+  inline void Wishart::GenerateLowerTri(Ref<MatrixXd> XL,
 					const Ref<const MatrixXd>& PsiL,
 					double nu) {
     int ii, jj;
@@ -178,30 +178,30 @@ namespace mniw {
 	XL_(ii,jj) = norm_rand();
       }
     }
-    // multiply by precision matrix VL = PsiL * XL
-    triMultLL(VL, PsiL, XL_);
+    // multiply by precision matrix XL = PsiL * XL
+    triMultLL(XL, PsiL, XL_);
     return;
   }
 
   /// Simulate a random draw from the lower Cholesky factor of a Wishart distribution with given precision matrix and shape parameters. 
   ///
-  /// @param [out] VL Matrix of size `q x q` containing the random draw, which lives only on the lower triangular half of the matrix.
+  /// @param [out] XL Matrix of size `q x q` containing the random draw, which lives only on the lower triangular half of the matrix.
   /// @param [in] XiL Matrix containing the inverse of the lower Cholesky factor of the scale matrix parameter `Psi`, namely `Psi^{-1} = XiL' * XiL`.
   /// @param [in] nu Shape parameter.
-  inline void Wishart::GenerateLowerTriXi(Ref<MatrixXd> VL,
+  inline void Wishart::GenerateLowerTriXi(Ref<MatrixXd> XL,
 					  const Ref<const MatrixXd>& XiL,
 					  double nu) {
     int ii, jj;
     for(ii=0; ii<q_; ii++) {
       // diagonal
-      VL(ii,ii) = sqrt(chisq_rand(nu-ii));
+      XL(ii,ii) = sqrt(chisq_rand(nu-ii));
       // off-diagonals
       for(jj=0; jj<ii; jj++) {
-	VL(ii,jj) = norm_rand();
+	XL(ii,jj) = norm_rand();
       }
     }
     // multiply by precision matrix
-    triMultLiX(VL, XiL);
+    triMultLiX(XL, XiL);
     return;
   }
 
