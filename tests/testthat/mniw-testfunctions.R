@@ -11,8 +11,11 @@ rMnorm <- function(p, q) {
 }
 
 # log-determinant
-ldet <- function(V) {
-  determinant(V, log = TRUE)$modulus[1]
+ldet <- function(X) {
+  determinant(X, log = TRUE)$modulus[1]
+}
+ldetV <- function(V) {
+  solveV(V, x = rep(1, nrow(V)), ldV = TRUE)$ldV
 }
 
 # log multi-gamma function
@@ -26,13 +29,13 @@ dwishR <- function(X, Psi, nu, inverse = FALSE, log = FALSE) {
   }
   d <- nrow(X)
   if(!inverse) {
-    ans <- (nu-d-1) * ldet(X)
-    ans <- ans - nu * ldet(Psi)
-    ans <- ans - sum(diag(solve(Psi, X)))
+    ans <- (nu-d-1) * ldetV(X)
+    ans <- ans - nu * ldetV(Psi)
+    ans <- ans - sum(diag(solveV(Psi, X)))
   } else {
-    ans <- -(nu+d+1) * ldet(X)
-    ans <- ans + nu * ldet(Psi)
-    ans <- ans - sum(diag(solve(X, Psi)))
+    ans <- -(nu+d+1) * ldetV(X)
+    ans <- ans + nu * ldetV(Psi)
+    ans <- ans - sum(diag(solveV(X, Psi)))
   }
   ans <- ans - nu*d * log(2)
   ans <- 0.5 * ans - lmgamma(nu/2, d)
@@ -58,7 +61,7 @@ rwishR <- function(Psi, nu, inverse = FALSE) {
     XL <- PsiL %*% XL
     X <- XL %*% t(XL)
   } else {
-    PsiL <- solve(t(chol(solve(Psi))))
+    PsiL <- solve(t(chol(solveV(Psi))))
     XL <- solve(PsiL, XL)
     X <- solve(XL %*% t(XL))
   }
@@ -73,8 +76,8 @@ dMNormR <- function(X, Lambda, SigmaU, SigmaV, log = FALSE) {
   SigmaV <- as.matrix(SigmaV)
   n <- nrow(X)
   p <- ncol(X)
-  ans <- n*p*log(2*pi) + sum(diag(solve(SigmaV, t(X-Lambda)) %*% solve(SigmaU, X-Lambda)))
-  ans <- ans + n*ldet(SigmaV) + p*ldet(SigmaU)
+  ans <- n*p*log(2*pi) + sum(diag(solveV(SigmaV, t(X-Lambda)) %*% solveV(SigmaU, X-Lambda)))
+  ans <- ans + n*ldetV(SigmaV) + p*ldetV(SigmaU)
   ans <- -ans/2
   if(!log) ans <- exp(ans)
   ans
@@ -100,9 +103,9 @@ dMTR <- function(X, Lambda, SigmaU, SigmaV, nu, log = FALSE) {
   p <- ncol(X)
   Z <- X - Lambda
   xi <- nu+n+p-1
-  ans <- diag(n) + solve(SigmaU, Z) %*% solve(SigmaV, t(Z))
+  ans <- diag(n) + solveV(SigmaU, Z) %*% solveV(SigmaV, t(Z))
   ## .5 * ldet(ans)
-  ans <- xi * ldet(ans) + n * ldet(SigmaV) + p * ldet(SigmaU) + n*p * log(pi)
+  ans <- xi * ldet(ans) + n * ldetV(SigmaV) + p * ldetV(SigmaU) + n*p * log(pi)
   ans <- -.5 * ans + lmgamma(.5*xi, p) - lmgamma(.5*(xi-n), p)
   ## ans <- ans + n*p * log(pi) + lmgamma(.5*(xi-n), p) - lmgamma(.5*xi, p)
   ## ans <- -2 * ans
@@ -115,7 +118,7 @@ rMTR <- function(Lambda, SigmaU, SigmaV, nu, prec = FALSE) {
   p <- nrow(Lambda)
   q <- ncol(Lambda)
   V <- rwishR(Psi = SigmaV, nu = nu, inverse = TRUE)
-  CL <- t(chol(solve(V)))
+  CL <- t(chol(solveV(V)))
   Z <- t(rMnorm(q, p))
   Z <- Z %*% solve(CL)
   if(!prec) {
@@ -140,7 +143,7 @@ rmniwR <- function(Lambda, Sigma, Psi, nu, prec = FALSE) {
   p <- nrow(Lambda)
   q <- ncol(Lambda)
   V <- rwishR(Psi = Psi, nu = nu, inverse = TRUE)
-  CL <- t(chol(solve(V)))
+  CL <- t(chol(solveV(V)))
   Z <- t(rMnorm(q, p))
   Z <- Z %*% solve(CL)
   if(!prec) {
@@ -149,7 +152,7 @@ rmniwR <- function(Lambda, Sigma, Psi, nu, prec = FALSE) {
     X <- solve(chol(Sigma)) %*% Z + Lambda
   }
   list(X = X, V = V)
-  #PsiL <- solve(t(chol(solve(Psi))))
+  #PsiL <- solve(t(chol(solveV(Psi))))
   #q <- nrow(PsiL)
   #for(ii in 1:q) {
   #  XL[ii,ii] <- sqrt(rchisq(1, df = nu-ii+1))
@@ -182,8 +185,8 @@ rmNormR <- function(mu, V) {
 # multivariate normal density in R
 dmNormR <- function(x, mu, V, log = FALSE) {
   p <- length(x)
-  ans <- p*log(2*pi) + ldet(V)
-  ans <- ans + crossprod((x-mu), solve(V, x-mu))[1]
+  ans <- p*log(2*pi) + ldetV(V)
+  ans <- ans + crossprod((x-mu), solveV(V, x-mu))[1]
   ans <- -ans/2
   if(!log) ans <- exp(ans)
   ans
@@ -245,10 +248,15 @@ arDiff <- function(x0, xhat) {
 }
 
 # solve for variance matrices
-solveV <- function(V, x) {
+solveV <- function(V, x, ldV = FALSE) {
   C <- chol(V)
-  if(missing(x)) x <- diag(nrow(V))
-  backsolve(r = C, x = backsolve(r = C, x = x, transpose = TRUE))
+  if (missing(x)) x <- diag(nrow(V))
+  ans <- backsolve(r = C, x = backsolve(r = C, x = x, transpose = TRUE))
+  if (ldV) {
+    ldV <- 2 * sum(log(diag(C)))
+    ans <- list(y = ans, ldV = ldV)
+  }
+  ans
 }
 
 # check R vs cpp code

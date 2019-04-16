@@ -2,54 +2,54 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 CrossProdVXX <- function(X, V, p, q, inverse = FALSE) {
-    .Call('_mniw_CrossProdVXX', PACKAGE = 'mniw', X, V, p, q, inverse)
+    .Call(`_mniw_CrossProdVXX`, X, V, p, q, inverse)
 }
 
 CrossProdVXY <- function(X, Y, V, p, q, r, inverse = FALSE) {
-    .Call('_mniw_CrossProdVXY', PACKAGE = 'mniw', X, Y, V, p, q, r, inverse)
+    .Call(`_mniw_CrossProdVXY`, X, Y, V, p, q, r, inverse)
 }
 
 HierUneqVModelGibbs <- function(nSamples, nBurn, Y, X, V, Lambda, Omega, Psi, nu, Beta0, iSigma0, Mu0, updateBetaSigma, updateMu, storeBetaSigma, storeMu) {
-    .Call('_mniw_HierUneqVModelGibbs', PACKAGE = 'mniw', nSamples, nBurn, Y, X, V, Lambda, Omega, Psi, nu, Beta0, iSigma0, Mu0, updateBetaSigma, updateMu, storeBetaSigma, storeMu)
+    .Call(`_mniw_HierUneqVModelGibbs`, nSamples, nBurn, Y, X, V, Lambda, Omega, Psi, nu, Beta0, iSigma0, Mu0, updateBetaSigma, updateMu, storeBetaSigma, storeMu)
 }
 
 GenerateMatrixNIW <- function(N, Lambda, Sigma, Psi, nu, inverse = FALSE) {
-    .Call('_mniw_GenerateMatrixNIW', PACKAGE = 'mniw', N, Lambda, Sigma, Psi, nu, inverse)
+    .Call(`_mniw_GenerateMatrixNIW`, N, Lambda, Sigma, Psi, nu, inverse)
 }
 
 LogDensityMatrixNormal <- function(X, Mu, RowV, ColV) {
-    .Call('_mniw_LogDensityMatrixNormal', PACKAGE = 'mniw', X, Mu, RowV, ColV)
+    .Call(`_mniw_LogDensityMatrixNormal`, X, Mu, RowV, ColV)
 }
 
 GenerateMatrixNormal <- function(N, Lambda, RowSigma, ColSigma) {
-    .Call('_mniw_GenerateMatrixNormal', PACKAGE = 'mniw', N, Lambda, RowSigma, ColSigma)
+    .Call(`_mniw_GenerateMatrixNormal`, N, Lambda, RowSigma, ColSigma)
 }
 
 LogDensityMatrixT <- function(X, Mu, RowV, ColV, nu) {
-    .Call('_mniw_LogDensityMatrixT', PACKAGE = 'mniw', X, Mu, RowV, ColV, nu)
+    .Call(`_mniw_LogDensityMatrixT`, X, Mu, RowV, ColV, nu)
 }
 
 GenerateMatrixT <- function(N, Lambda, RowSigma, ColSigma, nu, inverse = FALSE) {
-    .Call('_mniw_GenerateMatrixT', PACKAGE = 'mniw', N, Lambda, RowSigma, ColSigma, nu, inverse)
+    .Call(`_mniw_GenerateMatrixT`, N, Lambda, RowSigma, ColSigma, nu, inverse)
 }
 
 LogDensityMultivariateNormal <- function(X, Mu, V) {
-    .Call('_mniw_LogDensityMultivariateNormal', PACKAGE = 'mniw', X, Mu, V)
+    .Call(`_mniw_LogDensityMultivariateNormal`, X, Mu, V)
 }
 
 GenerateMultivariateNormal <- function(N, Lambda, Sigma) {
-    .Call('_mniw_GenerateMultivariateNormal', PACKAGE = 'mniw', N, Lambda, Sigma)
+    .Call(`_mniw_GenerateMultivariateNormal`, N, Lambda, Sigma)
 }
 
 GenerateRandomEffectsNormal <- function(N, lambda, y, V, A) {
-    .Call('_mniw_GenerateRandomEffectsNormal', PACKAGE = 'mniw', N, lambda, y, V, A)
+    .Call(`_mniw_GenerateRandomEffectsNormal`, N, lambda, y, V, A)
 }
 
 LogDensityWishart <- function(X, Psi, nu, inverse = FALSE) {
-    .Call('_mniw_LogDensityWishart', PACKAGE = 'mniw', X, Psi, nu, inverse)
+    .Call(`_mniw_LogDensityWishart`, X, Psi, nu, inverse)
 }
 
 GenerateWishart <- function(N, Psi, nu, inverse = FALSE) {
-    .Call('_mniw_GenerateWishart', PACKAGE = 'mniw', N, Psi, nu, inverse)
+    .Call(`_mniw_GenerateWishart`, N, Psi, nu, inverse)
 }
 
