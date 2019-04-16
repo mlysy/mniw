@@ -17,4 +17,4 @@ devtools::install_github("mlysy/mniw")
 
 ### Usage
 
-Please see function examples, e.g, `?rMNIW`.  A complete description of the distributions provided by the package is available  [here](http://htmlpreview.github.com/?https://github.com/mlysy/mniw/master/doc/mniw-distributions.html).
+Please see function examples, e.g, `?rMNIW`.  A complete description of the distributions provided by the package is available  [here](http://htmlpreview.github.com/?https://github.com/mlysy/mniw/blob/master/doc/mniw-distributions.html).
