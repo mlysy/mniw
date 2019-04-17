@@ -32,6 +32,14 @@ vec(X) ~ N(vec(\Lambda), V \%x\% \Sigma),
 }
 where \eqn{\textrm{vec}(\boldsymbol{X})}{vec(X)} is a vector stacking the columns of \eqn{\boldsymbol{X}}{X}, and \eqn{\boldsymbol{V} \otimes \boldsymbol{\Sigma}}{V \%x\% \Sigma} denotes the Kronecker product.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/mlysy/mniw/}
+  \item Report bugs at \url{https://github.com/mlysy/mniw/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Martin Lysy \email{mlysy@uwaterloo.ca}
 

@@ -4,7 +4,7 @@
 
 - [x]  *Convert **C++** code as Header-only library*.  To do this, put everything into header files *except* files ending in `Export.cpp`.  Those are the interface functions between **C++** and **R**.  Don't edit `RcppExports.cpp` since that's created by the **`Rcpp`** package, which itself facilitates the interface process.
 
-- [ ]  Standardize and coordinate argument names in R and C++, including unit tests.
+- [x]  Standardize and coordinate argument names in R and C++, including unit tests.
 
 - [ ]  Create package vignette illustrating package functionality.  Might also be worth comparing to [**mvnfast**](https://mfasiolo.github.io/mvnfast/articles/mvnfast.html).
 
@@ -19,3 +19,7 @@
 - [ ] Add multivariate-t distribution for good measure.
 
 - [ ] Finish documentation and example for Gibbs sampler.
+
+- [ ] Add vectorized matrix inversion to `crossprodV`.
+
+- [ ] Add `Omega` precision input to `rMNIW`?  How about `rmniw`?
