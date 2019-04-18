@@ -1,14 +1,13 @@
 /// @file MatrixNormal.h
 ///
-/// Density evaluation and random number generation for the Matrix Normal distribution.
+/// @brief Density evaluation and random number generation for the Matrix Normal distribution.
 
 #ifndef MatrixNormal_h
 #define MatrixNormal_h 1
 
 // [[Rcpp::depends(RcppEigen)]]
 #include <RcppEigen.h>
-// using namespace Eigen;
-#include "TriUtils.h"
+#include "mniw/TriUtils.h"
 
 namespace mniw {
 

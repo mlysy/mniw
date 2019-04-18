@@ -1,14 +1,13 @@
 /// @file RandomEffects.h
 ///
-/// Multivariate Random-Effects Normal distribution.
+/// @brief Multivariate Random-Effects Normal distribution.
 
 #ifndef RandomEffects_h
 #define RandomEffects_h 1
 
 // [[Rcpp::depends(RcppEigen)]]
 #include <RcppEigen.h>
-// using namespace Eigen;
-#include "TriUtils.h"
+#include "mniw/TriUtils.h"
 // #include <iostream>
 
 namespace mniw {

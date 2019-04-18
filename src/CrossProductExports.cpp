@@ -1,6 +1,6 @@
 /// @file CrossProductExports.cpp
 ///
-/// Exported Rcpp functions for matrix-weighted inner products.
+/// @brief Exported Rcpp functions for matrix-weighted inner products.
 ///
 /// A matrix-weighted inner product is of the form
 /// \f[

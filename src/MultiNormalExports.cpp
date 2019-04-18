@@ -1,13 +1,12 @@
 /// @file MultiNormalExports.cpp
 ///
-/// Exported Rcpp functions for the Multivariate Normal distribution.
+/// @brief Exported Rcpp functions for the Multivariate Normal distribution.
 
 // [[Rcpp::depends(RcppEigen)]]
 #include <RcppEigen.h>
 using namespace Eigen;
 //#include <iostream>
-#include "MultiNormal.h"
-// #include "mniwMatNorm.h"
+#include "mniw/MultiNormal.h"
 using namespace mniw;
 
 

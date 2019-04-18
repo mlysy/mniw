@@ -1,16 +1,13 @@
 /// @file Wishart.h
 ///
-/// Density evaluation and random number generation for the (Inverse) Wishart distribution.
+/// @brief Density evaluation and random number generation for the (Inverse) Wishart distribution.
 
 #ifndef Wishart_h
 #define Wishart_h 1
 
 // [[Rcpp::depends(RcppEigen)]]
 #include <RcppEigen.h>
-// using namespace Eigen;
-#include "TriUtils.h"
-// #include "mniwUtils.h"
-// #include <iostream>
+#include "mniw/TriUtils.h"
 
 namespace mniw {
 
@@ -18,8 +15,8 @@ namespace mniw {
 #define chisq_rand Rf_rchisq
   using namespace Eigen;
 
-  /// Multivariate log-gamma function
-  ///
+  /// Multivariate log-gamma function.
+
   /// Computes the multivariate log-gamma function, which for real \f$\alpha\f$ and integer \f$q\f$ is defined as the logarithm of
   ///
   /// \f[
@@ -39,8 +36,8 @@ namespace mniw {
     return lmg;
   }
 
-  /// The Wishart and Inverse Wishart distributions
-  ///
+  /// The %Wishart and Inverse %Wishart distributions.
+
   /// The %Wishart distribution is on a random positive-definite matrix \f$\bm{X}_{q\times q}\f$ is is denoted \f$X \sim \mathrm{Wish}(\Psi, \nu)\f$, and defined as \f$X = (L Z)(L Z)'\f$, where 
   /// 
   /// - \f$\Psi_{q\times q} = LL'\f$ is the positive-definite matrix scale parameter,
@@ -69,7 +66,6 @@ namespace mniw {
   /// \f[
   /// \log p(X \mid \Psi, \nu) = -\tfrac 1 2 \left[\mathrm{tr}(\Psi X^{-1}) + (\nu+q+1) \log |X| - \nu \log |\Psi| + \nu q \log(2) + 2 \log \Gamma_q(\tfrac \nu 2)\right].
   /// \f]
-  ///
   class Wishart {
   private:
     // storage

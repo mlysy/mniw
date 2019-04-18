@@ -1,18 +1,12 @@
 /// @file RandomEffectsExports.cpp
 ///
-/// Exported Rcpp functions for the Multivariate Random-Effects Normal distribution.
+/// @brief Exported Rcpp functions for the Multivariate Random-Effects Normal distribution.
 
-// #include <Rcpp.h>
-// using namespace Rcpp;
 // [[Rcpp::depends(RcppEigen)]]
 #include <RcppEigen.h>
 using namespace Eigen;
-//#include <iostream>
-// #include "mniwWishart.h"
-// #include "mniwMatNorm.h"
-// #include "mniwRandomEffects.h"
-#include "TriUtils.h"
-#include "RandomEffects.h"
+#include "mniw/TriUtils.h"
+#include "mniw/RandomEffects.h"
 using namespace mniw;
 
 //////////////////////////////////////////////////////////////////

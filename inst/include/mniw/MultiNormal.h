@@ -1,14 +1,13 @@
 /// @file MultiNormal.h
 ///
-/// Density evaluation and random number generation for the Multivariate Normal distribution.
+/// @brief Density evaluation and random number generation for the Multivariate Normal distribution.
 
 #ifndef MultiNormal_h
 #define MultiNormal_h 1
 
 // [[Rcpp::depends(RcppEigen)]]
 #include <RcppEigen.h>
-// using namespace Eigen;
-#include "TriUtils.h"
+#include "mniw/TriUtils.h"
 
 namespace mniw {
 

@@ -1,16 +1,13 @@
 /// @file WishartExports.cpp
 ///
-/// Exported Rcpp functions for the Wishart distribution.
+/// @brief Exported Rcpp functions for the %Wishart distribution.
 
 #include <Rcpp.h>
 using namespace Rcpp;
-// [[Rcpp::depends(RcppEigen)]]
 #include <RcppEigen.h>
 using namespace Eigen;
 //#include <iostream>
-// #include "mniwUtils.h"
-// #include "mniwWishart.h"
-#include "Wishart.h"
+#include "mniw/Wishart.h"
 using namespace mniw;
 
 // -----------------------------------------------------------------------------
@@ -36,7 +33,6 @@ Eigen::VectorXd LogDensityWishart(Eigen::MatrixXd X, Eigen::MatrixXd Psi,
   VectorXd logDens(N);
   // internal variables
   Wishart wish(q);
-  // MatrixXd Z(q,q);
   LLT<MatrixXd> cholX(q);
   LLT<MatrixXd> cholPsi(q);
   double ldPsi;
@@ -47,18 +43,10 @@ Eigen::VectorXd LogDensityWishart(Eigen::MatrixXd X, Eigen::MatrixXd Psi,
   if(singleX) {
     cholX.compute(X);
     ldX = logDetCholV(cholX);
-    // ldX = 0.0;
-    // for(int ii=0; ii<q; ii++) {
-    //   ldX += log(cholX.matrixL()(ii,ii));
-    // }
   }
   if(singlePsi) {
     cholPsi.compute(Psi);
     ldPsi = logDetCholV(cholPsi);
-    // ldPsi = 0.0;
-    // for(int ii=0; ii<q; ii++) {
-    //   ldPsi += log(cholPsi.matrixL()(ii,ii));
-    // }
   }
   for(int ii=0; ii<N; ii++) {
     if(!singleX) {
@@ -72,10 +60,6 @@ Eigen::VectorXd LogDensityWishart(Eigen::MatrixXd X, Eigen::MatrixXd Psi,
     logDens(ii) = wish.LogDens(X.block(0,ii*(!singleX)*q,q,q), cholX, ldX,
 			       Psi.block(0,ii*(!singlePsi)*q,q,q), cholPsi,
 			       ldPsi, nu(ii*(!singleNu)), inverse);
-    // logDens(ii) = LogDensWishart(X.block(0,ii*(!singleX)*q,q,q),
-    // 				 Psi.block(0,ii*(!singlePsi)*q,q,q),
-    // 				 nu(ii*(!singleNu)), inverse, !singleX, !singlePsi,
-    // 				 Z, ldX, cholX, ldPsi, cholPsi);
   }
   return logDens;
 }

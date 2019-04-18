@@ -1,16 +1,13 @@
 /// @file MatrixNormalExports.cpp
 ///
-/// Exported Rcpp functions for the Matrix-Normal distribution.
+/// @brief Exported Rcpp functions for the Matrix-Normal distribution.
 
-// #include <Rcpp.h>
-// using namespace Rcpp;
 // [[Rcpp::depends(RcppEigen)]]
 #include <RcppEigen.h>
 using namespace Eigen;
 //#include <iostream>
-#include "MatrixNormal.h"
+#include "mniw/MatrixNormal.h"
 using namespace mniw;
-// #include "mniwMatNorm.h"
 
 /// Log-density of the Matrix-Normal distribution.
 ///
@@ -36,8 +33,6 @@ Eigen::VectorXd LogDensityMatrixNormal(Eigen::MatrixXd X, Eigen::MatrixXd Lambda
   // output variables
   VectorXd logDens(N);
   // internal variables
-  // int ii;
-  // MatrixXd Z(p,q);
   LLT<MatrixXd> cholSigmaR(p);
   LLT<MatrixXd> cholSigmaC(q);
   double ldSigmaR, ldSigmaC;

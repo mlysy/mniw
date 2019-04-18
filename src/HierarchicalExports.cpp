@@ -1,14 +1,14 @@
 /// @file HierarchicalExports.cpp
 ///
-/// Exported Rcpp functions for Hierarchical Normal Unequal-Variance model. 
+/// @brief Exported Rcpp functions for Hierarchical Normal Unequal-Variance model. 
 
 // [[Rcpp::depends(RcppEigen)]]
 #include <RcppEigen.h>
 using namespace Eigen;
 using namespace Rcpp;
 //#include <iostream>
-#include "TriUtils.h"
-#include "Hierarchical.h"
+#include "mniw/TriUtils.h"
+#include "mniw/Hierarchical.h"
 using namespace mniw;
 
 /// Bayesian inference for the Hierarchical Normal Unequal-Variance model.

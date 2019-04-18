@@ -1,17 +1,16 @@
 /// @file Hierarchical.h
 ///
-/// Gibbs sampler for posterior distribution of Hierarchical Normal model with unequal variances.
+/// @brief Gibbs sampler for posterior distribution of Hierarchical Normal model with unequal variances.
 
 #ifndef Hierarchical_h
 #define Hierarchical_h 1
 
 // [[Rcpp::depends(RcppEigen)]]
 #include <RcppEigen.h>
-// using namespace Eigen;
-#include "TriUtils.h"
-#include "Wishart.h"
-#include "MatrixNormal.h"
-#include "RandomEffects.h"
+#include "mniw/TriUtils.h"
+#include "mniw/Wishart.h"
+#include "mniw/MatrixNormal.h"
+#include "mniw/RandomEffects.h"
 
 namespace mniw {
 

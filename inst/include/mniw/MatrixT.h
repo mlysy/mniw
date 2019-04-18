@@ -1,16 +1,15 @@
 /// @file MatrixT.h
 ///
-/// Density evaluation and random number generation for the Matrix-t distribution.
+/// @brief Density evaluation and random number generation for the Matrix-t distribution.
 
 #ifndef MatrixT_h
 #define MatrixT_h 1
 
 // [[Rcpp::depends(RcppEigen)]]
 #include <RcppEigen.h>
-// using namespace Eigen;
-#include "TriUtils.h"
-#include "Wishart.h"
-#include "MatrixNormal.h"
+#include "mniw/TriUtils.h"
+#include "mniw/Wishart.h"
+#include "mniw/MatrixNormal.h"
 
 namespace mniw {
 

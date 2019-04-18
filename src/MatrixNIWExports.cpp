@@ -1,20 +1,16 @@
 /// @file MatrixNIWExports.cpp
 ///
-/// Exported Rcpp functions for the Matrix-Normal Inverse-Wishart distribution.
+/// @brief Exported Rcpp functions for the Matrix-Normal Inverse-Wishart distribution.
 
-// #include <Rcpp.h>
-// using namespace Rcpp;
 // [[Rcpp::depends(RcppEigen)]]
 #include <RcppEigen.h>
 using namespace Eigen;
 using namespace Rcpp;
 //#include <iostream>
-#include "TriUtils.h"
-#include "Wishart.h"
-#include "MatrixNormal.h"
+#include "mniw/TriUtils.h"
+#include "mniw/Wishart.h"
+#include "mniw/MatrixNormal.h"
 using namespace mniw;
-// #include "mniwWishart.h"
-// #include "mniwMatNorm.h"
 
 //////////////////////////////////////////////////////////////////
 

@@ -1,11 +1,11 @@
 /// @file MatrixTExports.cpp
 ///
-/// Exported Rcpp functions for the Matrix-T distribution.
+/// @brief Exported Rcpp functions for the Matrix-T distribution.
 
 // [[Rcpp::depends(RcppEigen)]]
 #include <RcppEigen.h>
 using namespace Eigen;
-#include "MatrixT.h"
+#include "mniw/MatrixT.h"
 using namespace mniw;
 
 /// Log-density of the Matrix-T distribution.

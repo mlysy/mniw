@@ -1,16 +1,8 @@
 /// @file TriUtils.h
 ///
-/// Utility functions for triangular matrices.
+/// @brief Utility functions for triangular matrices.
 ///
 /// Various types of products, solvers, and decompositions involving lower and upper triangular matrices.  Almost all arguments to these functions can be subsets of larger matrices; see "Writing Functions Taking Eigen Types as Parameters" in the Eigen documentation.
-///
-/// @note TODO:
-///
-/// - Put in namespace
-/// - Remove `using namespace Eigen`
-/// - Remove macro documentation
-/// - Move Reverse-Cholesky here once dependence on tempPQ is removed
-///
 
 #ifndef TriUtils_h
 #define TriUtils_h 1
