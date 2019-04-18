@@ -1,5 +1,5 @@
 ---
-title: "Distributions Provided by the `mniw` Package"
+title: "Distributions Provided by the **mniw** Package"
 author: "Martin Lysy"
 date: "`r Sys.Date()`"
 output:
