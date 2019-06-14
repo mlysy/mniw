@@ -13,7 +13,7 @@ using namespace mniw;
 
 /// Generate a random sample from the Random-Effects Normal distribution.
 ///
-/// Generate `N` independent draws from \f$p(\boldsymbol{mu} \mid \boldsymbol{x})\f$, where
+/// Generate `N` independent draws from \f$p(\boldsymbol{\mu} \mid \boldsymbol{x})\f$, where
 /// \f[
 /// \begin{aligned}
 /// \boldsymbol{\mu} & \sim \mathcal N(\boldsymbol{\lambda}, \boldsymbol{\Sigma}) \\

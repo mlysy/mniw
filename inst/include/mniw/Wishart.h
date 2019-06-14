@@ -41,7 +41,7 @@ namespace mniw {
   /// The %Wishart distribution is on a random positive-definite matrix \f$\bm{X}_{q\times q}\f$ is is denoted \f$X \sim \mathrm{Wish}(\Psi, \nu)\f$, and defined as \f$X = (L Z)(L Z)'\f$, where 
   /// 
   /// - \f$\Psi_{q\times q} = LL'\f$ is the positive-definite matrix scale parameter,
-  /// - \f$\nu > \f$ is the shape parameter, 
+  /// - \f$\nu > q\f$ is the shape parameter, 
   /// 
   /// and \f$Z_{q\times q}\f$ is a random lower-triangular matrix with elements
   /// \f[

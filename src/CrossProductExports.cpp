@@ -64,7 +64,7 @@ Eigen::MatrixXd CrossProdVXX(Eigen::MatrixXd X, Eigen::MatrixXd V,
   return(Y);
 }
 
-/// Matrix-weighted self inner-product.
+/// Matrix-weighted inner-product.
 ///
 /// Calculate inner products of the form `t(X) V Y` or `t(X) V^{-1} Y`.  Each of `X`, `V`, and `Y` can be vectorized, i.e., of size `N` or `1`, referred to here as `n`.
 ///

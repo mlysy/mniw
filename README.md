@@ -17,7 +17,7 @@ devtools::install_github("mlysy/mniw")
 
 ### Usage
 
-The primary advantage of the **mniw** package is that it "vectorizes" over its input arguments.  Take for example the simulation of a Wishart distribution, which can be done with the built-in function `stats::rWishart()`: 
+The primary advantage of the **mniw** package is that it "vectorizes" over its input arguments.  Take for example the simulation of a Wishart distribution, which can be done with the built-in R function `stats::rWishart()`: 
 
 ```r
 n <- 10
@@ -38,7 +38,7 @@ X <- array(X, dim = c(p, p, n))
 However, the code above is both slow for large `n`, and inconvenient due to the reshaping of the `apply()` output.  The equivalent code using **mniw** is:
 
 ```r
-X <- rwish(n, df = nu, Psi = Psi)
+X <- rwish(n, df = nu, Psi = Psi) # produces an array of size p x p x n
 ```
 
 It is both simpler, and much faster for large `n` and `p`.
