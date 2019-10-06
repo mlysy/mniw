@@ -232,7 +232,7 @@ rMM <- function(n, p, q, rtype, vtype) {
       if(!varX) {
         X <- replicate(n, rMnorm(p,q), simplify = FALSE)
       } else {
-        X <- replicate(n, crossprod(rMnorm(p)), simplify = FALSE)
+        X <- replicate(n, crossprod(rMnorm(p)) + 5 * diag(p), simplify = FALSE)
       }
     }
     if(vtype == "vector") X <- lapply(X, drop)

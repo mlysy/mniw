@@ -17,7 +17,7 @@ namespace mniw {
 
   // --- matrix multiplication ---------------------------------------------------
 
-  /// Multiplication of two lower triangular matrices
+  /// @brief Multiplication of two lower triangular matrices
   ///
   /// Performs the matrix multiplication `X = L1 * L2`, where `L1` and `L2` are lower triangular matrices.
   ///
@@ -43,7 +43,7 @@ namespace mniw {
     return;
   }
 
-  /// Right-multiplication by upper triangular matrix
+  /// @brief Right-multiplication by upper triangular matrix
   ///
   /// Performs the matrix multiplication `Y = X * U`, where `U` is an upper triangular matrix.
   ///
@@ -60,7 +60,7 @@ namespace mniw {
     return;
   }
 
-  /// Left-multiplication by a lower triangular matrix
+  /// @brief Left-multiplication by a lower triangular matrix
   ///
   /// Performs the matrix multiplication `Y = L * X`, where `L` is a lower triangular matrix.
   ///
@@ -79,7 +79,7 @@ namespace mniw {
 
   // --- solution of linear system -----------------------------------------------
 
-  /// In-place solution of a lower triangular system
+  /// @brief In-place solution of a lower triangular system
   ///
   /// Performs the matrix multiplication `X = L^{-1} * X`, where `L` is a lower triangular matrix.
   ///
@@ -97,7 +97,7 @@ namespace mniw {
     return;
   }
 
-  /// In-place solution of a reverse lower triangular system
+  /// @brief In-place solution of a reverse lower triangular system
   ///
   /// Performs the multiplication `X = X * L^{-1}`, where `L` is a lower triangular matrix.
   ///
@@ -116,7 +116,7 @@ namespace mniw {
     return;
   }
 
-  /// In-place solution of an upper triangular system
+  /// @brief In-place solution of an upper triangular system
   ///
   /// Performs the multiplication `X = U^{-1} * X`, where `U` is an upper triangular matrix.
   ///
@@ -138,9 +138,9 @@ namespace mniw {
 
   // --- transpose-products ------------------------------------------------------
 
-  /// Transpose-product of upper triangular matrices
+  /// @brief Transpose-product of upper triangular matrices
   ///
-  /// Performs the multiplication `X = U' * U`, where `U` is an upper triangular matrix.
+  /// Performs the multiplication `X = U&apos; * U`, where `U` is an upper triangular matrix.
   ///
   /// @param [out] X Matrix of size `n x n` containing the transpose-product of `U`.
   /// @param [in] U Upper triangular matrix of size `n x n`.
@@ -163,9 +163,9 @@ namespace mniw {
     return;
   }
 
-  /// Reverse transpose-product of lower triangular matrices
+  /// @brief Reverse transpose-product of lower triangular matrices
   ///
-  /// Performs the multiplication `X = L * L'`, where `L` is a lower triangular matrix.
+  /// Performs the multiplication `X = L * L&apos;`, where `L` is a lower triangular matrix.
   ///
   /// @param [out] X Matrix of size `n x n` containing the reverse transpose-product of `L`.
   /// @param [in] L Lower triangular matrix of size `n x n`.
@@ -188,9 +188,9 @@ namespace mniw {
     return;
   }
 
-  /// Transpose-product of lower triangular matrices
+  /// @brief Transpose-product of lower triangular matrices
   ///
-  /// Performs the multiplication `X = L' * L`, where `L` is a lower triangular matrix.
+  /// Performs the multiplication `X = L&apos; * L`, where `L` is a lower triangular matrix.
   ///
   /// @param [out] X Matrix of size `n x n` containing the transpose-product of `L`.
   /// @param [in] L Lower triangular matrix of size `n x n`.
@@ -213,9 +213,9 @@ namespace mniw {
     return;
   }
 
-  /// Inverse of reverse transpose-product
+  /// @brief Inverse of reverse transpose-product
   ///
-  /// Performs the calculation `X = (L' * L)^{-1}`, where `L` is a lower triangular matrix.
+  /// Performs the calculation `X = (L&apos; * L)^{-1}`, where `L` is a lower triangular matrix.
   ///
   /// @param [out] X Matrix of size `n x n` containing the inverse of the reverse transpose-product of `L`.
   /// @param [in] L Lower triangular matrix of size `n x n`.
@@ -267,9 +267,9 @@ namespace mniw {
   //   return;
   // }
 
-  /// Reverse-Cholesky decomposition of a positive-definite matrix
+  /// @brief Reverse-Cholesky decomposition of a positive-definite matrix
   ///
-  /// Calculates the lower triangular matrix `L` satisfying `V = L'L`, where `V` is a positive-definite matrix.
+  /// Calculates the lower triangular matrix `L` satisfying `V = L&apos;L`, where `V` is a positive-definite matrix.
   ///
   /// @param [out] L Lower triangular matrix of size `n x n`.
   /// @param [in] V Positive-definite matrix of size `n x n`.
@@ -306,7 +306,7 @@ namespace mniw {
 
   // --- log-determinant ---------------------------------------------------------
 
-  /// Logarithm of the determinant of a Cholesky decomposition
+  /// @brief Logarithm of the determinant of a Cholesky decomposition
   ///
   /// Calculates `log|L|`, where `L` is the lower triangular factor of a Cholesky decomposition.
   ///
@@ -320,7 +320,7 @@ namespace mniw {
     return ldC;
   }
 
-  /// Logarithm of the determinant of a positive-definite matrix
+  /// @brief Logarithm of the determinant of a positive-definite matrix
   ///
   /// Calculates `log|V|`, where `V` is a positive-definite matrix.
   ///
