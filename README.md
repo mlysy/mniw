@@ -1,4 +1,4 @@
-# mniw: Tools for the Matrix-Normal Inverse-Wishart Distribution
+# mniw: The Matrix-Normal Inverse-Wishart Distribution
 
 *Martin Lysy, Bryan Yates*
 
