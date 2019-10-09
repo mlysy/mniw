@@ -7,12 +7,13 @@
 <meta charset="utf-8" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <meta name="author" content="Martin Lysy" />
 
-<meta name="date" content="2019-04-17" />
+<meta name="date" content="2019-10-09" />
 
 <title>Distributions Provided by the mniw Package</title>
 
@@ -205,6 +206,9 @@ code > span.al { color: #ff0000; font-weight: bold; }
 code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
 
+
+
+
 </head>
 
 <body>
@@ -212,9 +216,9 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 
 
-<h1 class="title toc-ignore">Distributions Provided by the <code>mniw</code> Package</h1>
-<h4 class="author"><em>Martin Lysy</em></h4>
-<h4 class="date"><em>2019-04-17</em></h4>
+<h1 class="title toc-ignore">Distributions Provided by the <strong>mniw</strong> Package</h1>
+<h4 class="author">Martin Lysy</h4>
+<h4 class="date">2019-10-09</h4>
 
 
 <div id="TOC">
@@ -237,122 +241,123 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 </ul>
 </div>
 
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-    TeX: {
-    Macros: {
-        bm: ["{\\boldsymbol{#1}}",1],
-        tx: ["{\\textrm{#1}}",1],
-        tfrac: ["{\\textstyle{\\frac{#1}{#2}}}",2],
-        rv: ["{#2_{#1},\\ldots,#2_{#3}}",3,"1"],
-        iid: ["{\\overset{\\;\\tx{iid}\\;}{\\sim}}"],
-        ind: ["{\\overset{\\:\\tx{ind}\\:}{\\sim}}"],
-        XX: ["{\\bm{X}}"],
-        YY: ["{\\bm{Y}}"],
-        LL: ["{\\bm{L}}"],
-        PPs: ["{\\bm{\\Psi}}"],
-        ZZ: ["{\\bm{Z}}"],
-        N: ["{\\mathcal{N}}"],
-        LLa: ["{\\bm{\\Lambda}}"],
-        SSi: ["{\\bm{\\Sigma}}"],
-        GGa: ["{\\bm{\\Gamma}}"],
-        UU: ["{\\bm{U}}"],
-        VV: ["{\\bm{V}}"],
-        aa: ["{\\bm{a}}"],
-        bb: ["{\\bm{b}}"],
-        xx: ["{\\bm{x}}"],
-        yy: ["{\\bm{y}}"],
-        bbe: ["{\\bm{\\beta}}"],
-        mmu: ["{\\bm{\\mu}}"],
-        kka: ["{\\bm{\\kappa}}"],
-        lla: ["{\\bm{\\lambda}}"],
-        TTh: ["{\\bm{\\Theta}}"],
-        GG: ["{\\bm{G}}"],
-        OOm: ["{\\bm{\\Omega}}"],
-        bz: ["{\\bm{0}}"],
-        wish: ["{\\tx{Wish}}"],
-        iwish: ["{\\tx{InvWish}}"],
-        MN: ["{\\tx{MatNorm}}"],
-        MT: ["{\\tx{MatT}}"],
-        mniw: ["{\\tx{MNIW}}"],
-        re: ["{\\tx{RxNorm}}"]
-    }
-    }
-});
-</script>
+<!-- <script type="text/x-mathjax-config"> -->
+<!-- MathJax.Hub.Config({ -->
+<!--     TeX: { -->
+<!--    Macros: { -->
+<!--        bm: ["{\\boldsymbol{#1}}",1], -->
+<!--        tx: ["{\\textrm{#1}}",1], -->
+<!--        tfrac: ["{\\textstyle{\\frac{#1}{#2}}}",2], -->
+<!--        rv: ["{#2_{#1},\\ldots,#2_{#3}}",3,"1"], -->
+<!--        iid: ["{\\overset{\\;\\tx{iid}\\;}{\\sim}}"], -->
+<!--        ind: ["{\\overset{\\:\\tx{ind}\\:}{\\sim}}"], -->
+<!--        XX: ["{\\bm{X}}"], -->
+<!--        YY: ["{\\bm{Y}}"], -->
+<!--        LL: ["{\\bm{L}}"], -->
+<!--        PPs: ["{\\bm{\\Psi}}"], -->
+<!--        ZZ: ["{\\bm{Z}}"], -->
+<!--        N: ["{\\mathcal{N}}"], -->
+<!--        LLa: ["{\\bm{\\Lambda}}"], -->
+<!--        SSi: ["{\\bm{\\Sigma}}"], -->
+<!--        GGa: ["{\\bm{\\Gamma}}"], -->
+<!--        UU: ["{\\bm{U}}"], -->
+<!--        VV: ["{\\bm{V}}"], -->
+<!--        aa: ["{\\bm{a}}"], -->
+<!--        bb: ["{\\bm{b}}"], -->
+<!--        xx: ["{\\bm{x}}"], -->
+<!--        yy: ["{\\bm{y}}"], -->
+<!--        bbe: ["{\\bm{\\beta}}"], -->
+<!--        mmu: ["{\\bm{\\mu}}"], -->
+<!--        kka: ["{\\bm{\\kappa}}"], -->
+<!--        lla: ["{\\bm{\\lambda}}"], -->
+<!--        TTh: ["{\\bm{\\Theta}}"], -->
+<!--        GG: ["{\\bm{G}}"], -->
+<!--        OOm: ["{\\bm{\\Omega}}"], -->
+<!--        bz: ["{\\bm{0}}"], -->
+<!--        wish: ["{\\tx{Wish}}"], -->
+<!--        iwish: ["{\\tx{InvWish}}"], -->
+<!--        MN: ["{\\tx{MatNorm}}"], -->
+<!--        MT: ["{\\tx{MatT}}"], -->
+<!--        mniw: ["{\\tx{MNIW}}"], -->
+<!--        re: ["{\\tx{RxNorm}}"] -->
+<!--    } -->
+<!--     } -->
+<!-- }); -->
+<!-- </script> -->
+
 <div id="wishart-distribution" class="section level2">
 <h2>Wishart Distribution</h2>
-<p>The Wishart distribution on a random positive-definite matrix <span class="math inline">\(\XX_{q\times q}\)</span> is is denoted <span class="math inline">\(\XX \sim \wish(\PPs, \nu)\)</span>, and defined as <span class="math inline">\(\XX = (\LL \ZZ)(\LL \ZZ)'\)</span>, where:</p>
+<p>The Wishart distribution on a random positive-definite matrix <span class="math inline">\({\boldsymbol{X}}_{q\times q}\)</span> is is denoted <span class="math inline">\({\boldsymbol{X}}\sim \textrm{Wish}({\boldsymbol{\Psi}}, \nu)\)</span>, and defined as <span class="math inline">\({\boldsymbol{X}}= ({\boldsymbol{L}}{\boldsymbol{Z}})({\boldsymbol{L}}{\boldsymbol{Z}})&#39;\)</span>, where:</p>
 <ul>
-<li><span class="math inline">\(\PPs_{q\times q} = \LL\LL'\)</span> is the positive-definite matrix scale parameter,</li>
-<li><span class="math inline">\(\nu &gt; q\)</span> is the shape parameter,</li>
-<li><p><span class="math inline">\(\ZZ_{q\times q}\)</span> is a random lower-triangular matrix with elements</p>
+<li><p><span class="math inline">\({\boldsymbol{\Psi}}_{q\times q} = {\boldsymbol{L}}{\boldsymbol{L}}&#39;\)</span> is the positive-definite matrix scale parameter,</p></li>
+<li><p><span class="math inline">\(\nu &gt; q\)</span> is the shape parameter,</p></li>
+<li><p><span class="math inline">\({\boldsymbol{Z}}_{q\times q}\)</span> is a random lower-triangular matrix with elements</p>
 <p><span class="math display">\[
   Z_{ij} \begin{cases} 
-         \iid \N(0,1) &amp; i &lt; j \\ 
-         \ind \chi^2_{(\nu-i+1)} &amp; i = j \\
+         \overset{\;\textrm{iid}\;}{\sim}\mathcal{N}(0,1) &amp; i &lt; j \\ 
+         \overset{\:\textrm{ind}\:}{\sim}\chi^2_{(\nu-i+1)} &amp; i = j \\
          = 0 &amp; i &gt; j.
          \end{cases}
   \]</span></p></li>
 </ul>
 <p>The log-density of the Wishart distribution is <span class="math display">\[
-\log p(\XX \mid \PPs, \nu) = -\tfrac{1}{2} \left[\mathrm{tr}(\PPs^{-1} \XX) + (q+1-\nu)\log |\XX| + \nu \log |\PPs|  + \nu q \log(2) + 2 \log \Gamma_q(\tfrac \nu 2)\right],
+\log p({\boldsymbol{X}}\mid {\boldsymbol{\Psi}}, \nu) = -\textstyle{\frac{1}{2}} \left[\mathrm{tr}({\boldsymbol{\Psi}}^{-1} {\boldsymbol{X}}) + (q+1-\nu)\log |{\boldsymbol{X}}| + \nu \log |{\boldsymbol{\Psi}}|  + \nu q \log(2) + 2 \log \Gamma_q(\textstyle{\frac{\nu }{2}})\right],
 \]</span> where <span class="math inline">\(\Gamma_n(x)\)</span> is the multivariate Gamma function defined as <span class="math display">\[
-\Gamma_n(x) = \pi^{n(n-1)/4} \prod_{j=1}^n \Gamma\big(x + \tfrac 1 2 (1-j)\big).
+\Gamma_n(x) = \pi^{n(n-1)/4} \prod_{j=1}^n \Gamma\big(x + \textstyle{\frac{1}{2}} (1-j)\big).
 \]</span></p>
 <div id="inverse-wishart-distribution" class="section level3">
 <h3>Inverse-Wishart Distribution</h3>
-<p>The Inverse-Wishart distribution <span class="math inline">\(\XX \sim \iwish(\PPs, \nu)\)</span> is defined as <span class="math inline">\(\XX^{-1} \sim \wish(\PPs^{-1}, \nu)\)</span>. Its log-density is given by <span class="math display">\[
-\log p(\XX \mid \PPs, \nu) = -\tfrac 1 2 \left[\mathrm{tr}(\PPs \XX^{-1}) + (\nu+q+1) \log |\XX| - \nu \log |\PPs| + \nu q \log(2) + 2 \log \Gamma_q(\tfrac \nu 2)\right].
+<p>The Inverse-Wishart distribution <span class="math inline">\({\boldsymbol{X}}\sim \textrm{InvWish}({\boldsymbol{\Psi}}, \nu)\)</span> is defined as <span class="math inline">\({\boldsymbol{X}}^{-1} \sim \textrm{Wish}({\boldsymbol{\Psi}}^{-1}, \nu)\)</span>. Its log-density is given by <span class="math display">\[
+\log p({\boldsymbol{X}}\mid {\boldsymbol{\Psi}}, \nu) = -\textstyle{\frac{1}{2}} \left[\mathrm{tr}({\boldsymbol{\Psi}}{\boldsymbol{X}}^{-1}) + (\nu+q+1) \log |{\boldsymbol{X}}| - \nu \log |{\boldsymbol{\Psi}}| + \nu q \log(2) + 2 \log \Gamma_q(\textstyle{\frac{\nu }{2}})\right].
 \]</span></p>
 </div>
 <div id="properties" class="section level3">
 <h3>Properties</h3>
-<p>If <span class="math inline">\(\XX_{q\times q} \sim \wish(\PPs,\nu)\)</span>, the for a nonzero vector <span class="math inline">\(\aa \in \mathbb R^q\)</span> we have <span class="math display">\[
-\frac{\aa'\XX\aa}{\aa'\PPs\aa} \sim \chi^2_{(\nu)}.
+<p>If <span class="math inline">\({\boldsymbol{X}}_{q\times q} \sim \textrm{Wish}({\boldsymbol{\Psi}},\nu)\)</span>, the for a nonzero vector <span class="math inline">\({\boldsymbol{a}}\in \mathbb R^q\)</span> we have <span class="math display">\[
+\frac{{\boldsymbol{a}}&#39;{\boldsymbol{X}}{\boldsymbol{a}}}{{\boldsymbol{a}}&#39;{\boldsymbol{\Psi}}{\boldsymbol{a}}} \sim \chi^2_{(\nu)}.
 \]</span></p>
 </div>
 </div>
 <div id="matrix-normal-distribution" class="section level2">
 <h2>Matrix-Normal Distribution</h2>
-<p>The Matrix-Normal distribution on a random matrix <span class="math inline">\(\XX_{p \times q}\)</span> is denoted <span class="math inline">\(\XX \sim \MN(\LLa, \SSi_R, \SSi_C)\)</span>, and defined as <span class="math inline">\(\XX = \LL\ZZ \UU + \LLa\)</span>, where:</p>
+<p>The Matrix-Normal distribution on a random matrix <span class="math inline">\({\boldsymbol{X}}_{p \times q}\)</span> is denoted <span class="math inline">\({\boldsymbol{X}}\sim \textrm{MatNorm}({\boldsymbol{\Lambda}}, {\boldsymbol{\Sigma}}_R, {\boldsymbol{\Sigma}}_C)\)</span>, and defined as <span class="math inline">\({\boldsymbol{X}}= {\boldsymbol{L}}{\boldsymbol{Z}}{\boldsymbol{U}}+ {\boldsymbol{\Lambda}}\)</span>, where:</p>
 <ul>
-<li><span class="math inline">\(\LLa_{p \times q}\)</span> is the mean matrix parameter,</li>
-<li><span class="math inline">\({\SSi_R}_{p \times p} = \LL\LL'\)</span> is the row-variance matrix parameter,</li>
-<li><span class="math inline">\({\SSi_C}_{q \times q} = \UU'\UU\)</span> is the column-variance matrix parameter,</li>
-<li><span class="math inline">\(\ZZ_{q\times q}\)</span> is a random matrix with <span class="math inline">\(Z_{ij} \iid \N(0,1)\)</span>.</li>
+<li><span class="math inline">\({\boldsymbol{\Lambda}}_{p \times q}\)</span> is the mean matrix parameter,</li>
+<li><span class="math inline">\({{\boldsymbol{\Sigma}}_R}_{p \times p} = {\boldsymbol{L}}{\boldsymbol{L}}&#39;\)</span> is the row-variance matrix parameter,</li>
+<li><span class="math inline">\({{\boldsymbol{\Sigma}}_C}_{q \times q} = {\boldsymbol{U}}&#39;{\boldsymbol{U}}\)</span> is the column-variance matrix parameter,</li>
+<li><span class="math inline">\({\boldsymbol{Z}}_{q\times q}\)</span> is a random matrix with <span class="math inline">\(Z_{ij} \overset{\;\textrm{iid}\;}{\sim}\mathcal{N}(0,1)\)</span>.</li>
 </ul>
 <p>The log-density of the Matrix-Normal distribution is <span class="math display">\[
-\log p(\XX \mid \LLa, \SSi_R, \SSi_C) = -\tfrac 1 2 \left[\mathrm{tr}\big(\SSi_C^{-1}(\XX-\LLa)'\SSi_R^{-1}(\XX-\LLa)\big) + \nu q \log(2\pi) + \nu \log |\SSi_C| + q \log |\SSi_R|\right].
+\log p({\boldsymbol{X}}\mid {\boldsymbol{\Lambda}}, {\boldsymbol{\Sigma}}_R, {\boldsymbol{\Sigma}}_C) = -\textstyle{\frac{1}{2}} \left[\mathrm{tr}\big({\boldsymbol{\Sigma}}_C^{-1}({\boldsymbol{X}}-{\boldsymbol{\Lambda}})&#39;{\boldsymbol{\Sigma}}_R^{-1}({\boldsymbol{X}}-{\boldsymbol{\Lambda}})\big) + \nu q \log(2\pi) + \nu \log |{\boldsymbol{\Sigma}}_C| + q \log |{\boldsymbol{\Sigma}}_R|\right].
 \]</span></p>
 <div id="properties-1" class="section level3">
 <h3>Properties</h3>
-<p>If <span class="math inline">\(\XX_{p \times q} \sim \MN(\LLa, \SSi_R, \SSi_C)\)</span>, then for nonzero vectors <span class="math inline">\(\aa \in \mathbb R^p\)</span> and <span class="math inline">\(\bb \in \mathbb R^q\)</span> we have <span class="math display">\[
-\aa' \XX \bb \sim \N(\aa' \LLa \bb, \aa'\SSi_R\aa \cdot \bb'\SSi_C\bb).
+<p>If <span class="math inline">\({\boldsymbol{X}}_{p \times q} \sim \textrm{MatNorm}({\boldsymbol{\Lambda}}, {\boldsymbol{\Sigma}}_R, {\boldsymbol{\Sigma}}_C)\)</span>, then for nonzero vectors <span class="math inline">\({\boldsymbol{a}}\in \mathbb R^p\)</span> and <span class="math inline">\({\boldsymbol{b}}\in \mathbb R^q\)</span> we have <span class="math display">\[
+{\boldsymbol{a}}&#39; {\boldsymbol{X}}{\boldsymbol{b}}\sim \mathcal{N}({\boldsymbol{a}}&#39; {\boldsymbol{\Lambda}}{\boldsymbol{b}}, {\boldsymbol{a}}&#39;{\boldsymbol{\Sigma}}_R{\boldsymbol{a}}\cdot {\boldsymbol{b}}&#39;{\boldsymbol{\Sigma}}_C{\boldsymbol{b}}).
 \]</span></p>
 </div>
 </div>
 <div id="matrix-normal-inverse-wishart-distribution" class="section level2">
 <h2>Matrix-Normal Inverse-Wishart Distribution</h2>
-<p>The Matrix-Normal Inverse-Wishart Distribution on a random matrix <span class="math inline">\(\XX_{p \times q}\)</span> and random positive-definite matrix <span class="math inline">\(\VV_{q\times q}\)</span> is denoted <span class="math inline">\((\XX,\VV) \sim \mniw(\LLa, \SSi, \PPs, \nu)\)</span>, and defined as <span class="math display">\[
+<p>The Matrix-Normal Inverse-Wishart Distribution on a random matrix <span class="math inline">\({\boldsymbol{X}}_{p \times q}\)</span> and random positive-definite matrix <span class="math inline">\({\boldsymbol{V}}_{q\times q}\)</span> is denoted <span class="math inline">\(({\boldsymbol{X}},{\boldsymbol{V}}) \sim \textrm{MNIW}({\boldsymbol{\Lambda}}, {\boldsymbol{\Sigma}}, {\boldsymbol{\Psi}}, \nu)\)</span>, and defined as <span class="math display">\[
 \begin{aligned}
-\XX \mid \VV &amp; \sim \MN(\LLa, \SSi, \VV) \\
-\VV &amp; \sim \iwish(\PPs, \nu).
+{\boldsymbol{X}}\mid {\boldsymbol{V}}&amp; \sim \textrm{MatNorm}({\boldsymbol{\Lambda}}, {\boldsymbol{\Sigma}}, {\boldsymbol{V}}) \\
+{\boldsymbol{V}}&amp; \sim \textrm{InvWish}({\boldsymbol{\Psi}}, \nu).
 \end{aligned}
 \]</span></p>
 <div id="properties-2" class="section level3">
 <h3>Properties</h3>
 <p>The MNIX distribution is conjugate prior for the multivariable response regression model <span class="math display">\[
-\YY_{n \times q} \sim \MN(\XX_{n\times p} \bbe_{p \times q}, \VV, \SSi).
-\]</span> That is, if <span class="math inline">\((\bbe, \SSi) \sim \mniw(\LLa, \OOm^{-1}, \PPs, \nu)\)</span>, then <span class="math display">\[
-\bbe, \SSi \mid \YY \sim \mniw(\hat \LLa, \hat \OOm^{-1}, \hat \PPs, \hat \nu),
+{\boldsymbol{Y}}_{n \times q} \sim \textrm{MatNorm}({\boldsymbol{X}}_{n\times p} {\boldsymbol{\beta}}_{p \times q}, {\boldsymbol{V}}, {\boldsymbol{\Sigma}}).
+\]</span> That is, if <span class="math inline">\(({\boldsymbol{\beta}}, {\boldsymbol{\Sigma}}) \sim \textrm{MNIW}({\boldsymbol{\Lambda}}, {\boldsymbol{\Omega}}^{-1}, {\boldsymbol{\Psi}}, \nu)\)</span>, then <span class="math display">\[
+{\boldsymbol{\beta}}, {\boldsymbol{\Sigma}}\mid {\boldsymbol{Y}}\sim \textrm{MNIW}(\hat {\boldsymbol{\Lambda}}, \hat {\boldsymbol{\Omega}}^{-1}, \hat {\boldsymbol{\Psi}}, \hat \nu),
 \]</span> where <span class="math display">\[
 \begin{aligned}
-\hat \OOm &amp; = \XX'\VV^{-1}\XX + \OOm 
+\hat {\boldsymbol{\Omega}}&amp; = {\boldsymbol{X}}&#39;{\boldsymbol{V}}^{-1}{\boldsymbol{X}}+ {\boldsymbol{\Omega}}
 &amp;
-\hat \PPs &amp; = \PPs + \YY'\VV^{-1}\YY + \LLa'\OOm\LLa - \hat \LLa'\hat \OOm \hat \LLa
+\hat {\boldsymbol{\Psi}}&amp; = {\boldsymbol{\Psi}}+ {\boldsymbol{Y}}&#39;{\boldsymbol{V}}^{-1}{\boldsymbol{Y}}+ {\boldsymbol{\Lambda}}&#39;{\boldsymbol{\Omega}}{\boldsymbol{\Lambda}}- \hat {\boldsymbol{\Lambda}}&#39;\hat {\boldsymbol{\Omega}}\hat {\boldsymbol{\Lambda}}
 \\
-\hat \LLa &amp; = \hat \OOm^{-1}(\XX'\VV^{-1}\YY + \OOm\LLa)
+\hat {\boldsymbol{\Lambda}}&amp; = \hat {\boldsymbol{\Omega}}^{-1}({\boldsymbol{X}}&#39;{\boldsymbol{V}}^{-1}{\boldsymbol{Y}}+ {\boldsymbol{\Omega}}{\boldsymbol{\Lambda}})
 &amp;
 \hat \nu &amp; = \nu + n.
 \end{aligned}
@@ -361,59 +366,62 @@ MathJax.Hub.Config({
 </div>
 <div id="matrix-t-distribution" class="section level2">
 <h2>Matrix-t Distribution</h2>
-<p>The Matrix-<span class="math inline">\(t\)</span> distribution on a random matrix <span class="math inline">\(\XX_{p \times q}\)</span> is denoted <span class="math inline">\(\XX \sim \MT(\LLa, \SSi_R, \SSi_C, \nu)\)</span>, and defined as the marginal distribution of <span class="math inline">\(\XX\)</span> for <span class="math inline">\((\XX, \VV) \sim \mniw(\LLa, \SSi_R, \SSi_C, \nu)\)</span>. Its log-density is given by <span class="math display">\[
+<p>The Matrix-<span class="math inline">\(t\)</span> distribution on a random matrix <span class="math inline">\({\boldsymbol{X}}_{p \times q}\)</span> is denoted <span class="math inline">\({\boldsymbol{X}}\sim \textrm{MatT}({\boldsymbol{\Lambda}}, {\boldsymbol{\Sigma}}_R, {\boldsymbol{\Sigma}}_C, \nu)\)</span>, and defined as the marginal distribution of <span class="math inline">\({\boldsymbol{X}}\)</span> for <span class="math inline">\(({\boldsymbol{X}}, {\boldsymbol{V}}) \sim \textrm{MNIW}({\boldsymbol{\Lambda}}, {\boldsymbol{\Sigma}}_R, {\boldsymbol{\Sigma}}_C, \nu)\)</span>. Its log-density is given by <span class="math display">\[
 \begin{aligned}
-\log p(\XX \mid \LLa, \SSi_R, \SSi_C, \nu) 
-&amp; = -\tfrac 1 2 \Big[(\nu+p+q-1)\log | I + \SSi_R^{-1}(\XX-\LLa)\SSi_C^{-1}(\XX-\LLa)'| \\
-&amp; \phantom{= -\tfrac 1 2 \Big[} + q \log |\SSi_R| + p \log |\SSi_C| \\
-&amp; \phantom{= -\tfrac 1 2 \Big[} + pq \log(\pi) - \log \Gamma_q(\tfrac{\nu+p+q-1}{2}) + \log \Gamma_q(\tfrac{\nu+q-1}{2})\Big].
+\log p({\boldsymbol{X}}\mid {\boldsymbol{\Lambda}}, {\boldsymbol{\Sigma}}_R, {\boldsymbol{\Sigma}}_C, \nu) 
+&amp; = -\textstyle{\frac{1}{2}} \Big[(\nu+p+q-1)\log | I + {\boldsymbol{\Sigma}}_R^{-1}({\boldsymbol{X}}-{\boldsymbol{\Lambda}}){\boldsymbol{\Sigma}}_C^{-1}({\boldsymbol{X}}-{\boldsymbol{\Lambda}})&#39;| \\
+&amp; \phantom{= -\textstyle{\frac{1}{2}} \Big[} + q \log |{\boldsymbol{\Sigma}}_R| + p \log |{\boldsymbol{\Sigma}}_C| \\
+&amp; \phantom{= -\textstyle{\frac{1}{2}} \Big[} + pq \log(\pi) - \log \Gamma_q(\textstyle{\frac{\nu+p+q-1}{2}}) + \log \Gamma_q(\textstyle{\frac{\nu+q-1}{2}})\Big].
 \end{aligned}
 \]</span></p>
 <div id="properties-3" class="section level3">
 <h3>Properties</h3>
-<p>If <span class="math inline">\(\XX_{p\times q} \sim \MT(\LLa, \SSi_R, \SSi_C, \nu)\)</span>, then for nonzero vectors <span class="math inline">\(\aa \in \mathbb R^p\)</span> and <span class="math inline">\(\bb \in \mathbb R^q\)</span> we have <span class="math display">\[
-\frac{\aa'\XX\bb - \mu}{\sigma} \sim t_{(\nu -q + 1)},
+<p>If <span class="math inline">\({\boldsymbol{X}}_{p\times q} \sim \textrm{MatT}({\boldsymbol{\Lambda}}, {\boldsymbol{\Sigma}}_R, {\boldsymbol{\Sigma}}_C, \nu)\)</span>, then for nonzero vectors <span class="math inline">\({\boldsymbol{a}}\in \mathbb R^p\)</span> and <span class="math inline">\({\boldsymbol{b}}\in \mathbb R^q\)</span> we have <span class="math display">\[
+\frac{{\boldsymbol{a}}&#39;{\boldsymbol{X}}{\boldsymbol{b}}- \mu}{\sigma} \sim t_{(\nu -q + 1)},
 \]</span> where <span class="math display">\[
-\mu = \aa'\LLa\bb, \qquad \sigma^2 = \frac{\aa'\SSi_R\aa \cdot \bb'\SSi_C\bb}{\nu - q + 1}.
+\mu = {\boldsymbol{a}}&#39;{\boldsymbol{\Lambda}}{\boldsymbol{b}}, \qquad \sigma^2 = \frac{{\boldsymbol{a}}&#39;{\boldsymbol{\Sigma}}_R{\boldsymbol{a}}\cdot {\boldsymbol{b}}&#39;{\boldsymbol{\Sigma}}_C{\boldsymbol{b}}}{\nu - q + 1}.
 \]</span></p>
 </div>
 </div>
 <div id="random-effects-normal-distribution" class="section level2">
 <h2>Random-Effects Normal Distribution</h2>
-<p>Consider the multivariate normal distribution on <span class="math inline">\(q\)</span>-dimensional vectors <span class="math inline">\(\xx\)</span> and <span class="math inline">\(\mmu\)</span> given by <span class="math display">\[
+<p>Consider the multivariate normal distribution on <span class="math inline">\(q\)</span>-dimensional vectors <span class="math inline">\({\boldsymbol{x}}\)</span> and <span class="math inline">\({\boldsymbol{\mu}}\)</span> given by <span class="math display">\[
 \begin{aligned}
-\xx \mid \mmu &amp; \sim \N(\mmu, \VV) \\
-\mmu &amp; \sim \N(\lla, \SSi).
+{\boldsymbol{x}}\mid {\boldsymbol{\mu}}&amp; \sim \mathcal{N}({\boldsymbol{\mu}}, {\boldsymbol{V}}) \\
+{\boldsymbol{\mu}}&amp; \sim \mathcal{N}({\boldsymbol{\lambda}}, {\boldsymbol{\Sigma}}).
 \end{aligned}
-\]</span> The random-effects normal distribution is defined as the posterior distribution <span class="math inline">\(\mmu \sim p(\mmu \mid \xx)\)</span>, which is given by <span class="math display">\[
-\mmu \mid \xx \sim \N\big(\GG(\xx-\lla) + \lla, \GG\VV\big), \qquad \GG = \SSi(\VV + \SSi)^{-1}.
-\]</span> The notation for this distribution is <span class="math inline">\(\mmu \sim \re(\xx, \VV, \lla, \SSi)\)</span>.</p>
+\]</span> The random-effects normal distribution is defined as the posterior distribution <span class="math inline">\({\boldsymbol{\mu}}\sim p({\boldsymbol{\mu}}\mid {\boldsymbol{x}})\)</span>, which is given by <span class="math display">\[
+{\boldsymbol{\mu}}\mid {\boldsymbol{x}}\sim \mathcal{N}\big({\boldsymbol{G}}({\boldsymbol{x}}-{\boldsymbol{\lambda}}) + {\boldsymbol{\lambda}}, {\boldsymbol{G}}{\boldsymbol{V}}\big), \qquad {\boldsymbol{G}}= {\boldsymbol{\Sigma}}({\boldsymbol{V}}+ {\boldsymbol{\Sigma}})^{-1}.
+\]</span> The notation for this distribution is <span class="math inline">\({\boldsymbol{\mu}}\sim \textrm{RxNorm}({\boldsymbol{x}}, {\boldsymbol{V}}, {\boldsymbol{\lambda}}, {\boldsymbol{\Sigma}})\)</span>.</p>
 </div>
 <div id="hierarchical-normal-normal-model" class="section level2">
 <h2>Hierarchical Normal-Normal Model</h2>
 <p>The hierarchical Normal-Normal model is defined as <span class="math display">\[
 \begin{aligned}
-\yy_i \mid \mmu_i, \bbe, \SSi &amp; \ind \N(\mmu_i, \VV_i) \\
-\mmu_i \mid \bbe, \SSi &amp; \iid \N(\xx_i'\bbe, \SSi) \\
-(\bbe, \SSi) &amp; \sim \mniw(\LLa, \Omega^{-1}, \PPs, \nu),
+{\boldsymbol{y}}_i \mid {\boldsymbol{\mu}}_i, {\boldsymbol{\beta}}, {\boldsymbol{\Sigma}}&amp; \overset{\:\textrm{ind}\:}{\sim}\mathcal{N}({\boldsymbol{\mu}}_i, {\boldsymbol{V}}_i) \\
+{\boldsymbol{\mu}}_i \mid {\boldsymbol{\beta}}, {\boldsymbol{\Sigma}}&amp; \overset{\;\textrm{iid}\;}{\sim}\mathcal{N}({\boldsymbol{x}}_i&#39;{\boldsymbol{\beta}}, {\boldsymbol{\Sigma}}) \\
+({\boldsymbol{\beta}}, {\boldsymbol{\Sigma}}) &amp; \sim \textrm{MNIW}({\boldsymbol{\Lambda}}, \Omega^{-1}, {\boldsymbol{\Psi}}, \nu),
 \end{aligned}
 \]</span> where:</p>
 <ul>
-<li><span class="math inline">\({\yy_i}_{q\times 1}\)</span> is the response vector for subject <span class="math inline">\(i\)</span>,</li>
-<li><span class="math inline">\({\mmu_i}_{q\times 1}\)</span> is the random effect for subject <span class="math inline">\(i\)</span>,</li>
-<li><span class="math inline">\({\VV_i}_{q\times q}\)</span> is the error variance for subject <span class="math inline">\(i\)</span>,</li>
-<li><span class="math inline">\({\xx_i}_{p\times 1}\)</span> is the covariate vector for subject <span class="math inline">\(i\)</span>,</li>
-<li><span class="math inline">\(\bbe_{p \times q}\)</span> is the random-effects coefficient matrix,</li>
-<li><span class="math inline">\(\SSi_{q \times q}\)</span> is the random-effects error variance.</li>
+<li><span class="math inline">\({{\boldsymbol{y}}_i}_{q\times 1}\)</span> is the response vector for subject <span class="math inline">\(i\)</span>,</li>
+<li><span class="math inline">\({{\boldsymbol{\mu}}_i}_{q\times 1}\)</span> is the random effect for subject <span class="math inline">\(i\)</span>,</li>
+<li><span class="math inline">\({{\boldsymbol{V}}_i}_{q\times q}\)</span> is the error variance for subject <span class="math inline">\(i\)</span>,</li>
+<li><span class="math inline">\({{\boldsymbol{x}}_i}_{p\times 1}\)</span> is the covariate vector for subject <span class="math inline">\(i\)</span>,</li>
+<li><span class="math inline">\({\boldsymbol{\beta}}_{p \times q}\)</span> is the random-effects coefficient matrix,</li>
+<li><span class="math inline">\({\boldsymbol{\Sigma}}_{q \times q}\)</span> is the random-effects error variance.</li>
 </ul>
-<p>Let <span class="math inline">\(\YY_{n\times q} = (\rv \yy n)\)</span>, <span class="math inline">\(\XX_{n\times p} = (\rv \xx n)\)</span>, and <span class="math inline">\(\TTh_{n \times q} = (\rv \mmu n)\)</span>. If interest lies in the posterior distribution <span class="math inline">\(p(\TTh, \bbe, \SSi \mid \YY, \XX)\)</span>, then a Gibbs sampler can be used to cycle through the following conditional distributions: <span class="math display">\[
+<p>Let <span class="math inline">\({\boldsymbol{Y}}_{n\times q} = (n_{\boldsymbol{y}},\ldots,n_{)}\)</span>, <span class="math inline">\({\boldsymbol{X}}_{n\times p} = (n_{\boldsymbol{x}},\ldots,n_{)}\)</span>, and <span class="math inline">\({\boldsymbol{\Theta}}_{n \times q} = (n_{\boldsymbol{\mu}},\ldots,n_{)}\)</span>. If interest lies in the posterior distribution <span class="math inline">\(p({\boldsymbol{\Theta}}, {\boldsymbol{\beta}}, {\boldsymbol{\Sigma}}\mid {\boldsymbol{Y}}, {\boldsymbol{X}})\)</span>, then a Gibbs sampler can be used to cycle through the following conditional distributions: <span class="math display">\[
 \begin{aligned}
-\mmu_i \mid \bbe, \SSi, \YY, \XX &amp; \ind \re(\yy_i, \VV_i, \xx_i'\bbe, \SSi) \\
-\bbe, \SSi \mid \TTh, \YY, \XX &amp; \sim \mniw(\hat \LLa, \hat \OOm^{-1}, \hat \PPs, \hat \nu),
+{\boldsymbol{\mu}}_i \mid {\boldsymbol{\beta}}, {\boldsymbol{\Sigma}}, {\boldsymbol{Y}}, {\boldsymbol{X}}&amp; \overset{\:\textrm{ind}\:}{\sim}\textrm{RxNorm}({\boldsymbol{y}}_i, {\boldsymbol{V}}_i, {\boldsymbol{x}}_i&#39;{\boldsymbol{\beta}}, {\boldsymbol{\Sigma}}) \\
+{\boldsymbol{\beta}}, {\boldsymbol{\Sigma}}\mid {\boldsymbol{\Theta}}, {\boldsymbol{Y}}, {\boldsymbol{X}}&amp; \sim \textrm{MNIW}(\hat {\boldsymbol{\Lambda}}, \hat {\boldsymbol{\Omega}}^{-1}, \hat {\boldsymbol{\Psi}}, \hat \nu),
 \end{aligned}
-\]</span> where <span class="math inline">\(\hat \LLa\)</span>, <span class="math inline">\(\hat \OOm\)</span>, <span class="math inline">\(\hat \PPs\)</span>, and <span class="math inline">\(\hat \nu\)</span> are obtained from the MNIW conjugate posterior formula with <span class="math inline">\(\YY \gets \TTh\)</span>.</p>
+\]</span> where <span class="math inline">\(\hat {\boldsymbol{\Lambda}}\)</span>, <span class="math inline">\(\hat {\boldsymbol{\Omega}}\)</span>, <span class="math inline">\(\hat {\boldsymbol{\Psi}}\)</span>, and <span class="math inline">\(\hat \nu\)</span> are obtained from the MNIW conjugate posterior formula with <span class="math inline">\({\boldsymbol{Y}}\gets {\boldsymbol{\Theta}}\)</span>.</p>
 </div>
 
+
+
+<!-- code folding -->
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

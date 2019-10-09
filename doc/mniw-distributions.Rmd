@@ -1,5 +1,5 @@
 ---
-title: "Distributions Provided by the `mniw` Package"
+title: "Distributions Provided by the **mniw** Package"
 author: "Martin Lysy"
 date: "`r Sys.Date()`"
 output:
@@ -12,49 +12,86 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-    TeX: {
-	Macros: {
-	    bm: ["{\\boldsymbol{#1}}",1],
-		tx: ["{\\textrm{#1}}",1],
-	    tfrac: ["{\\textstyle{\\frac{#1}{#2}}}",2],
-		rv: ["{#2_{#1},\\ldots,#2_{#3}}",3,"1"],
-		iid: ["{\\overset{\\;\\tx{iid}\\;}{\\sim}}"],
-		ind: ["{\\overset{\\:\\tx{ind}\\:}{\\sim}}"],
-	    XX: ["{\\bm{X}}"],
-	    YY: ["{\\bm{Y}}"],
-	    LL: ["{\\bm{L}}"],
-	    PPs: ["{\\bm{\\Psi}}"],
-	    ZZ: ["{\\bm{Z}}"],
-	    N: ["{\\mathcal{N}}"],
-	    LLa: ["{\\bm{\\Lambda}}"],
-	    SSi: ["{\\bm{\\Sigma}}"],
-	    GGa: ["{\\bm{\\Gamma}}"],
-	    UU: ["{\\bm{U}}"],
-	    VV: ["{\\bm{V}}"],
-		aa: ["{\\bm{a}}"],
-		bb: ["{\\bm{b}}"],
-	    xx: ["{\\bm{x}}"],
-		yy: ["{\\bm{y}}"],
-		bbe: ["{\\bm{\\beta}}"],
-	    mmu: ["{\\bm{\\mu}}"],
-		kka: ["{\\bm{\\kappa}}"],
-		lla: ["{\\bm{\\lambda}}"],
-		TTh: ["{\\bm{\\Theta}}"],
-	    GG: ["{\\bm{G}}"],
-	    OOm: ["{\\bm{\\Omega}}"],
-		bz: ["{\\bm{0}}"],
-		wish: ["{\\tx{Wish}}"],
-		iwish: ["{\\tx{InvWish}}"],
-		MN: ["{\\tx{MatNorm}}"],
-		MT: ["{\\tx{MatT}}"],
-		mniw: ["{\\tx{MNIW}}"],
-		re: ["{\\tx{RxNorm}}"]
-	}
-    }
-});
-</script>
+<!-- <script type="text/x-mathjax-config"> -->
+<!-- MathJax.Hub.Config({ -->
+<!--     TeX: { -->
+<!-- 	Macros: { -->
+<!-- 	    bm: ["{\\boldsymbol{#1}}",1], -->
+<!-- 		tx: ["{\\textrm{#1}}",1], -->
+<!-- 	    tfrac: ["{\\textstyle{\\frac{#1}{#2}}}",2], -->
+<!-- 		rv: ["{#2_{#1},\\ldots,#2_{#3}}",3,"1"], -->
+<!-- 		iid: ["{\\overset{\\;\\tx{iid}\\;}{\\sim}}"], -->
+<!-- 		ind: ["{\\overset{\\:\\tx{ind}\\:}{\\sim}}"], -->
+<!-- 	    XX: ["{\\bm{X}}"], -->
+<!-- 	    YY: ["{\\bm{Y}}"], -->
+<!-- 	    LL: ["{\\bm{L}}"], -->
+<!-- 	    PPs: ["{\\bm{\\Psi}}"], -->
+<!-- 	    ZZ: ["{\\bm{Z}}"], -->
+<!-- 	    N: ["{\\mathcal{N}}"], -->
+<!-- 	    LLa: ["{\\bm{\\Lambda}}"], -->
+<!-- 	    SSi: ["{\\bm{\\Sigma}}"], -->
+<!-- 	    GGa: ["{\\bm{\\Gamma}}"], -->
+<!-- 	    UU: ["{\\bm{U}}"], -->
+<!-- 	    VV: ["{\\bm{V}}"], -->
+<!-- 		aa: ["{\\bm{a}}"], -->
+<!-- 		bb: ["{\\bm{b}}"], -->
+<!-- 	    xx: ["{\\bm{x}}"], -->
+<!-- 		yy: ["{\\bm{y}}"], -->
+<!-- 		bbe: ["{\\bm{\\beta}}"], -->
+<!-- 	    mmu: ["{\\bm{\\mu}}"], -->
+<!-- 		kka: ["{\\bm{\\kappa}}"], -->
+<!-- 		lla: ["{\\bm{\\lambda}}"], -->
+<!-- 		TTh: ["{\\bm{\\Theta}}"], -->
+<!-- 	    GG: ["{\\bm{G}}"], -->
+<!-- 	    OOm: ["{\\bm{\\Omega}}"], -->
+<!-- 		bz: ["{\\bm{0}}"], -->
+<!-- 		wish: ["{\\tx{Wish}}"], -->
+<!-- 		iwish: ["{\\tx{InvWish}}"], -->
+<!-- 		MN: ["{\\tx{MatNorm}}"], -->
+<!-- 		MT: ["{\\tx{MatT}}"], -->
+<!-- 		mniw: ["{\\tx{MNIW}}"], -->
+<!-- 		re: ["{\\tx{RxNorm}}"] -->
+<!-- 	} -->
+<!--     } -->
+<!-- }); -->
+<!-- </script> -->
+
+\newcommand{\bm}[1]{\boldsymbol{#1}}
+\newcommand{\tx}[1]{\textrm{#1}}
+\newcommand{\tfrac}[2]{\textstyle{\frac{#1}{#2}}}
+\newcommand{\rv}[3][1]{#2_{#1},\ldots,#2_{#3}}
+\newcommand{\iid}{\overset{\;\tx{iid}\;}{\sim}}
+\newcommand{\ind}{\overset{\:\tx{ind}\:}{\sim}}
+\newcommand{\XX}{{\bm{X}}}
+\newcommand{\YY}{{\bm{Y}}}
+\newcommand{\LL}{{\bm{L}}}
+\newcommand{\PPs}{{\bm{\Psi}}}
+\newcommand{\ZZ}{{\bm{Z}}}
+\newcommand{\N}{\mathcal{N}}
+\newcommand{\LLa}{{\bm{\Lambda}}}
+\newcommand{\SSi}{{\bm{\Sigma}}}
+\newcommand{\GGa}{{\bm{\Gamma}}}
+\newcommand{\UU}{{\bm{U}}}
+\newcommand{\VV}{{\bm{V}}}
+\newcommand{\aa}{{\bm{a}}}
+\newcommand{\bb}{{\bm{b}}}
+\newcommand{\xx}{{\bm{x}}}
+\newcommand{\yy}{{\bm{y}}}
+\newcommand{\bbe}{{\bm{\beta}}}
+\newcommand{\mmu}{{\bm{\mu}}}
+\newcommand{\kka}{{\bm{\kappa}}}
+\newcommand{\lla}{{\bm{\lambda}}}
+\newcommand{\TTh}{{\bm{\Theta}}}
+\newcommand{\GG}{{\bm{G}}}
+\newcommand{\OOm}{{\bm{\Omega}}}
+\newcommand{\bz}{{\bm{0}}}
+\newcommand{\wish}{\tx{Wish}}
+\newcommand{\iwish}{\tx{InvWish}}
+\newcommand{\MN}{\tx{MatNorm}}
+\newcommand{\MT}{\tx{MatT}}
+\newcommand{\mniw}{\tx{MNIW}}
+\newcommand{\re}{\tx{RxNorm}}
+
 
 ## Wishart Distribution
 

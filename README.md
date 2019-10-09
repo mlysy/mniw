@@ -1,3 +1,5 @@
+<!-- comment -->
+
 # mniw: The Matrix-Normal Inverse-Wishart Distribution
 
 *Martin Lysy, Bryan Yates*
@@ -43,4 +45,4 @@ X <- rwish(n, df = nu, Psi = Psi) # produces an array of size p x p x n
 
 It is both simpler, and much faster for large `n` and `p`.
 
-The other functions in **mniw** behave much the same way.  A complete description of the distributions provided by the package is available in `vignette("mniw-distributions")`.
+The other functions in **mniw** behave much the same way.  A complete description of the distributions provided by the package is available [here](http://htmlpreview.github.io/?https://github.com/mlysy/mniw/master/doc/mniw-distributions.html).
