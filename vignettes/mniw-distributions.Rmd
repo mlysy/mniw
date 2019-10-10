@@ -59,7 +59,7 @@ vignette: >
 \newcommand{\bm}[1]{\boldsymbol{#1}}
 \newcommand{\tx}[1]{\textrm{#1}}
 \newcommand{\tfrac}[2]{\textstyle{\frac{#1}{#2}}}
-\newcommand{\rv}[3][1]{#2_{#1},\ldots,#2_{#3}}
+\newcommand{\rv}[3]{#2_{#1},\ldots,#2_{#3}}
 \newcommand{\iid}{\overset{\;\tx{iid}\;}{\sim}}
 \newcommand{\ind}{\overset{\:\tx{ind}\:}{\sim}}
 \newcommand{\XX}{{\bm{X}}}
@@ -243,7 +243,7 @@ where:
 - $\bbe_{p \times q}$ is the random-effects coefficient matrix,
 - $\SSi_{q \times q}$ is the random-effects error variance.
 
-Let $\YY_{n\times q} = (\rv \yy n)$, $\XX_{n\times p} = (\rv \xx n)$, and $\TTh_{n \times q} = (\rv \mmu n)$.  If interest lies in the posterior distribution $p(\TTh, \bbe, \SSi \mid \YY, \XX)$, then a Gibbs sampler can be used to cycle through the following conditional distributions:
+Let $\YY_{n\times q} = (\rv 1 \yy n)$, $\XX_{n\times p} = (\rv 1 \xx n)$, and $\TTh_{n \times q} = (\rv 1 \mmu n)$.  If interest lies in the posterior distribution $p(\TTh, \bbe, \SSi \mid \YY, \XX)$, then a Gibbs sampler can be used to cycle through the following conditional distributions:
 \[
 \begin{aligned}
 \mmu_i \mid \bbe, \SSi, \YY, \XX & \ind \re(\yy_i, \VV_i, \xx_i'\bbe, \SSi) \\
