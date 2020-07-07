@@ -4,13 +4,15 @@
 \name{Hospitals}
 \alias{Hospitals}
 \title{Hospital profiling data.}
-\format{A data frame with 27 rows (one for each hospital) and 4 variables:
+\format{
+A data frame with 27 rows (one for each hospital) and 4 variables:
 \describe{
   \item{\code{NSrg}}{Non-surgery related problem rate (\%).}
   \item{\code{Srg}}{Surgery related problem rate (\%).}
   \item{\code{Severity}}{Average health index for surveyed patients.}
   \item{\code{Size}}{Number of patients surveyed.}
-}}
+}
+}
 \usage{
 Hospitals
 }

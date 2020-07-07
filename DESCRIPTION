@@ -16,5 +16,5 @@ LinkingTo: Rcpp, RcppEigen
 LazyData: true
 Suggests: testthat, knitr, rmarkdown
 Encoding: UTF-8
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 VignetteBuilder: knitr

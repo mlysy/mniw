@@ -4,8 +4,19 @@
 \alias{RxNormLM}
 \title{Bayesian inference for a random-effects regression model.}
 \usage{
-RxNormLM(nsamples, Y, V, X, prior = NULL, init, burn, updateHyp = TRUE,
-  storeHyp = TRUE, updateRX = TRUE, storeRX = FALSE)
+RxNormLM(
+  nsamples,
+  Y,
+  V,
+  X,
+  prior = NULL,
+  init,
+  burn,
+  updateHyp = TRUE,
+  storeHyp = TRUE,
+  updateRX = TRUE,
+  storeRX = FALSE
+)
 }
 \arguments{
 \item{nsamples}{number of posterior samples to draw.}
