@@ -15,3 +15,5 @@ vignettes/.build.timestamp
 
 # unignore html files in doc
 !doc
+/doc/
+/Meta/

@@ -1,8 +1,8 @@
 Package: mniw
 Type: Package
 Title: The Matrix-Normal Inverse-Wishart Distribution
-Version: 1.0
-Date: 2019-10-06
+Version: 1.0.1
+Date: 2022-08-11
 Authors@R: c(person("Martin", "Lysy", role = c("aut", "cre"),
                     email = "mlysy@uwaterloo.ca"),
              person("Bryan", "Yates", role = "aut"))
@@ -16,5 +16,5 @@ LinkingTo: Rcpp, RcppEigen
 LazyData: true
 Suggests: testthat, knitr, rmarkdown
 Encoding: UTF-8
-RoxygenNote: 7.1.0
+RoxygenNote: 7.2.1
 VignetteBuilder: knitr

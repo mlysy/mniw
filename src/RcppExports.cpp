@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // CrossProdVXX
 Eigen::MatrixXd CrossProdVXX(Eigen::MatrixXd X, Eigen::MatrixXd V, int p, int q, bool inverse);
 RcppExport SEXP _mniw_CrossProdVXX(SEXP XSEXP, SEXP VSEXP, SEXP pSEXP, SEXP qSEXP, SEXP inverseSEXP) {

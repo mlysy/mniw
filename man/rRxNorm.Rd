@@ -23,17 +23,12 @@ Sample from the conditional parameter distribution given the data and hyperparam
 \details{
 Consider the hierarchical multivariate normal model
 \deqn{
-\arraycolsep=1.4pt
 \begin{array}{rcl}
 \boldsymbol{\mu} & \sim & \mathcal{N}(\boldsymbol{\lambda}, \boldsymbol{\Sigma}) \\
 \boldsymbol{x} \mid \boldsymbol{\mu} & \sim & \mathcal{N}(\boldsymbol{\mu}, \boldsymbol{V}).
 \end{array}
 }{
 \mu ~ N(\lambda, \Sigma)
-}
-\deqn{
-\vspace{-2em}
-}{
 x | \mu ~ N(\mu, V).
 }
 The Multivariate-Normal Random-Effects model \eqn{\boldsymbol{\mu} \sim \textrm{RxNorm}(\boldsymbol{x}, \boldsymbol{V}, \boldsymbol{\lambda}, \boldsymbol{\Sigma})}{\mu ~ RxNorm(x, V, \lambda, \Sigma)} on the random vector \eqn{\boldsymbol{\mu}_q}{\mu_q} is defined as the posterior distribution \eqn{p(\boldsymbol{\mu} \mid \boldsymbol{x}, \boldsymbol{\lambda}, \boldsymbol{\Sigma})}{p(\mu | x, \lambda, \Sigma)}.  This distribution is multivariate normal; for the mathematical specification of its parameters please see \code{vignette("mniw-distributions", package = "mniw")}.
