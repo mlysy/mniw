@@ -8,3 +8,4 @@
 ^man-roxygen$
 ^examples$
 ^inst/doxygen$
+^\.github$
