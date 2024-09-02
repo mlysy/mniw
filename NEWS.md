@@ -1,0 +1,18 @@
+# mniw 1.0.2
+
+## Bug Fixes
+
+- Fixed `foo.template method<>()` calls to comply with Clang-20.0, per CRAN request.
+
+- Removed unused variable `ldV` from C++ code.
+
+
+# mniw 1.0.1
+
+## Minor Changes
+
+- Updated latex in documentation per new CRAN guidelines.
+
+# mniw 1.0.0
+
+- Initial CRAN release.

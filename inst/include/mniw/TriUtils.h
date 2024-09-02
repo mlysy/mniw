@@ -92,7 +92,7 @@ namespace mniw {
 #ifdef _MSC_VER
     L.template triangularView<Eigen::Lower>().solveInPlace(X);
 #else
-    L.template triangularView<Eigen::Lower>().template solveInPlace(X);
+    L.template triangularView<Eigen::Lower>().template solveInPlace<>(X);
 #endif
     return;
   }
@@ -130,7 +130,7 @@ namespace mniw {
 #ifdef _MSC_VER
     U.template triangularView<Eigen::Upper>().solveInPlace(X);
 #else
-    U.template triangularView<Eigen::Upper>().template solveInPlace(X);
+    U.template triangularView<Eigen::Upper>().template solveInPlace<>(X);
 #endif
     return;
   }
@@ -328,9 +328,9 @@ namespace mniw {
   /// @param [in] cholV Cholesky solver of size `n x n` required for intermediate calculations.
   /// @return The logarithm of the determinant of `V`.
   inline double logDetV(MatrixXd V, LLT<MatrixXd> cholV) {
-    double ldV = 0.0;
     cholV.compute(V);
     return 2.0 * logDetCholV(cholV);
+    // double ldV = 0.0;
     // for(int ii=0; ii<V.cols(); ii++) {
     //   ldV += log(cholV.matrixL()(ii,ii));
     // }
