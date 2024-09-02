@@ -2,7 +2,7 @@
 
 ## Bug Fixes
 
-- Fixed `foo.template method<>()` calls to comply with Clang-20.0, per CRAN request.
+- Fixed `foo.template method<>()` calls to comply with Clang-20.0, per CRAN request.  This made `_MSC_VER` switch unnecessary.
 
 - Removed unused variable `ldV` from C++ code.
 
