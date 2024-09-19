@@ -2,23 +2,26 @@
 
 #' Generate samples from the Matrix-Normal Inverse-Wishart distribution.
 #'
-#' @name MNIW
+#' @name MNIW-dist
+#' @aliases rMNIW rmniw MNIW
 #' @param n number of samples.
-#' @param Lambda A mean matrix of size \code{p x q} or an array of size \code{p x q x n}.  Defaults to matrix of zeros when missing.
-#' @param Sigma A row-wise variance or precision matrix of size \code{p x p}, or an array of size \code{p x p x n}.  Defaults to the identity matrix when missing.
-#' @param Omega A between-row precision matrix of size \code{p x p}, or an array of size \code{p x p x n}.  Defaults to the identity matrix when missing.
-#' @param Psi A scale matrix of size \code{q x q}, or an array of size \code{q x q x n}.  Defaults to identity matrix when missing.
+#' @param Lambda A mean matrix of size `p x q` or an array of size `p x q x n`.  Defaults to matrix of zeros when missing.
+#' @param Sigma A row-wise variance or precision matrix of size `p x p`, or an array of size `p x p x n`.  Defaults to the identity matrix when missing.
+#' @param Omega A between-row precision matrix of size `p x p`, or an array of size `p x p x n`.  Defaults to the identity matrix when missing.
+#' @param Psi A scale matrix of size `q x q`, or an array of size `q x q x n`.  Defaults to identity matrix when missing.
 #' @param nu Scalar degrees-of-freedom parameter.
-#' @param prec Logical; whether or not \code{Sigma} is on the variance or precision scale.
+#' @param prec Logical; whether or not `Sigma` is on the variance or precision scale.
 #'
 #' @return A list with elements:
 #' \describe{
-#' \item{\code{X}}{Array of size \code{p x q x n} random samples from the Matrix-Normal component (see \strong{Details}).}
-#' \item{\code{V}}{Array of size \code{q x q x n} of random samples from the Inverse-Wishart component.}
+#' \item{`X`}{Array of size `p x q x n` random samples from the Matrix-Normal component (see Details).}
+#' \item{`V`}{Array of size `q x q x n` of random samples from the Inverse-Wishart component.}
 #' }
 #' @template details-mniw
-#' @details \code{rmniw} is a convenience wrapper to \code{rMNIW(Sigma = Omega, prec = TRUE)}, for the common situation in Bayesian inference with conjugate priors when between-row variances are naturally parametrized on the precision scale.
+#' @details `rmniw()` is a convenience wrapper to `rMNIW(Sigma = Omega, prec = TRUE)`, for the common situation in Bayesian inference with conjugate priors when between-row variances are naturally parametrized on the precision scale.
 #' @example examples/MNIW.R
+
+#' @rdname MNIW-dist
 #' @export
 rMNIW <- function(n, Lambda, Sigma, Psi, nu, prec = FALSE) {
   # get dimensions
@@ -50,7 +53,7 @@ rMNIW <- function(n, Lambda, Sigma, Psi, nu, prec = FALSE) {
   XV
 }
 
-#' @rdname MNIW
+#' @rdname MNIW-dist
 #' @export
 rmniw <- function(n, Lambda, Omega, Psi, nu) {
   rMNIW(n = n, Lambda = Lambda, Sigma = Omega,

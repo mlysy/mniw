@@ -7,10 +7,10 @@
 \format{
 A data frame with 27 rows (one for each hospital) and 4 variables:
 \describe{
-  \item{\code{NSrg}}{Non-surgery related problem rate (\%).}
-  \item{\code{Srg}}{Surgery related problem rate (\%).}
-  \item{\code{Severity}}{Average health index for surveyed patients.}
-  \item{\code{Size}}{Number of patients surveyed.}
+\item{\code{NSrg}}{Non-surgery related problem rate (percent).}
+\item{\code{Srg}}{Surgery related problem rate (percent).}
+\item{\code{Severity}}{Average health index for surveyed patients.}
+\item{\code{Size}}{Number of patients surveyed.}
 }
 }
 \usage{

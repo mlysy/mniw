@@ -1,12 +1,12 @@
 #' Matrix cross-product.
 #'
-#' Vectorized matrix cross-products \code{t(X) V Y} or \code{t(X) V^{-1} Y}.
+#' Vectorized matrix cross-products `t(X) V Y` or `t(X) V^{-1} Y`.
 #'
-#' @param X A matrix of size \code{p x q}, or an array of size \code{p x q x n}.
-#' @param Y A matrix of size \code{p x r}, or an array of size \code{p x r x n}.  If missing defaults to \code{Y = X}.
-#' @param V A matrix of size \code{p x p}, or an array of size \code{p x p x n}.
-#' @param inverse Logical; whether or not the inner product should be calculated with \code{V} or \code{V^{-1}}.
-#' @return An array of size \code{q x r x n}.
+#' @param X A matrix of size `p x q`, or an array of size `p x q x n`.
+#' @param Y A matrix of size `p x r`, or an array of size `p x r x n`.  If missing defaults to `Y = X`.
+#' @param V A matrix of size `p x p`, or an array of size `p x p x n`.
+#' @param inverse Logical; whether or not the inner product should be calculated with `V` or `V^{-1}`.
+#' @return An array of size `q x r x n`.
 #'
 #' @example examples/crossprodV.R
 #' @export

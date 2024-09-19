@@ -8,8 +8,8 @@
 #'
 #' Densities and random sampling for the Wishart and Inverse-Wishart distributions.
 #'
-#' @name Wishart
-#' @aliases dwish rwish diwish riwish dwishart rwishart
+#' @name Wishart-dist
+#' @aliases dwish rwish diwish riwish dwishart rwishart Wishart
 #' @template param-Xqq
 #' @template param-n
 #' @template param-Psi
@@ -17,41 +17,36 @@
 #' @param inverse Logical; whether or not to use the Inverse-Wishart distribution.
 #' @template param-log
 #' @template details-wishart
-#' @details \code{dwish} and \code{diwish} are convenience wrappers for \code{dwishart}, and similarly \code{rwish} and \code{riwish} are wrappers for \code{rwishart}.
+#' @details `dwish()` and `diwish()` are convenience wrappers for `dwishart()`, and similarly `rwish()` and `riwish()` are wrappers for `rwishart()`.
 #'
 #' @example examples/Wishart.R
 #' @template return-rdqq
 
 #--- convenience wrappers --------------------------------------------------
 
-# \deqn{
-# f(\boldsymbol{X} \mid \boldsymbol{\Psi}, \nu) = \frac{|\boldsymbol{X}|^{(\nu-q+1)/2}\exp\big\{-\frac 1 2 \textrm{trace}(\boldsymbol{\Psi}^{-1}\boldsymbol{X})\big\}}{2^{\nu q/2}|\boldsymbol{\Psi}|^{\nu/2} \Gamma_q(\frac \nu 2)}
-# }
-
-
 # wishart density
-#' @rdname Wishart
+#' @rdname Wishart-dist
 #' @export
 dwish <- function(X, Psi, nu, log = FALSE) {
   dwishart(X, Psi, nu, inverse = FALSE, log)
 }
 
 # wishart simulation
-#' @rdname Wishart
+#' @rdname Wishart-dist
 #' @export
 rwish <- function(n, Psi, nu) {
   rwishart(n, Psi, nu, inverse = FALSE)
 }
 
 # inverse wishart density
-#' @rdname Wishart
+#' @rdname Wishart-dist
 #' @export
 diwish <- function(X, Psi, nu, log = FALSE) {
   dwishart(X, Psi, nu, inverse = TRUE, log)
 }
 
 # inverse wishart simulation
-#' @rdname Wishart
+#' @rdname Wishart-dist
 #' @export
 riwish <- function(n, Psi, nu) {
   rwishart(n, Psi, nu, inverse = TRUE)
@@ -61,7 +56,7 @@ riwish <- function(n, Psi, nu) {
 
 # density of wishart and inverse wishart
 
-#' @rdname Wishart
+#' @rdname Wishart-dist
 #' @export
 dwishart <- function(X, Psi, nu, inverse = FALSE, log = FALSE) {
   # get dimensions
@@ -98,7 +93,7 @@ dwishart <- function(X, Psi, nu, inverse = FALSE, log = FALSE) {
 }
 
 # random sampling for wishart and inverse wishart
-#' @rdname Wishart
+#' @rdname Wishart-dist
 #' @export
 rwishart <- function(n, Psi, nu, inverse = FALSE) {
   # get problem dimensions

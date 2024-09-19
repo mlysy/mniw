@@ -2,13 +2,13 @@
 
 #' Conditional sampling for Multivariate-Normal Random-Effects model.
 #'
-#' Sample from the conditional parameter distribution given the data and hyperparameters of the Multivariate-Normal Random-Effects (mNormRE) model (see \strong{Details}).
+#' Sample from the conditional parameter distribution given the data and hyperparameters of the Multivariate-Normal Random-Effects (mNormRE) model (see **Details**).
 #'
 #' @template param-n
-#' @param x Data observations.  Either a vector of length \code{q} or a \code{n x q} matrix.  In the latter case each row is a different vector.
-#' @param V Observation variances.  Either a matrix of size \code{q x q} or a \code{q x q x n} array.
-#' @param lambda Prior means.  Either a vector of length \code{q} or an \code{n x q} matrix.  In the latter case each row is a different mean.  Defaults to zeros.
-#' @param Sigma Prior variances.  Either a matrix of size \code{q x q} or a \code{q x q x n} array.  Defaults to identity matrix.
+#' @param x Data observations.  Either a vector of length `q` or a `n x q` matrix.  In the latter case each row is a different vector.
+#' @param V Observation variances.  Either a matrix of size `q x q` or a `q x q x n` array.
+#' @param lambda Prior means.  Either a vector of length `q` or an `n x q` matrix.  In the latter case each row is a different mean.  Defaults to zeros.
+#' @param Sigma Prior variances.  Either a matrix of size `q x q` or a `q x q x n` array.  Defaults to identity matrix.
 #' @details Consider the hierarchical multivariate normal model
 #' \deqn{
 #' \begin{array}{rcl}
@@ -19,7 +19,7 @@
 #' \mu ~ N(\lambda, \Sigma)
 #' x | \mu ~ N(\mu, V).
 #' }
-#' The Multivariate-Normal Random-Effects model \eqn{\boldsymbol{\mu} \sim \textrm{RxNorm}(\boldsymbol{x}, \boldsymbol{V}, \boldsymbol{\lambda}, \boldsymbol{\Sigma})}{\mu ~ RxNorm(x, V, \lambda, \Sigma)} on the random vector \eqn{\boldsymbol{\mu}_q}{\mu_q} is defined as the posterior distribution \eqn{p(\boldsymbol{\mu} \mid \boldsymbol{x}, \boldsymbol{\lambda}, \boldsymbol{\Sigma})}{p(\mu | x, \lambda, \Sigma)}.  This distribution is multivariate normal; for the mathematical specification of its parameters please see \code{vignette("mniw-distributions", package = "mniw")}.
+#' The Multivariate-Normal Random-Effects model \eqn{\boldsymbol{\mu} \sim \textrm{RxNorm}(\boldsymbol{x}, \boldsymbol{V}, \boldsymbol{\lambda}, \boldsymbol{\Sigma})}{\mu ~ RxNorm(x, V, \lambda, \Sigma)} on the random vector \eqn{\boldsymbol{\mu}_q}{\mu_q} is defined as the posterior distribution \eqn{p(\boldsymbol{\mu} \mid \boldsymbol{x}, \boldsymbol{\lambda}, \boldsymbol{\Sigma})}{p(\mu | x, \lambda, \Sigma)}.  This distribution is multivariate normal; for the mathematical specification of its parameters please see `vignette("mniw-distributions", package = "mniw")`.
 #'
 #' @example examples/RandomEffects.R
 #' @export

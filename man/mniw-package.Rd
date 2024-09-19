@@ -31,6 +31,7 @@ where \eqn{\textrm{vec}(\boldsymbol{X})}{vec(X)} is a vector stacking the column
 Useful links:
 \itemize{
   \item \url{https://github.com/mlysy/mniw/}
+  \item \url{https://mlysy.github.io/mniw/}
   \item Report bugs at \url{https://github.com/mlysy/mniw/issues}
 }
 

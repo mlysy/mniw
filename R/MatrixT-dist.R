@@ -1,28 +1,28 @@
-#--- matrix normal distribution --------------------------------------------
+#--- matrix-t distribution ------------------------------------------------
 
-#' The Matrix-Normal distribution.
+#' The Matrix-t distribution.
 #'
-#' Density and random sampling for the Matrix-Normal distribution.
+#' Density and sampling for the Matrix-t distribution.
 #'
-#' @name MatrixNormal
-#' @aliases dMNorm rMNorm
+#' @name MatrixT-dist
+#' @aliases dMT rMT MatrixT
 #' @template param-n
 #' @template param-Xpq
 #' @template param-Lambda
 #' @template param-SigmaR
 #' @template param-SigmaC
+#' @template param-nu
 #' @template param-log
 #'
-#' @template details-matnorm
-#' @example examples/MatrixNormal.R
-#'
 #' @template return-rdpq
+#'
+#' @template details-matrixt
 
-#--- lower-level functions -------------------------------------------------
+#--- lower-level functions ------------------------------------------------
 
-#' @rdname MatrixNormal
+#' @rdname MatrixT-dist
 #' @export
-dMNorm <- function(X, Lambda, SigmaR, SigmaC, log = FALSE) {
+dMT <- function(X, Lambda, SigmaR, SigmaC, nu, log = FALSE) {
   # get dimensions
   PQ <- .getPQ(X = X, Lambda = Lambda, Sigma = SigmaR, Psi = SigmaC)
   p <- PQ[1]
@@ -39,38 +39,40 @@ dMNorm <- function(X, Lambda, SigmaR, SigmaC, log = FALSE) {
   if(anyNA(SigmaR)) stop("SigmaR and X have incompatible dimensions.")
   SigmaC <- .setDims(SigmaC, q = q)
   if(anyNA(SigmaC)) stop("SigmaC and X have incompatible dimensions.")
+  nu <- c(nu)
   # check lengths
   N <- .getN(p = p, q = q, X = X, Lambda = Lambda, Sigma = SigmaR,
-             Psi = SigmaC)
+             Psi = SigmaC, nu = nu)
   if(length(N) > 2) stop("Arguments have different lengths.")
-  ans <- LogDensityMatrixNormal(X, Lambda, SigmaR, SigmaC)
+  ans <- LogDensityMatrixT(X, Lambda, SigmaR, SigmaC, nu)
   if(!log) ans <- exp(ans)
   ans
 }
 
-#' @rdname MatrixNormal
+#' @rdname MatrixT-dist
 #' @export
-rMNorm <- function(n, Lambda, SigmaR, SigmaC) {
+rMT <- function(n, Lambda, SigmaR, SigmaC, nu) {
   # get dimensions
   PQ <- .getPQ(Lambda = Lambda, Sigma = SigmaR, Psi = SigmaC)
   p <- PQ[1]
   q <- PQ[2]
-  if(any(anyNA(PQ))) {
+  if(anyNA(PQ)) {
     stop("Problem dimensions are undetermined (too many missing inputs).")
   }
-  # format arguments
   Lambda <- .setDims(Lambda, p = p, q = q)
   if(anyNA(Lambda)) stop("Something went wrong.  Please report bug.")
   SigmaR <- .setDims(SigmaR, p = p)
   if(anyNA(SigmaR)) stop("SigmaR and Lambda have incompatible dimensions.")
   SigmaC <- .setDims(SigmaC, q = q)
   if(anyNA(SigmaC)) stop("SigmaC and Lambda have incompatible dimensions.")
+  nu <- c(nu)
   # check lengths
   N <- .getN(p = p, q = q, Lambda = Lambda, Sigma = SigmaR,
-             Psi = SigmaC)
-  if(length(N) > 2 || (length(N) == 2 && N[2] != n))
+             Psi = SigmaC, nu = nu)
+  if(length(N) > 2 || (length(N) == 2 && N[2] != n)) {
     stop("Arguments don't all have length n.")
-  X <- GenerateMatrixNormal(n, Lambda, SigmaR, SigmaC)
+  }
+  X <- GenerateMatrixT(n, Lambda, SigmaR, SigmaC, nu)
   if(n > 1) X <- array(X, dim = c(p,q,n))
   X
 }

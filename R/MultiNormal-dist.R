@@ -4,16 +4,17 @@
 #'
 #' Density and random sampling for the Multivariate Normal distribution.
 #'
-#' @name MultiNormal
-#' @aliases dmNorm rmNorm
-#' @param x Argument to the density function.  A vector of length \code{q} or an \code{n x q} matrix.
+#' @name MultiNormal-dist
+#' @aliases dmNorm rmNorm MultiNormal
+#' @param x Argument to the density function.  A vector of length `q` or an `n x q` matrix.
 #' @template param-n
-#' @param mu Mean vector(s).  Either a vector of length \code{q} or an \code{n x q} matrix.  If missing defaults to a vector of zeros.
-#' @param Sigma Covariance matrix or matrices.  Either a \code{q x q} matrix or a \code{q x q x n} array.  If missing defaults to the identity matrix.
+#' @param mu Mean vector(s).  Either a vector of length `q` or an `n x q` matrix.  If missing defaults to a vector of zeros.
+#' @param Sigma Covariance matrix or matrices.  Either a `q x q` matrix or a `q x q x n` array.  If missing defaults to the identity matrix.
 #' @template param-log
-#' @return A vector for densities, or a \code{n x q} matrix for random sampling.
+#' @return A vector for densities, or a `n x q` matrix for random sampling.
 #' @example examples/MultiNormal.R
-#' @rdname MultiNormal
+
+#' @rdname MultiNormal-dist
 #' @export
 dmNorm <- function(x, mu, Sigma, log = FALSE) {
   # get dimensions
@@ -44,7 +45,7 @@ dmNorm <- function(x, mu, Sigma, log = FALSE) {
   ans
 }
 
-#' @rdname MultiNormal
+#' @rdname MultiNormal-dist
 #' @export
 rmNorm <- function(n, mu, Sigma) {
   # get dimensions

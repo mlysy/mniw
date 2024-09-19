@@ -4,10 +4,10 @@
 #'
 #' @format A data frame with 27 rows (one for each hospital) and 4 variables:
 #' \describe{
-#'   \item{\code{NSrg}}{Non-surgery related problem rate (\%).}
-#'   \item{\code{Srg}}{Surgery related problem rate (\%).}
-#'   \item{\code{Severity}}{Average health index for surveyed patients.}
-#'   \item{\code{Size}}{Number of patients surveyed.}
+#'   \item{`NSrg`}{Non-surgery related problem rate (percent).}
+#'   \item{`Srg`}{Surgery related problem rate (percent).}
+#'   \item{`Severity`}{Average health index for surveyed patients.}
+#'   \item{`Size`}{Number of patients surveyed.}
 #' }
-#' @references Everson, P.J. and Morris, C.N. "Inference for multivariate normal hierarchical models." \emph{Journal of the Royal Statistical Society, Series B} 62:2 (2000): 399-412.
+#' @references Everson, P.J. and Morris, C.N. "Inference for multivariate normal hierarchical models." *Journal of the Royal Statistical Society, Series B* 62:2 (2000): 399-412.
 "Hospitals"

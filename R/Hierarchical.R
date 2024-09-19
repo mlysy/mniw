@@ -1,14 +1,14 @@
 #' Bayesian inference for a random-effects regression model.
 #'
-#' Gibbs sampler for posterior distribution of parameters and hyperparameters of a multivariate normal random-effects linear regression model called RxNormLM (see \strong{Details}).
+#' Gibbs sampler for posterior distribution of parameters and hyperparameters of a multivariate normal random-effects linear regression model called RxNormLM (see Details).
 #'
 #' @param nsamples number of posterior samples to draw.
-#' @param Y \code{N x q} matrix of responses.
-#' @param V Either a \code{q x q} variance matrix or an \code{q x q x N} array of such matrices.
-#' @param X \code{N x p} matrix of covariates.
-#' @param prior parameters of the prior MNIW distribution on the hyperparameters (see \strong{Details}).
-#' @param burn integer number of burn-in samples, or fraction of \code{nsamples} to prepend as burn-in.
-#' @param init (optional) list with elements \code{Beta}, \code{Sigma}, and \code{Mu} providing the initial values for these.  Default values are \code{Beta = matrix(0, p, q)}, \code{Sigma = diag(q)}, and \code{Mu = Y}.
+#' @param Y `N x q` matrix of responses.
+#' @param V Either a `q x q` variance matrix or an `q x q x N` array of such matrices.
+#' @param X `N x p` matrix of covariates.
+#' @param prior parameters of the prior MNIW distribution on the hyperparameters (see Details).
+#' @param burn integer number of burn-in samples, or fraction of `nsamples` to prepend as burn-in.
+#' @param init (optional) list with elements `Beta`, `Sigma`, and `Mu` providing the initial values for these.  Default values are `Beta = matrix(0, p, q)`, `Sigma = diag(q)`, and `Mu = Y`.
 #' @param updateHyp,storeHyp logical. Whether or not to update/store the hyperparameter draws.
 #' @param updateRX,storeRX logical. Whether or not to update/store the random-effects draws.
 #' @details The RxNormLM model is given by
@@ -23,12 +23,12 @@
 #' }
 #' where \eqn{y_i} and \eqn{\mu_i} are response and random-effects vectors of length \eqn{q}, \eqn{x_i} are covariate vectors of length \eqn{p}, and \eqn{(\beta, \Sigma)} are hyperparameter matrices of size \eqn{p \times q} and \eqn{q \times q}.
 #'
-#' The MNIW prior distribution is given by a list with elements \code{Lambda}, \code{Omega}, \code{Psi}, and \code{nu}.  If any of these is \code{NULL} or missing, the default value is 0.  Note that \code{Omega == 0} gives a Lebesgue prior to \eqn{\beta}.
+#' The MNIW prior distribution is given by a list with elements `Lambda`, `Omega`, `Psi`, and `nu`.  If any of these is `NULL` or missing, the default value is 0.  Note that `Omega == 0` gives a Lebesgue prior to \eqn{\beta}.
 #' @return A list with (potential) elements:
 #' \describe{
-#'   \item{\code{Beta}}{An \code{p x q x nsamples} array of regression coefficient iterations (if \code{storeHyp == TRUE})}
-#'   \item{\code{Sigma}}{An \code{q x q x nsamples} array of regression variance matrices (if \code{storeHyp == TRUE})}
-#'   \item{\code{Mu}}{An \code{n x q x nsamples} array of random effects (if \code{storeRX == TRUE})}
+#'   \item{`Beta`}{An `p x q x nsamples` array of regression coefficient iterations (if `storeHyp == TRUE`)}
+#'   \item{`Sigma`}{An `q x q x nsamples` array of regression variance matrices (if `storeHyp == TRUE`)}
+#'   \item{`Mu`}{An `n x q x nsamples` array of random effects (if `storeRX == TRUE`)}
 #' }
 #'
 #' @example examples/Hierarchical.R

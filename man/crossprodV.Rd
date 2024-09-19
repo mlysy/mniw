@@ -7,19 +7,19 @@
 crossprodV(X, Y = NULL, V, inverse = FALSE)
 }
 \arguments{
-\item{X}{A matrix of size \code{p x q}, or an array of size \code{p x q x n}.}
+\item{X}{A matrix of size \verb{p x q}, or an array of size \verb{p x q x n}.}
 
-\item{Y}{A matrix of size \code{p x r}, or an array of size \code{p x r x n}.  If missing defaults to \code{Y = X}.}
+\item{Y}{A matrix of size \verb{p x r}, or an array of size \verb{p x r x n}.  If missing defaults to \code{Y = X}.}
 
-\item{V}{A matrix of size \code{p x p}, or an array of size \code{p x p x n}.}
+\item{V}{A matrix of size \verb{p x p}, or an array of size \verb{p x p x n}.}
 
 \item{inverse}{Logical; whether or not the inner product should be calculated with \code{V} or \code{V^{-1}}.}
 }
 \value{
-An array of size \code{q x r x n}.
+An array of size \verb{q x r x n}.
 }
 \description{
-Vectorized matrix cross-products \code{t(X) V Y} or \code{t(X) V^{-1} Y}.
+Vectorized matrix cross-products \verb{t(X) V Y} or \verb{t(X) V^\{-1\} Y}.
 }
 \examples{
 # problem dimensions

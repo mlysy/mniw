@@ -9,13 +9,13 @@ rRxNorm(n, x, V, lambda, Sigma)
 \arguments{
 \item{n}{Integer number of random samples to generate.}
 
-\item{x}{Data observations.  Either a vector of length \code{q} or a \code{n x q} matrix.  In the latter case each row is a different vector.}
+\item{x}{Data observations.  Either a vector of length \code{q} or a \verb{n x q} matrix.  In the latter case each row is a different vector.}
 
-\item{V}{Observation variances.  Either a matrix of size \code{q x q} or a \code{q x q x n} array.}
+\item{V}{Observation variances.  Either a matrix of size \verb{q x q} or a \verb{q x q x n} array.}
 
-\item{lambda}{Prior means.  Either a vector of length \code{q} or an \code{n x q} matrix.  In the latter case each row is a different mean.  Defaults to zeros.}
+\item{lambda}{Prior means.  Either a vector of length \code{q} or an \verb{n x q} matrix.  In the latter case each row is a different mean.  Defaults to zeros.}
 
-\item{Sigma}{Prior variances.  Either a matrix of size \code{q x q} or a \code{q x q x n} array.  Defaults to identity matrix.}
+\item{Sigma}{Prior variances.  Either a matrix of size \verb{q x q} or a \verb{q x q x n} array.  Defaults to identity matrix.}
 }
 \description{
 Sample from the conditional parameter distribution given the data and hyperparameters of the Multivariate-Normal Random-Effects (mNormRE) model (see \strong{Details}).

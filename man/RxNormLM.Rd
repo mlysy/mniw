@@ -21,13 +21,13 @@ RxNormLM(
 \arguments{
 \item{nsamples}{number of posterior samples to draw.}
 
-\item{Y}{\code{N x q} matrix of responses.}
+\item{Y}{\verb{N x q} matrix of responses.}
 
-\item{V}{Either a \code{q x q} variance matrix or an \code{q x q x N} array of such matrices.}
+\item{V}{Either a \verb{q x q} variance matrix or an \verb{q x q x N} array of such matrices.}
 
-\item{X}{\code{N x p} matrix of covariates.}
+\item{X}{\verb{N x p} matrix of covariates.}
 
-\item{prior}{parameters of the prior MNIW distribution on the hyperparameters (see \strong{Details}).}
+\item{prior}{parameters of the prior MNIW distribution on the hyperparameters (see Details).}
 
 \item{init}{(optional) list with elements \code{Beta}, \code{Sigma}, and \code{Mu} providing the initial values for these.  Default values are \code{Beta = matrix(0, p, q)}, \code{Sigma = diag(q)}, and \code{Mu = Y}.}
 
@@ -40,13 +40,13 @@ RxNormLM(
 \value{
 A list with (potential) elements:
 \describe{
-  \item{\code{Beta}}{An \code{p x q x nsamples} array of regression coefficient iterations (if \code{storeHyp == TRUE})}
-  \item{\code{Sigma}}{An \code{q x q x nsamples} array of regression variance matrices (if \code{storeHyp == TRUE})}
-  \item{\code{Mu}}{An \code{n x q x nsamples} array of random effects (if \code{storeRX == TRUE})}
+\item{\code{Beta}}{An \verb{p x q x nsamples} array of regression coefficient iterations (if \code{storeHyp == TRUE})}
+\item{\code{Sigma}}{An \verb{q x q x nsamples} array of regression variance matrices (if \code{storeHyp == TRUE})}
+\item{\code{Mu}}{An \verb{n x q x nsamples} array of random effects (if \code{storeRX == TRUE})}
 }
 }
 \description{
-Gibbs sampler for posterior distribution of parameters and hyperparameters of a multivariate normal random-effects linear regression model called RxNormLM (see \strong{Details}).
+Gibbs sampler for posterior distribution of parameters and hyperparameters of a multivariate normal random-effects linear regression model called RxNormLM (see Details).
 }
 \details{
 The RxNormLM model is given by

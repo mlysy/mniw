@@ -1,1 +1,1 @@
-#' @param Lambda Mean parameter  Either a \code{p x q} matrix or a \code{p x q x n} array.
+#' @param Lambda Mean parameter.  Either a `p x q` matrix or a `p x q x n` array.
