@@ -4,6 +4,12 @@
 
 *Martin Lysy, Bryan Yates*
 
+<!-- badges: start -->
+
+[![R-CMD-check](https://github.com/mlysy/mniw/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/mlysy/mniw/actions/workflows/R-CMD-check.yaml)
+<!-- badges: end -->
+
+
 ---
 
 ### Description
@@ -12,9 +18,15 @@ Density evaluation and random number generation for the Matrix-Normal Inverse-Wi
 
 ### Installation
 
-Install the R package [**devtools**](https://CRAN.R-project.org/package=devtools) and run
+To install the CRAN version (1.0.1):
+``` r
+install.packages("mniw", INSTALL_opts = "--install-tests")
+```
+
+To install the latest development version: first install the [**devtools**](https://CRAN.R-project.org/package=devtools), then:
+
 ```r
-devtools::install_github("mlysy/mniw")
+devtools::install_github("mlysy/mniw", INSTALL_opts = "--install-tests")
 ```
 
 ### Usage
@@ -45,4 +57,4 @@ X <- rwish(n, df = nu, Psi = Psi) # produces an array of size p x p x n
 
 It is both simpler, and much faster for large `n` and `p`.
 
-The other functions in **mniw** behave much the same way.  A complete description of the distributions provided by the package is available [here](http://htmlpreview.github.io/?https://github.com/mlysy/mniw/master/doc/mniw-distributions.html).
+The other functions in **mniw** behave much the same way.  A complete description of the distributions provided by the package is available [here](https://mlysy.github.io/mniw/articles/mniw-distributions.html).

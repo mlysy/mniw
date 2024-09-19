@@ -1,5 +1,11 @@
 # mniw 1.0.2
 
+## Minor Changes
+
+- roxygen documentation now uses Markdown.
+
+- Minor reformatting of package vignette.
+
 ## Bug Fixes
 
 - Fixed `foo.template method<>()` calls to comply with Clang-20.0, per CRAN request.  This made `_MSC_VER` switch unnecessary.

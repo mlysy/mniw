@@ -23,7 +23,6 @@ vignette: >
 \newcommand{\LL}{{\bm{L}}}
 \newcommand{\PPs}{{\bm{\Psi}}}
 \newcommand{\ZZ}{{\bm{Z}}}
-\newcommand{\N}{\mathcal{N}}
 \newcommand{\LLa}{{\bm{\Lambda}}}
 \newcommand{\SSi}{{\bm{\Sigma}}}
 \newcommand{\GGa}{{\bm{\Gamma}}}
@@ -41,12 +40,13 @@ vignette: >
 \newcommand{\GG}{{\bm{G}}}
 \newcommand{\OOm}{{\bm{\Omega}}}
 \newcommand{\bz}{{\bm{0}}}
-\newcommand{\wish}{\tx{Wish}}
-\newcommand{\iwish}{\tx{InvWish}}
-\newcommand{\MN}{\tx{MatNorm}}
-\newcommand{\MT}{\tx{MatT}}
-\newcommand{\mniw}{\tx{MNIW}}
-\newcommand{\re}{\tx{RxNorm}}
+\newcommand{\wish}{\operatorname{Wish}}
+\newcommand{\iwish}{\operatorname{InvWish}}
+\newcommand{\MN}{\operatorname{MatNorm}}
+\newcommand{\MT}{\operatorname{MatT}}
+\newcommand{\mniw}{\operatorname{MNIW}}
+\newcommand{\re}{\operatorname{RxNorm}}
+\newcommand{\N}{\operatorname{Normal}}
 
 
 ## Wishart Distribution
