@@ -1,5 +1,3 @@
-Meta
-doc
 # R
 *.Rhistory
 *.Rapp.history
@@ -14,6 +12,5 @@ vignettes/.build.timestamp
 *.DS_Store
 
 # unignore html files in doc
-!doc
 /doc/
 /Meta/
