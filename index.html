@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">mniw</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.2</span>
       </span>
     </div>
 
@@ -81,6 +81,8 @@
 <div class="page-header"><h1 id="mniw-the-matrix-normal-inverse-wishart-distribution">mniw: The Matrix-Normal Inverse-Wishart Distribution<a class="anchor" aria-label="anchor" href="#mniw-the-matrix-normal-inverse-wishart-distribution"></a>
 </h1></div>
 <p><em>Martin Lysy, Bryan Yates</em></p>
+<!-- badges: start -->
+
 <hr>
 <div class="section level3">
 <h3 id="description">Description<a class="anchor" aria-label="anchor" href="#description"></a>
@@ -90,30 +92,33 @@
 <div class="section level3">
 <h3 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h3>
-<p>Install the R package <a href="https://CRAN.R-project.org/package=devtools" class="external-link"><strong>devtools</strong></a> and run</p>
+<p>To install the CRAN version (1.0.1):</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"mlysy/mniw"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"mniw"</span>, INSTALL_opts <span class="op">=</span> <span class="st">"--install-tests"</span><span class="op">)</span></span></code></pre></div>
+<p>To install the latest development version: first install the <a href="https://CRAN.R-project.org/package=devtools" class="external-link"><strong>devtools</strong></a>, then:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"mlysy/mniw"</span>, INSTALL_opts <span class="op">=</span> <span class="st">"--install-tests"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
 </h3>
 <p>The primary advantage of the <strong>mniw</strong> package is that it “vectorizes” over its input arguments. Take for example the simulation of a Wishart distribution, which can be done with the built-in R function <code><a href="https://rdrr.io/r/stats/rWishart.html" class="external-link">stats::rWishart()</a></code>:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">10</span></span>
 <span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fl">3</span></span>
 <span><span class="va">nu</span> <span class="op">&lt;-</span> <span class="fl">6</span></span>
 <span><span class="co"># produces an array of size p x p x n</span></span>
 <span><span class="va">Psi</span> <span class="op">&lt;-</span> <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/rWishart.html" class="external-link">rWishart</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, df <span class="op">=</span> <span class="va">nu</span>, Sigma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/diag.html" class="external-link">diag</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Now suppose we want to generate Wishart random variables each with a different <code>Sigma</code>:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Vectorizing over the 'Sigma' argument</span></span>
 <span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">Psi</span>, <span class="fl">3</span>, <span class="fu">stats</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/r/stats/rWishart.html" class="external-link">rWishart</a></span>, n <span class="op">=</span> <span class="fl">1</span>, df <span class="op">=</span> <span class="va">nu</span><span class="op">)</span></span>
 <span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/array.html" class="external-link">array</a></span><span class="op">(</span><span class="va">X</span>, dim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">p</span>, <span class="va">p</span>, <span class="va">n</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>However, the code above is both slow for large <code>n</code>, and inconvenient due to the reshaping of the <code><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply()</a></code> output. The equivalent code using <strong>mniw</strong> is:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/Wishart-dist.html">rwish</a></span><span class="op">(</span><span class="va">n</span>, df <span class="op">=</span> <span class="va">nu</span>, Psi <span class="op">=</span> <span class="va">Psi</span><span class="op">)</span> <span class="co"># produces an array of size p x p x n</span></span></code></pre></div>
 <p>It is both simpler, and much faster for large <code>n</code> and <code>p</code>.</p>
-<p>The other functions in <strong>mniw</strong> behave much the same way. A complete description of the distributions provided by the package is available <a href="http://htmlpreview.github.io/?https://github.com/mlysy/mniw/master/doc/mniw-distributions.html" class="external-link">here</a>.</p>
+<p>The other functions in <strong>mniw</strong> behave much the same way. A complete description of the distributions provided by the package is available <a href="https://mlysy.github.io/mniw/articles/mniw-distributions.html">here</a>.</p>
 </div>
 </div>
   </div>
@@ -151,7 +156,12 @@
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/mlysy/mniw/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/mlysy/mniw/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+</ul>
+</div>
 
   </div>
 </div>
