@@ -1,0 +1,26 @@
+<div class="copyright">
+  <!-- <p>Copyright 2017-2019 Martin Lysy</p> -->
+  <script>
+    function get_date() {
+	// return "aaaa";
+	var x = new Date(Date.parse(document.lastModified));
+	var d = x.getDate();
+	var m = x.getMonth() + 1;
+	var y = x.getYear();
+	// different on IE and NS
+	if(y >= 2000)
+	{
+	    y -= 2000;
+	}
+	if(y >= 100)
+	{
+	    y -= 100;
+	}
+	y = y + 2000;
+	// x = new Date(x);
+	// return x.getMonth();
+	return "" + m + "/" + d + "/" + y;
+    }
+  </script>
+  <p>Last updated: <script> document.write(get_date()) </script></p>
+</dviv>

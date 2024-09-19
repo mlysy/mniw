@@ -1,0 +1,5 @@
+url: https://mlysy.github.io/mniw/
+template:
+  bootstrap: 3
+  params:
+    bootswatch: readable

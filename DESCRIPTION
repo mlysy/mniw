@@ -7,7 +7,7 @@ Authors@R: c(person("Martin", "Lysy", role = c("aut", "cre"),
                     email = "mlysy@uwaterloo.ca"),
              person("Bryan", "Yates", role = "aut"))
 Description: Density evaluation and random number generation for the Matrix-Normal Inverse-Wishart (MNIW) distribution, as well as the the Matrix-Normal, Matrix-T, Wishart, and Inverse-Wishart distributions.  Core calculations are implemented in a portable (header-only) C++ library, with matrix manipulations using the 'Eigen' library for linear algebra.  Also provided is a Gibbs sampler for Bayesian inference on a random-effects model with multivariate normal observations.
-URL: https://github.com/mlysy/mniw/
+URL: https://github.com/mlysy/mniw/, https://mlysy.github.io/mniw/
 BugReports: https://github.com/mlysy/mniw/issues
 License: GPL-3
 Depends: R (>= 2.10)
